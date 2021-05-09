@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MobEats</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="menu">Tutaj będzie menu</string>
+    <string name="play">PLAY</string>
+    <string name="logo">Logo</string>
 </resources>
