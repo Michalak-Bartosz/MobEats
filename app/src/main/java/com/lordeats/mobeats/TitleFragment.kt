@@ -23,7 +23,7 @@ class TitleFragment : Fragment() {
         savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_title, container, false)
         binding.playButton.setOnClickListener { view: View ->
-            Navigation.findNavController(view).navigate(R.id.action_titleFragment_to_mainMenuFragment)
+            Navigation.findNavController(view).navigate(R.id.action_titleFragment_to_loginFragment)
         }
         return binding.root
     }

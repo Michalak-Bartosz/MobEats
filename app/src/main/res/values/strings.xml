@@ -1,7 +1,14 @@
 <resources>
     <string name="app_name">MobEats</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="menu">Tutaj będzie menu</string>
-    <string name="play">PLAY</string>
+    <string name="start">START</string>
     <string name="logo">Logo</string>
+
+    <string name="signIn">Sign In!</string>
+    <string name="signUp">Sign Up!</string>
+    <string name="notSingUpCom">You are not sing up?</string>
+    <string name="singUpButton">Register here</string>
+    <string name="hintNickname">Nickname</string>
+    <string name="registerButton">Register</string>
 </resources>
