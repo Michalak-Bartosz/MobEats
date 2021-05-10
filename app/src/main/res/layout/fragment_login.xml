@@ -19,19 +19,18 @@
             android:text="@string/singUpButton"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.8"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/notSingUpComTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:text="@string/notSingUpCom"
             android:textColor="@color/black"
             android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@+id/singUpButton"
-            app:layout_constraintEnd_toStartOf="@+id/singUpButton" />
+            app:layout_constraintBottom_toTopOf="@+id/singUpButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/signInTextView"

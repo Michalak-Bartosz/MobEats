@@ -14,9 +14,5 @@ class AppActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_app)
 
-        var message = intent.getStringExtra(EXTRA_MESSAGE)
-        binding.message.apply {
-            text = message
-        }
     }
 }

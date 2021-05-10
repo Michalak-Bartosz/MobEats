@@ -29,16 +29,10 @@ class RegisterFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false)
-        binding.registerButton.setOnClickListener { view: View ->
-            Navigation.findNavController(view).navigate(R.id.action_registerFragment_to_appActivity) }
-        return binding.root
-    }
-
-    fun register(view: View){
-        var nickname = binding.nicknamePlainText.text.toString()
-        intent = Intent(this.activity, AppActivity::class.java).apply {
-            putExtra(EXTRA_MESSAGE, nickname)
+        binding.registerButton.setOnClickListener{
+            intent = Intent(context, AppActivity::class.java)
+            startActivity(intent)
         }
-        startActivity(intent)
+        return binding.root
     }
 }

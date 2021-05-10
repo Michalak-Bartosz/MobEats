@@ -25,13 +25,5 @@
         android:id="@+id/registerFragment"
         android:name="com.lordeats.mobeats.registerLogin.RegisterFragment"
         android:label="fragment_register"
-        tools:layout="@layout/fragment_register" >
-        <action
-            android:id="@+id/action_registerFragment_to_appActivity"
-            app:destination="@id/appActivity" />
-    </fragment>
-    <activity
-        android:id="@+id/appActivity"
-        android:name="com.lordeats.mobeats.activity.AppActivity"
-        android:label="AppActivity" />
+        tools:layout="@layout/fragment_register" />
 </navigation>
