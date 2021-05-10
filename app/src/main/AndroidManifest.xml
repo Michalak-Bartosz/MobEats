@@ -10,7 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MobEats">
         <activity android:name=".activity.AppActivity"></activity>
-        <activity android:name=".activity.StartActivity">
+        <activity android:name=".activity.StartActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

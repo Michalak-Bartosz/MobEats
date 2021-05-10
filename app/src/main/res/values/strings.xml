@@ -11,4 +11,7 @@
     <string name="singUpButton">Register here</string>
     <string name="hintNickname">Nickname</string>
     <string name="registerButton">Register</string>
+    <string name="hintPassword">Password</string>
+    <string name="hintRepeatPassword">Repeat Password</string>
+    <string name="loginButton">Login</string>
 </resources>

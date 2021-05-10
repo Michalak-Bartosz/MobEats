@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.databinding.ActivityAppBinding
-import com.lordeats.mobeats.registerLogin.EXTRA_MESSAGE
 
 class AppActivity : AppCompatActivity() {
 

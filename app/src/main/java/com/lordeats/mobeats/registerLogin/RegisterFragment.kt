@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.Navigation
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.activity.AppActivity
 import com.lordeats.mobeats.databinding.FragmentRegisterBinding
@@ -17,7 +16,6 @@ import com.lordeats.mobeats.databinding.FragmentRegisterBinding
  * Use the [RegisterFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-const val EXTRA_MESSAGE = "com.lordeats.mobeats.MESSAGE"
 
 class RegisterFragment : Fragment() {
 
@@ -29,10 +27,16 @@ class RegisterFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false)
+
         binding.registerButton.setOnClickListener{
-            intent = Intent(context, AppActivity::class.java)
+            intent = Intent(activity, AppActivity::class.java)
+            intent.action = Intent.ACTION_SEND
+            intent.putExtra(Intent.EXTRA_TEXT, binding.nicknamePlainText.text.toString())
+            intent.type = "text/plain"
             startActivity(intent)
+            activity?.finish()
         }
+
         return binding.root
     }
 }
