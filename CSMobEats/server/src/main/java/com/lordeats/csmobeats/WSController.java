@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 
@@ -13,10 +14,12 @@ import org.springframework.stereotype.Controller;
 public class WSController {
 
     private final RegistrationService registrationService;
+    private final SimpMessagingTemplate template;
 
     @Autowired
-    public WSController(RegistrationService registrationService) {
+    public WSController(RegistrationService registrationService, SimpMessagingTemplate template) {
         this.registrationService = registrationService;
+        this.template = template;
     }
 
     @MessageMapping("/chat")
@@ -36,6 +39,8 @@ public class WSController {
     public String register(String message, @Header("simpSessionId") String sessionId) {
         log.info("Registering user: " + message + " from session: " + sessionId);
         registrationService.registerUser(sessionId, message);
+        log.info("List users:\n" + registrationService.listUsers());
+        template.convertAndSendToUser(message,sessionId,registrationService.listUsers());
         return registrationService.listUsers();
     }
 }

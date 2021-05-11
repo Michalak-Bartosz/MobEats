@@ -5,13 +5,30 @@
     <string name="start">START</string>
     <string name="logo">Logo</string>
 
+<!--    Login and Register Fragment Section-->
+
+    <string name="hintNickname">Nickname</string>
+    <string name="hintPassword">Password</string>
+
+<!--    Login Fragment Section-->
+
     <string name="signIn">Sign In!</string>
-    <string name="signUp">Sign Up!</string>
+    <string name="loginButton">Login</string>
     <string name="notSingUpCom">You are not sing up?</string>
     <string name="singUpButton">Register here</string>
-    <string name="hintNickname">Nickname</string>
-    <string name="registerButton">Register</string>
-    <string name="hintPassword">Password</string>
+
+    <string name="noDataToSignIn">Please enter Nickname and Password!</string>
+    <string name="nicknameAndPasswordNotCorrect">Login or password is not correct!</string>
+    <string name="successfulLogin">Successful login!</string>
+
+<!--    Register Fragment Section-->
+
+    <string name="signUp">Sign Up!</string>
     <string name="hintRepeatPassword">Repeat Password</string>
-    <string name="loginButton">Login</string>
+    <string name="registerButton">Register</string>
+
+    <string name="noDataToSingUp">Please enter Nickname and Password!</string>
+    <string name="noRepeatPassword">Please repeat password!</string>
+    <string name="keyPasswordNotEqual">The passwords do not match!</string>
+    <string name="successfulRegister">Successful register!</string>
 </resources>
