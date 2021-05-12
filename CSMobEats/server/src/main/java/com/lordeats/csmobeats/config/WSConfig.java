@@ -1,4 +1,4 @@
-package com.lordeats.csmobeats;
+package com.lordeats.csmobeats.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

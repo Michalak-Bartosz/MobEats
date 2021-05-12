@@ -1,11 +1,11 @@
-package com.lordeats.csmobeats;
+package com.lordeats.csmobeats.services;
 
 
 import java.util.HashMap;
 
 public interface RegistrationService {
 
-    HashMap<String, String> users = new HashMap<>();
+    HashMap<String, String> registeredUsersHashMap = new HashMap<>();
 
     public boolean registerUser(String hash, String realName);
     public void removeUser(String sessionId);

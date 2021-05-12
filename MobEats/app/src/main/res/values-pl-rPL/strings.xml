@@ -10,6 +10,7 @@
 
     <string name="hintNickname">Nickname</string>
     <string name="hintPassword">Password</string>
+    <string name="noneError">Nieznany błąd. Przepraszamy, spróbuj jeszcze raz.</string>
 
     <!--    Login Fragment Section-->
 

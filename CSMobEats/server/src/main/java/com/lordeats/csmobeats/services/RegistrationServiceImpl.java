@@ -1,34 +1,34 @@
-package com.lordeats.csmobeats;
+package com.lordeats.csmobeats.services;
 
 import org.springframework.stereotype.Service;
 
 @Service
-public class RegistrationServiceImpl implements RegistrationService{
+public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public synchronized boolean registerUser(String hash, String realName) {
-        if(users.containsValue(realName)){
+        if(registeredUsersHashMap.containsValue(realName)){
             return false;
         }
-        users.put(hash, realName);
+        registeredUsersHashMap.put(hash, realName);
         return true;
     }
 
     @Override
     public void removeUser(String sessionId) {
-        users.remove(sessionId);
+        registeredUsersHashMap.remove(sessionId);
     }
 
     @Override
     public String getUser(String sessionId) {
-        return users.get(sessionId);
+        return registeredUsersHashMap.get(sessionId);
     }
 
     @Override
     public String listUsers() {
         var sb = new StringBuilder();
 
-        for(var value: users.values()){
+        for(var value: registeredUsersHashMap.values()){
             sb.append(value).append("\n");
         }
 

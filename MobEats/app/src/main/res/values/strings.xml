@@ -9,6 +9,7 @@
 
     <string name="hintNickname">Nickname</string>
     <string name="hintPassword">Password</string>
+    <string name="noneError">None Error. Sorry try again</string>
 
 <!--    Login Fragment Section-->
 
