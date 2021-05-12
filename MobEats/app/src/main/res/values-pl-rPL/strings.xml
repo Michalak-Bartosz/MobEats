@@ -1,16 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">MobEats</string>
 
     <string name="menu">Tutaj będzie menu</string>
-    <string name="start">START</string>
+    <string name="start">ROZPOCZNIJ</string>
     <string name="logo">Logo</string>
 
-<!--    Login and Register Fragment Section-->
+    <!--    Login and Register Fragment Section-->
 
     <string name="hintNickname">Nickname</string>
     <string name="hintPassword">Password</string>
 
-<!--    Login Fragment Section-->
+    <!--    Login Fragment Section-->
 
     <string name="signIn">Sign In!</string>
     <string name="loginButton">Login</string>
@@ -21,7 +22,7 @@
     <string name="nicknameAndPasswordNotCorrect">Login or password is not correct!</string>
     <string name="successfulLogin">Successful login!</string>
 
-<!--    Register Fragment Section-->
+    <!--    Register Fragment Section-->
 
     <string name="signUp">Sign Up!</string>
     <string name="hintRepeatPassword">Repeat Password</string>
@@ -31,5 +32,5 @@
     <string name="noRepeatPassword">Please repeat password!</string>
     <string name="keyPasswordNotEqual">The passwords do not match!</string>
     <string name="successfulRegister">Successful register!</string>
-    <string name="failToRegister">Nickname is already used!</string>
+    <string name="failToRegister">Podana nazwa użytkownika jest już używana!</string>
 </resources>

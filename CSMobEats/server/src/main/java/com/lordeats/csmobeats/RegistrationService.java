@@ -7,7 +7,7 @@ public interface RegistrationService {
 
     HashMap<String, String> users = new HashMap<>();
 
-    public void registerUser(String hash, String realName);
+    public boolean registerUser(String hash, String realName);
     public void removeUser(String sessionId);
     public  String getUser(String sessionId);
     public String listUsers();

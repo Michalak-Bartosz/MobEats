@@ -6,11 +6,12 @@ import org.springframework.stereotype.Service;
 public class RegistrationServiceImpl implements RegistrationService{
 
     @Override
-    public synchronized void registerUser(String hash, String realName) {
+    public synchronized boolean registerUser(String hash, String realName) {
         if(users.containsValue(realName)){
-            throw new IllegalArgumentException();
+            return false;
         }
         users.put(hash, realName);
+        return true;
     }
 
     @Override

@@ -31,7 +31,7 @@ public class ClientMobEatsApplication {
             @Override
             public void afterConnected(StompSession session, StompHeaders connectHeaders) {
                 session.subscribe("/topic/messages",this);
-                session.subscribe("user/queue/registrationName", this);
+                session.subscribe("/user/queue/signUp", this);
 
             }
 
@@ -54,7 +54,7 @@ public class ClientMobEatsApplication {
             public void handleFrame(StompHeaders headers, Object payload) {
                 if("/topic/messages".equals(headers.getDestination())){
                     log.info(payload + "");
-                }else if("user/queue/registrationName".equals(headers.getDestination())){
+                }else if("/user/queue/register".equals(headers.getDestination())){
                     log.info("Users on chat: " + payload + "");
                 }
             }
@@ -65,12 +65,12 @@ public class ClientMobEatsApplication {
 
         log.info("Podaj nazwe użytkownika: ");
         s = sc.nextLine();
-        connection.get().send("/app/name", s);
+        connection.get().send("/mobEats/signUp", s);
         log.info("ChatData");
 
         do {
             s = sc.nextLine();
-            connection.get().send("/app/chat", s);
+            connection.get().send("/mobEats/chat", s);
         }while(!sc.nextLine().startsWith("q!"));
     }
 

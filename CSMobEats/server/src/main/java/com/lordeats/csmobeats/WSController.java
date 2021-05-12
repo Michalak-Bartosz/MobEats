@@ -14,12 +14,12 @@ import org.springframework.stereotype.Controller;
 public class WSController {
 
     private final RegistrationService registrationService;
-    private final SimpMessagingTemplate template;
+//    private final SimpMessagingTemplate template;
 
     @Autowired
-    public WSController(RegistrationService registrationService, SimpMessagingTemplate template) {
+    public WSController(RegistrationService registrationService) {
         this.registrationService = registrationService;
-        this.template = template;
+//        this.template = template;
     }
 
     @MessageMapping("/chat")
@@ -34,13 +34,17 @@ public class WSController {
         return registrationService.getUser(sessionId) + ": " + message;
     }
 
-    @MessageMapping("/name")
-    @SendToUser("queue/registrationName")
+    @MessageMapping("/signUp")
+    @SendToUser("queue/register")
     public String register(String message, @Header("simpSessionId") String sessionId) {
-        log.info("Registering user: " + message + " from session: " + sessionId);
-        registrationService.registerUser(sessionId, message);
-        log.info("List users:\n" + registrationService.listUsers());
-        template.convertAndSendToUser(message,sessionId,registrationService.listUsers());
-        return registrationService.listUsers();
+
+        if(registrationService.registerUser(sessionId, message)) {
+            log.info("Registering user: " + message + " from session: " + sessionId);
+            return "ture";
+        } else{
+            return "false";
+        }
+//        log.info("List users:\n" + registrationService.listUsers());
+//        template.convertAndSendToUser(message,sessionId,registrationService.listUsers());
     }
 }

@@ -15,7 +15,7 @@ public class WSConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.enableSimpleBroker("/topic","/queue");
-        registry.setApplicationDestinationPrefixes("/app");
+        registry.setApplicationDestinationPrefixes("/mobEats");
         registry.setUserDestinationPrefix("/user");
     }
 
@@ -23,7 +23,9 @@ public class WSConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/chat");
         registry.addEndpoint("/chat").withSockJS();
-        registry.addEndpoint("/name");
-        registry.addEndpoint("/name").withSockJS();
+        registry.addEndpoint("/signUp");
+        registry.addEndpoint("/signUp").withSockJS();
+        registry.addEndpoint("/signIn");
+        registry.addEndpoint("/signIn").withSockJS();
     }
 }
