@@ -9,6 +9,16 @@
         android:paddingEnd="16dp"
         android:orientation="vertical">
 
+        <Button
+            android:id="@+id/changeLngButton"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_gravity="right"
+            android:fontFamily="sans-serif-black"
+            android:text="@string/additionalLng"
+            android:textSize="10sp"
+            app:backgroundTint="#000000" />
+
         <fragment
             android:id="@+id/myNavHostFragment"
             android:name="androidx.navigation.fragment.NavHostFragment"

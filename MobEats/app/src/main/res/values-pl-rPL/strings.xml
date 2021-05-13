@@ -5,33 +5,35 @@
     <string name="menu">Tutaj będzie menu</string>
     <string name="start">ROZPOCZNIJ</string>
     <string name="logo">Logo</string>
+    <string name="additionalLng">ENG</string>
+    <string name="serverConnectionError">Brak połączenia z serwerem!</string>
 
     <!--    Login and Register Fragment Section-->
 
-    <string name="hintNickname">Nickname</string>
-    <string name="hintPassword">Password</string>
+    <string name="hintNickname">Nazwa użytkownika</string>
+    <string name="hintPassword">Hasło</string>
     <string name="noneError">Nieznany błąd. Przepraszamy, spróbuj jeszcze raz.</string>
 
     <!--    Login Fragment Section-->
 
-    <string name="signIn">Sign In!</string>
-    <string name="loginButton">Login</string>
-    <string name="notSingUpCom">You are not sing up?</string>
-    <string name="singUpButton">Register here</string>
+    <string name="signIn">Zaloguj się!</string>
+    <string name="loginButton">Zaloguj</string>
+    <string name="notSingUpCom">Nie jesteś zarejestrowany?</string>
+    <string name="singUpButton">Zarejestruj się tutaj</string>
 
-    <string name="noDataToSignIn">Please enter Nickname and Password!</string>
-    <string name="nicknameAndPasswordNotCorrect">Login or password is not correct!</string>
-    <string name="successfulLogin">Successful login!</string>
+    <string name="noDataToSignIn">Prosze podaj nazwę użytkownika i hasło!</string>
+    <string name="nicknameAndPasswordNotCorrect">Nazwa użytkownika lub hasło nie są poprawne!</string>
+    <string name="successfulLogin">Udane logowanie!</string>
 
     <!--    Register Fragment Section-->
 
-    <string name="signUp">Sign Up!</string>
-    <string name="hintRepeatPassword">Repeat Password</string>
-    <string name="registerButton">Register</string>
+    <string name="signUp">Zarejestruj się!</string>
+    <string name="registerButton">Zarejestruj</string>
+    <string name="hintRepeatPassword">Powtórz hasło</string>
 
-    <string name="noDataToSingUp">Please enter Nickname and Password!</string>
-    <string name="noRepeatPassword">Please repeat password!</string>
-    <string name="keyPasswordNotEqual">The passwords do not match!</string>
-    <string name="successfulRegister">Successful register!</string>
+    <string name="noDataToSingUp">Prosze podaj nazwę użytkownika i hasło!</string>
+    <string name="noRepeatPassword">Prosze powtórz hasło!</string>
+    <string name="keyPasswordNotEqual">Podane hasła nie są identyczne!</string>
+    <string name="successfulRegister">Udana rejestracja!</string>
     <string name="failToRegister">Podana nazwa użytkownika jest już używana!</string>
 </resources>

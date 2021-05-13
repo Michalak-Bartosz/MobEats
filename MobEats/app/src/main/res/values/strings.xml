@@ -4,6 +4,8 @@
     <string name="menu">Tutaj będzie menu</string>
     <string name="start">START</string>
     <string name="logo">Logo</string>
+    <string name="additionalLng">PL</string>
+    <string name="serverConnectionError">Cannot connect with server!</string>
 
 <!--    Login and Register Fragment Section-->
 
@@ -33,4 +35,5 @@
     <string name="keyPasswordNotEqual">The passwords do not match!</string>
     <string name="successfulRegister">Successful register!</string>
     <string name="failToRegister">Nickname is already used!</string>
+
 </resources>

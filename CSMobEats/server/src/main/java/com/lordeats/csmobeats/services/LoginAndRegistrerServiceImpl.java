@@ -8,8 +8,9 @@ public class LoginAndRegistrerServiceImpl implements LoginAndRegisterService {
 
     @Override
     public synchronized boolean registerUser(JSONObject registerPayload) {
-        if(registeredUsersHashMap.contains(registerPayload)){
-            return false;
+        for(var value: registeredUsersHashMap){
+            if(value.toString().equals(registerPayload.toString()))
+                return false;
         }
         registeredUsersHashMap.add(registerPayload);
         return true;
