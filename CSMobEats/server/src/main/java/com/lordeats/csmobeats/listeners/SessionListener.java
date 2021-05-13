@@ -1,6 +1,6 @@
 package com.lordeats.csmobeats.listeners;
 
-import com.lordeats.csmobeats.services.RegistrationService;
+import com.lordeats.csmobeats.services.LoginAndRegisterService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -13,11 +13,11 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 @Component
 public class SessionListener {
 
-    private final RegistrationService registrationService;
+    private final LoginAndRegisterService loginAndRegisterService;
 
     @Autowired
-    public SessionListener(RegistrationService registrationService) {
-        this.registrationService = registrationService;
+    public SessionListener(LoginAndRegisterService loginAndRegisterService) {
+        this.loginAndRegisterService = loginAndRegisterService;
     }
 
     @EventListener
@@ -29,5 +29,6 @@ public class SessionListener {
     @EventListener
     public void handleSessionDisconnected(SessionDisconnectEvent event){
         log.info("User disconnected with session id: " + event.getSessionId());
+        loginAndRegisterService.logOutUser(event.getSessionId());
     }
 }

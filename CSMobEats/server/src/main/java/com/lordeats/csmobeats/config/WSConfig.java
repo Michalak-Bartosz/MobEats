@@ -21,8 +21,8 @@ public class WSConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/chat");
-        registry.addEndpoint("/chat").withSockJS();
+        registry.addEndpoint("/app");
+        registry.addEndpoint("/app").withSockJS();
         registry.addEndpoint("/signUp");
         registry.addEndpoint("/signUp").withSockJS();
         registry.addEndpoint("/signIn");

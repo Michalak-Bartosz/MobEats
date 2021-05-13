@@ -24,6 +24,7 @@ class MainMenuFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main_menu, container, false)
+        context?.let { DynamicToast.makeSuccess(it, getString(R.string.successfulLogin)).show() }
         return binding.root
     }
 

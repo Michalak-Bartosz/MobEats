@@ -19,8 +19,8 @@
     <string name="singUpButton">Register here</string>
 
     <string name="noDataToSignIn">Please enter Nickname and Password!</string>
-    <string name="nicknameAndPasswordNotCorrect">Login or password is not correct!</string>
     <string name="successfulLogin">Successful login!</string>
+    <string name="nicknameAndPasswordNotCorrect">Login or password is not correct!</string>
 
 <!--    Register Fragment Section-->
 

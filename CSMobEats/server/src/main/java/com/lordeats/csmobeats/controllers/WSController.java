@@ -1,6 +1,6 @@
 package com.lordeats.csmobeats.controllers;
 
-import com.lordeats.csmobeats.services.RegistrationService;
+import com.lordeats.csmobeats.services.LoginAndRegisterService;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,19 +15,17 @@ import org.springframework.stereotype.Controller;
 @Slf4j
 public class WSController {
 
-    private final RegistrationService registrationService;
-    private final JSONObject acceptRegister = new JSONObject();
-    private final JSONObject rejectRegister = new JSONObject();
-    private JSONObject registerPayload;
-    private JSONObject loginPayload;
+    private final LoginAndRegisterService loginAndRegisterService;
+    private final JSONObject acceptPayload = new JSONObject();
+    private final JSONObject rejectPayload = new JSONObject();
 
     @Autowired
-    public WSController(RegistrationService registrationService) {
-        this.registrationService = registrationService;
+    public WSController(LoginAndRegisterService loginAndRegisterService) {
+        this.loginAndRegisterService = loginAndRegisterService;
 
         try {
-            acceptRegister.put("value","accept");
-            rejectRegister.put("value", "reject");
+            acceptPayload.put("value","accept");
+            rejectPayload.put("value", "reject");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -38,12 +36,17 @@ public class WSController {
     @SendTo("/topic/messages")
     public String processMessage(String message, @Header("simpSessionId") String sessionId){
 
-        log.info("Received message from: " + registrationService.getUser(sessionId) + ": " + message);
-
-        if (message.startsWith("q!")) {
-            message = "User: " + registrationService.getUser(sessionId) + " disconnected.";
-        }
-        return registrationService.getUser(sessionId) + ": " + message;
+//        log.info("Received message from: " + loginAndRegisterService.getUser(sessionId) + ": " + message);
+//        try {
+//            if (message.startsWith("q!")) {
+//                message = "User: " + loginAndRegisterService.getUser(sessionId).getString("name") + " disconnected.";
+//            }
+//            return loginAndRegisterService.getUser(sessionId).getString("name") + ": " + message;
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        return "Message Error";
+        return "";
     }
 
     @MessageMapping("/signUp")
@@ -51,29 +54,38 @@ public class WSController {
     public String register(String message, @Header("simpSessionId") String sessionId) {
 
         try {
-            registerPayload = new JSONObject(message);
-            boolean OK = registrationService.registerUser(sessionId, registerPayload.getString("nickname"));
+            JSONObject registerPayload = new JSONObject(message);
+            boolean OK = loginAndRegisterService.registerUser(registerPayload);
             if(OK) {
-                log.info("Registering user: " + message + " from session: " + sessionId + "\n" + OK);
-                return acceptRegister.toString();
+                log.info("Registering user: " + message + " from session: " + sessionId);
+                return acceptPayload.toString();
             } else {
-                return rejectRegister.toString();
+                return rejectPayload.toString();
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return rejectRegister.toString();
+        return rejectPayload.toString();
     }
 
-    @MessageMapping("/singIn")
+    @MessageMapping("/signIn")
     @SendToUser("/queue/login")
     public String login(String message, @Header("simpSessionId") String sessionId) {
+
+        log.info("Registered users: " + loginAndRegisterService.listRegisteredUsers());
         try {
-            loginPayload = new JSONObject(message);
+            JSONObject loginPayload = new JSONObject(message);
+            log.info("LoginPayload: " + loginPayload);
+            boolean OK = loginAndRegisterService.logInUser(loginPayload, sessionId);
+            if(OK) {
+                log.info("Login user: " + message + " from session: " + sessionId);
+                return acceptPayload.toString();
+            } else {
+                return rejectPayload.toString();
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        return  loginPayload.toString();
+        return  rejectPayload.toString();
     }
 }

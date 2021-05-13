@@ -54,7 +54,7 @@ class RegisterFragment : Fragment() {
 
     @SuppressLint("CheckResult")
     private fun connectToServer() {
-        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/chat")
+        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/app")
         client.connect()
         client.topic("/user/queue/register").subscribe { topicMessage ->
             registerReplyTmp = topicMessage.payload
