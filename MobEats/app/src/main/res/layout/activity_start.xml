@@ -16,8 +16,10 @@
             android:layout_gravity="right"
             android:fontFamily="sans-serif-black"
             android:text="@string/additionalLng"
+            android:textColor="#FFFFFF"
             android:textSize="10sp"
-            app:backgroundTint="#000000" />
+            app:backgroundTint="#000000"
+            app:iconTint="#FFFFFF"/>
 
         <fragment
             android:id="@+id/myNavHostFragment"

@@ -55,6 +55,7 @@ public class WSController {
 
         try {
             JSONObject registerPayload = new JSONObject(message);
+            log.info("RegisterPayload: " + registerPayload);
             boolean OK = loginAndRegisterService.registerUser(registerPayload);
             if(OK) {
                 log.info("Registering user: " + message + " from session: " + sessionId);
@@ -72,7 +73,6 @@ public class WSController {
     @SendToUser("/queue/login")
     public String login(String message, @Header("simpSessionId") String sessionId) {
 
-        log.info("Registered users: " + loginAndRegisterService.listRegisteredUsers());
         try {
             JSONObject loginPayload = new JSONObject(message);
             log.info("LoginPayload: " + loginPayload);
