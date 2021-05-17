@@ -4,7 +4,7 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LoginAndRegistrerServiceImpl implements LoginAndRegisterService {
+public class LoginAndRegisterServiceImpl implements LoginAndRegisterService {
 
     @Override
     public synchronized boolean registerUser(JSONObject registerPayload) {

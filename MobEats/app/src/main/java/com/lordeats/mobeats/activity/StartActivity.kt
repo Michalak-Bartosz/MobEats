@@ -3,9 +3,11 @@ package com.lordeats.mobeats.activity
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import com.lordeats.mobeats.LocaleHelper
 import com.lordeats.mobeats.R
@@ -20,6 +22,7 @@ import org.json.JSONObject
 import ua.naiksoftware.stomp.Stomp
 import ua.naiksoftware.stomp.StompClient
 import ua.naiksoftware.stomp.dto.LifecycleEvent
+import java.util.*
 
 
 class StartActivity : AppCompatActivity() {
@@ -34,12 +37,13 @@ class StartActivity : AppCompatActivity() {
     private var loginReplyTmp: String = ""
     private lateinit var loginReply: JSONObject;
 
-    private lateinit var nickname: String
+    private lateinit var userData: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_start)
         changeLngButtonListenerConfig()
+        changeModeButtonListenerConfig()
         connectToServer()
         clientLifecycleConfig()
     }
@@ -86,7 +90,6 @@ class StartActivity : AppCompatActivity() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: MessageEvent){
-        Log.d("Bartek StartActivity", event.message.toString())
         if(client.isConnected) {
             if(event.message!!.getString("type")  == "register") {
                 event.message!!.remove("type")
@@ -94,11 +97,10 @@ class StartActivity : AppCompatActivity() {
                 client.send("/mobEats/signUp", event.message.toString()).subscribe()
             } else if(event.message!!.getString("type") == "login") {
                 event.message!!.remove("type")
-                nickname = event.message!!.getString("nickname")
+                userData = event.message!!.toString()
                 setLoginSubscribe()
                 client.send("/mobEats/signIn", event.message.toString()).subscribe()
             }
-
         } else {
             DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show()
             connectToServer()
@@ -148,13 +150,16 @@ class StartActivity : AppCompatActivity() {
     private fun goToMainAppActivity(){
         intent = Intent(this, AppActivity::class.java)
         intent.action = Intent.ACTION_SEND
-        intent.putExtra(Intent.EXTRA_TEXT, nickname)
+        intent.putExtra(Intent.EXTRA_TEXT, userData)
         intent.type = "text/plain"
         startActivity(intent)
         this.finish()
     }
 
     private fun changeLngButtonListenerConfig() {
+        val appSettingPrefs: SharedPreferences = getSharedPreferences("AppSettingPrefs", 0)
+        val sharedPrefsEdit: SharedPreferences.Editor = appSettingPrefs.edit()
+
         binding.changeLngButton.setOnClickListener {
             when {
                 LocaleHelper.getLanguage(this) == "en" -> {
@@ -170,6 +175,38 @@ class StartActivity : AppCompatActivity() {
                     binding.changeLngButton.text = getString(R.string.additionalLng)
                 }
             }
+        }
+    }
+
+    private fun changeModeButtonListenerConfig() {
+
+        val appSettingPrefs: SharedPreferences = getSharedPreferences("AppSettingPrefs", 0)
+        val sharedPrefsEdit: SharedPreferences.Editor = appSettingPrefs.edit()
+        val isNightModeOn: Boolean = appSettingPrefs.getBoolean("NightMode", false)
+
+        if(isNightModeOn){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            binding.changeModeButton.setImageResource(R.drawable.ic_light_mode)
+        }
+        else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            binding.changeModeButton.setImageResource(R.drawable.ic_dark_mode)
+        }
+
+        binding.changeModeButton.setOnClickListener {
+
+            if (isNightModeOn){
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                sharedPrefsEdit.putBoolean("NightMode", false)
+                sharedPrefsEdit.apply()
+                binding.changeModeButton.setImageResource(R.drawable.ic_dark_mode)
+            }else{
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                sharedPrefsEdit.putBoolean("NightMode", true)
+                sharedPrefsEdit.apply()
+                binding.changeModeButton.setImageResource(R.drawable.ic_light_mode)
+            }
+
         }
     }
 

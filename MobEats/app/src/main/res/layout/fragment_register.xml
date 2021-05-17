@@ -11,13 +11,11 @@
         android:layout_height="match_parent">
 
         <TextView
+            style="@style/mainLargeText"
             android:id="@+id/signUpTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-black"
             android:text="@string/signUp"
-            android:textColor="#000000"
-            android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -25,6 +23,7 @@
             app:layout_constraintVertical_bias="0.16000003" />
 
         <EditText
+            style="@style/mainTextEdit"
             android:id="@+id/nicknameRegisterPlainText"
             android:layout_width="0dp"
             android:layout_height="50dp"
@@ -35,14 +34,13 @@
             android:ems="10"
             android:hint="@string/hintNickname"
             android:inputType="textPersonName"
-            android:textColor="#000000"
-            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/signUpTextView" />
 
         <EditText
+            style="@style/mainTextEdit"
             android:id="@+id/keyOnePassword"
             android:layout_width="0dp"
             android:layout_height="50dp"
@@ -52,14 +50,13 @@
             android:ems="10"
             android:hint="@string/hintPassword"
             android:inputType="textPassword"
-            android:textColor="#000000"
-            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/nicknameRegisterPlainText" />
 
         <EditText
+            style="@style/mainTextEdit"
             android:id="@+id/keyTwoPassword"
             android:layout_width="0dp"
             android:layout_height="50dp"
@@ -69,13 +66,12 @@
             android:ems="10"
             android:hint="@string/hintRepeatPassword"
             android:inputType="textPassword"
-            android:textColor="#000000"
-            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/keyOnePassword" />
 
         <Button
+            style="@style/mainTextButton"
             android:id="@+id/registerButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -83,9 +79,6 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="24dp"
             android:text="@string/registerButton"
-            android:textColor="@color/white"
-            app:backgroundTint="#000000"
-            app:iconTint="#FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/keyTwoPassword" />
