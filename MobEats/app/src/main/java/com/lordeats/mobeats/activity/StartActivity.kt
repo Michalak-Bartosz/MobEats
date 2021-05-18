@@ -2,6 +2,7 @@ package com.lordeats.mobeats.activity
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -9,11 +10,10 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
-import com.lordeats.mobeats.LocaleHelper
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.databinding.ActivityStartBinding
 import com.lordeats.mobeats.events.MessageEvent
-import com.lordeats.mobeats.events.RegisterReplyEvent
+import com.lordeats.mobeats.events.MessageReplyEvent
 import com.pranavpandey.android.dynamic.toasts.DynamicToast
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -25,19 +25,21 @@ import ua.naiksoftware.stomp.dto.LifecycleEvent
 import java.util.*
 
 
+@Suppress("DEPRECATION")
 class StartActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityStartBinding
     private lateinit var client: StompClient
 
-    private lateinit var registerReplyMessage: RegisterReplyEvent
+    private lateinit var registerReplyMessage: MessageReplyEvent
 
     private var registerReplyTmp: String = ""
-    private lateinit var registerReply: JSONObject;
+    private lateinit var registerReply: JSONObject
     private var loginReplyTmp: String = ""
-    private lateinit var loginReply: JSONObject;
+    private lateinit var loginReply: JSONObject
 
     private lateinit var userData: String
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,18 +90,21 @@ class StartActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("CheckResult")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: MessageEvent){
         if(client.isConnected) {
             if(event.message!!.getString("type")  == "register") {
                 event.message!!.remove("type")
                 setOnRegisterSubscribe()
-                client.send("/mobEats/signUp", event.message.toString()).subscribe()
+                client.send("/mobEats/signUp", event.message.toString()).subscribe({ },
+                    { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
             } else if(event.message!!.getString("type") == "login") {
                 event.message!!.remove("type")
                 userData = event.message!!.toString()
                 setLoginSubscribe()
-                client.send("/mobEats/signIn", event.message.toString()).subscribe()
+                client.send("/mobEats/signIn", event.message.toString()).subscribe({ },
+                    { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
             }
         } else {
             DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show()
@@ -115,7 +120,7 @@ class StartActivity : AppCompatActivity() {
             when {
                 registerReply.getString("value") == "accept" -> {
                     this.runOnUiThread { DynamicToast.makeSuccess(this, getString(R.string.successfulRegister)).show() }
-                    registerReplyMessage = RegisterReplyEvent("accept")
+                    registerReplyMessage = MessageReplyEvent("acceptRegister")
                     EventBus.getDefault().post(registerReplyMessage)
                 }
                 registerReply.getString("value") == "reject" -> {
@@ -135,6 +140,7 @@ class StartActivity : AppCompatActivity() {
             loginReply = JSONObject(loginReplyTmp)
             when {
                 loginReply.getString("value") == "accept" -> {
+                    this.runOnUiThread { DynamicToast.makeSuccess(this, getString(R.string.successfulLogin)).show() }
                     goToMainAppActivity()
                 }
                 loginReply.getString("value") == "reject" -> {
@@ -150,7 +156,7 @@ class StartActivity : AppCompatActivity() {
     private fun goToMainAppActivity(){
         intent = Intent(this, AppActivity::class.java)
         intent.action = Intent.ACTION_SEND
-        intent.putExtra(Intent.EXTRA_TEXT, userData)
+        intent.putExtra("User Data", userData)
         intent.type = "text/plain"
         startActivity(intent)
         this.finish()
@@ -160,22 +166,33 @@ class StartActivity : AppCompatActivity() {
         val appSettingPrefs: SharedPreferences = getSharedPreferences("AppSettingPrefs", 0)
         val sharedPrefsEdit: SharedPreferences.Editor = appSettingPrefs.edit()
 
-        binding.changeLngButton.setOnClickListener {
+        binding.changeLngStartButton.setOnClickListener {
             when {
-                LocaleHelper.getLanguage(this) == "en" -> {
-                    LocaleHelper.setLocale(this, "pl")
-                    binding.changeLngButton.text = getString(R.string.additionalLng)
+                binding.changeLngStartButton.text == "PL" -> {
+                    sharedPrefsEdit.putString("Locale.Helper.Selected.Language", "pl")
+                    updateResources(this, "pl")
+                    binding.changeLngStartButton.text = getString(R.string.additionalLng)
                 }
-                LocaleHelper.getLanguage(this) == "pl" -> {
-                    LocaleHelper.setLocale(this, "en")
-                    binding.changeLngButton.text = getString(R.string.additionalLng)
+                binding.changeLngStartButton.text == "ENG" -> {
+                    sharedPrefsEdit.putString("Locale.Helper.Selected.Language", "en")
+                    updateResources(this, "en")
+                    binding.changeLngStartButton.text = getString(R.string.additionalLng)
                 }
-                else -> {
-                    LocaleHelper.setLocale(this, "pl")
-                    binding.changeLngButton.text = getString(R.string.additionalLng)
-                }
+                else -> { }
             }
+
+            sharedPrefsEdit.apply()
+            recreate()
         }
+    }
+
+    private fun updateResources(context: Context, language: String) {
+        val locale = Locale(language)
+        Locale.setDefault(locale)
+        val resources = context.resources
+        val configuration = resources.configuration
+        configuration.locale = locale
+        resources.updateConfiguration(configuration, resources.displayMetrics)
     }
 
     private fun changeModeButtonListenerConfig() {
@@ -186,27 +203,25 @@ class StartActivity : AppCompatActivity() {
 
         if(isNightModeOn){
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            binding.changeModeButton.setImageResource(R.drawable.ic_light_mode)
+            binding.changeModeStartButton.setImageResource(R.drawable.ic_light_mode)
         }
         else{
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            binding.changeModeButton.setImageResource(R.drawable.ic_dark_mode)
+            binding.changeModeStartButton.setImageResource(R.drawable.ic_dark_mode)
         }
 
-        binding.changeModeButton.setOnClickListener {
+        binding.changeModeStartButton.setOnClickListener {
 
             if (isNightModeOn){
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 sharedPrefsEdit.putBoolean("NightMode", false)
-                sharedPrefsEdit.apply()
-                binding.changeModeButton.setImageResource(R.drawable.ic_dark_mode)
+                binding.changeModeStartButton.setImageResource(R.drawable.ic_dark_mode)
             }else{
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 sharedPrefsEdit.putBoolean("NightMode", true)
-                sharedPrefsEdit.apply()
-                binding.changeModeButton.setImageResource(R.drawable.ic_light_mode)
+                binding.changeModeStartButton.setImageResource(R.drawable.ic_light_mode)
             }
-
+            sharedPrefsEdit.apply()
         }
     }
 

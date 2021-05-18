@@ -5,9 +5,86 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".appEngine.MainMenuFragment">
 
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/mainBackground"
+        android:id="@+id/titleConstraint"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/menu" />
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/ImageBackground1"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:src="@drawable/main_app_background_theme"
+            app:layout_constraintBottom_toTopOf="@+id/ImageBackground2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/ImageBackground2"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:padding="6dp"
+            android:src="@drawable/main_app_background_theme_reverse"
+            app:layout_constraintBottom_toTopOf="@+id/ImageBackground3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/ImageBackground3"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:src="@drawable/main_app_background_theme"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/findFoodButton"
+            style="@style/mainTextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:insetLeft="6dp"
+            android:insetTop="6dp"
+            android:insetRight="6dp"
+            android:insetBottom="6dp"
+            android:padding="6dp"
+            android:shadowColor="@color/ic_launcher_background"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="3"
+            android:text="@string/findFood"
+            android:textSize="50sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.438" />
+
+        <Button
+            android:id="@+id/manageAccountButton"
+            style="@style/mainTextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:insetLeft="6dp"
+            android:insetTop="6dp"
+            android:insetRight="6dp"
+            android:insetBottom="6dp"
+            android:padding="6dp"
+            android:shadowColor="@color/ic_launcher_background"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="3"
+            android:text="@string/manageAccount"
+            android:textSize="25sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/findFoodButton" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

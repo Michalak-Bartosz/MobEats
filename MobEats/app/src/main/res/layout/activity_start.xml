@@ -10,7 +10,7 @@
         android:layout_height="match_parent">
 
         <ImageButton
-            android:id="@+id/changeModeButton"
+            android:id="@+id/changeModeStartButton"
             style="@style/mainImageButton"
             android:layout_width="55dp"
             android:layout_height="30dp"
@@ -21,13 +21,13 @@
             android:focusable="true"
             android:scaleType="centerInside"
             app:layout_constraintBottom_toTopOf="@+id/myNavHostFragment"
-            app:layout_constraintEnd_toStartOf="@+id/changeLngButton"
+            app:layout_constraintEnd_toStartOf="@+id/changeLngStartButton"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_dark_mode"
             tools:ignore="VectorDrawableCompat" />
 
         <Button
-            android:id="@+id/changeLngButton"
+            android:id="@+id/changeLngStartButton"
             style="@style/mainTextButton"
             android:layout_width="55dp"
             android:layout_height="30dp"
@@ -51,14 +51,5 @@
             app:navGraph="@navigation/navigation" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:orientation="vertical">-->
-
-<!--    </LinearLayout>-->
 
 </layout>

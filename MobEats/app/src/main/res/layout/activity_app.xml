@@ -1,34 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/topBarBackground"
+        android:id="@+id/titleConstraint"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
+
+        <TextView
+            style="@style/mainText"
+            android:id="@+id/greetingText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/myNavHostFragment"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/changeModeApptButton"
+            style="@style/mainImageButton"
+            android:layout_width="55dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="8dp"
+            android:adjustViewBounds="false"
+            android:clickable="true"
+            android:cropToPadding="false"
+            android:focusable="true"
+            android:scaleType="centerInside"
+            app:layout_constraintBottom_toTopOf="@+id/myNavHostFragment"
+            app:layout_constraintEnd_toStartOf="@+id/changeLngAppButton"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_dark_mode"
+            tools:ignore="VectorDrawableCompat" />
 
         <Button
-            android:id="@+id/changeLngButton"
-            android:layout_width="60dp"
-            android:layout_height="40dp"
-            android:layout_gravity="right"
+            android:id="@+id/changeLngAppButton"
+            style="@style/mainTextButton"
+            android:layout_width="55dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="16dp"
             android:fontFamily="sans-serif-black"
             android:text="@string/additionalLng"
-            android:textColor="#FFFFFF"
             android:textSize="10sp"
-            app:backgroundTint="#000000"
-            app:iconTint="#FFFFFF"/>
+            app:cornerRadius="6dp"
+            app:layout_constraintBottom_toTopOf="@+id/myNavHostFragment"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <fragment
             android:id="@+id/myNavHostFragment"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="40dp"
             app:defaultNavHost="true"
-            app:navGraph="@navigation/app_navigation"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navGraph="@navigation/app_navigation" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

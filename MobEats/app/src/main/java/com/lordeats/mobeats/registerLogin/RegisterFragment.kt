@@ -11,7 +11,7 @@ import androidx.navigation.findNavController
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.databinding.FragmentRegisterBinding
 import com.lordeats.mobeats.events.MessageEvent
-import com.lordeats.mobeats.events.RegisterReplyEvent
+import com.lordeats.mobeats.events.MessageReplyEvent
 import com.pranavpandey.android.dynamic.toasts.DynamicToast
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -79,9 +79,8 @@ class RegisterFragment : Fragment() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onRegisterEvent(event: RegisterReplyEvent){
-        Log.d("Bartek RegisterFragment", event.message.toString())
-        if(event.message == "accept"){
+    fun onRegisterEvent(event: MessageReplyEvent){
+        if(event.message == "acceptRegister"){
             this.view?.findNavController()?.navigate(R.id.action_registerFragment_to_loginFragment)
         }
     }

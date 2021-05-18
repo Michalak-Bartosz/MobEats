@@ -71,9 +71,9 @@
             app:layout_constraintTop_toBottomOf="@+id/keyOnePassword" />
 
         <Button
-            style="@style/mainTextButton"
             android:id="@+id/registerButton"
-            android:layout_width="wrap_content"
+            style="@style/mainTextButton"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="32dp"

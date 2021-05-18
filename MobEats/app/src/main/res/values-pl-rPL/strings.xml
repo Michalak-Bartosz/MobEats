@@ -2,11 +2,19 @@
 <resources>
     <string name="app_name">MobEats</string>
 
+<!--    StartActivity-->
+
     <string name="menu">Tutaj będzie menu</string>
     <string name="start">ROZPOCZNIJ</string>
     <string name="logo">Logo</string>
     <string name="additionalLng">ENG</string>
     <string name="serverConnectionError">Brak połączenia z serwerem!</string>
+
+    <!--    AppActivity-->
+
+    <string name="manageAccount">Zarządzaj kontem</string>
+    <string name="findFood">Znajdź jedzenie!</string>
+    <string name="greetingText">Witaj</string>
 
     <!--    Login and Register Fragment Section-->
 
@@ -36,4 +44,22 @@
     <string name="keyPasswordNotEqual">Podane hasła nie są identyczne!</string>
     <string name="successfulRegister">Udana rejestracja!</string>
     <string name="failToRegister">Podana nazwa użytkownika jest już używana!</string>
+
+    <!--    Manage Account-->
+
+    <string name="changeButton">Zmień</string>
+    <string name="changeNicknameText">Zmień nazwę konta</string>
+    <string name="changeNicknameHint">Twoja nowa nazwa</string>
+    <string name="changePasswordText">Zmień swoje hasło</string>
+    <string name="changePasswordNewHint">Twoje nowe hasło</string>
+    <string name="changePasswordOldHint">Twoje stare hasło</string>
+
+    <string name="changeAccepted">Zmiana zaakceptowana.</string>
+    <string name="changeRejected">Zamiana odrzucona.</string>
+    <string name="changeRejectedNickname">Zamiana odrzucona. Podana nazwa użytkownika jest już używana!</string>
+    <string name="changeRejectedSameData">Zamiana odrzucona. Dane są takie same!</string>
+    <string name="newNicknameText">Nowa:</string>
+    <string name="newPasswordText">Nowe:</string>
+    <string name="oldPasswordText">Stare:</string>
+
 </resources>

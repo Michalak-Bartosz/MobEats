@@ -1,5 +1,8 @@
 <resources>
+
     <string name="app_name">MobEats</string>
+
+    <!--    StartActivity-->
 
     <string name="menu">Tutaj będzie menu</string>
     <string name="start">START</string>
@@ -7,13 +10,19 @@
     <string name="additionalLng">PL</string>
     <string name="serverConnectionError">Cannot connect with server!</string>
 
-<!--    Login and Register Fragment Section-->
+    <!--    AppActivity-->
+
+    <string name="manageAccount">Manage Account</string>
+    <string name="findFood">Find Food!</string>
+    <string name="greetingText">Welcome</string>
+
+    <!--    Login and Register Fragment Section-->
 
     <string name="hintNickname">Nickname</string>
     <string name="hintPassword">Password</string>
     <string name="noneError">None Error. Sorry try again</string>
 
-<!--    Login Fragment Section-->
+    <!--    Login Fragment Section-->
 
     <string name="signIn">Sign In!</string>
     <string name="loginButton">Login</string>
@@ -21,10 +30,10 @@
     <string name="singUpButton">Register here</string>
 
     <string name="noDataToSignIn">Please enter Nickname and Password!</string>
-    <string name="successfulLogin">Successful login!</string>
     <string name="nicknameAndPasswordNotCorrect">Login or password is not correct!</string>
+    <string name="successfulLogin">Successful login!</string>
 
-<!--    Register Fragment Section-->
+    <!--    Register Fragment Section-->
 
     <string name="signUp">Sign Up!</string>
     <string name="hintRepeatPassword">Repeat Password</string>
@@ -35,5 +44,22 @@
     <string name="keyPasswordNotEqual">The passwords do not match!</string>
     <string name="successfulRegister">Successful register!</string>
     <string name="failToRegister">Nickname is already used!</string>
+
+<!--    Manage Account-->
+
+    <string name="changeButton">Change</string>
+    <string name="changeNicknameText">Change your nickname</string>
+    <string name="changeNicknameHint">Your new nickname</string>
+    <string name="changePasswordText">Change your password</string>
+    <string name="changePasswordNewHint">Your new password</string>
+    <string name="changePasswordOldHint">Your old password</string>
+
+    <string name="changeAccepted">Change accepted</string>
+    <string name="changeRejected">Change rejected</string>
+    <string name="changeRejectedNickname">Change rejected. Nickname is already used!</string>
+    <string name="changeRejectedSameData">Change rejected. The data is the same!</string>
+    <string name="newNicknameText">New:</string>
+    <string name="newPasswordText">New:</string>
+    <string name="oldPasswordText">Old:</string>
 
 </resources>

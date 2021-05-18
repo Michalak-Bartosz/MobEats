@@ -12,7 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MobEats"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.AppActivity"></activity>
+        <activity android:name=".activity.AppActivity"
+            android:theme="@style/Theme.Design.Light.NoActionBar"></activity>
         <activity android:name=".activity.StartActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"

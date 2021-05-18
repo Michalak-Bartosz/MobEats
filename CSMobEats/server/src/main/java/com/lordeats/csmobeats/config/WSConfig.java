@@ -27,5 +27,7 @@ public class WSConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/signUp").withSockJS();
         registry.addEndpoint("/signIn");
         registry.addEndpoint("/signIn").withSockJS();
+        registry.addEndpoint("/changeData");
+        registry.addEndpoint("/changeData").withSockJS();
     }
 }

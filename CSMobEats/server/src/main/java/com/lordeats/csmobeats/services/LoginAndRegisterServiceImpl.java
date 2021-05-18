@@ -1,5 +1,6 @@
 package com.lordeats.csmobeats.services;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,53 @@ public class LoginAndRegisterServiceImpl implements LoginAndRegisterService {
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public synchronized boolean changeData(JSONObject changeDataPayload) {
+        String newNickname;
+        String newPassword;
+        JSONObject newUser = new JSONObject();
+        try {
+            if(changeDataPayload.getString("type").equals("nickname")) {
+                newNickname = changeDataPayload.getString("newNickname");
+                changeDataPayload.remove("newNickname");
+                if(!checkNickname(newNickname)){
+                    return false;
+                }
+                newUser.put("nickname", newNickname);
+                newUser.put("password", changeDataPayload.getString("password"));
+            } else if(changeDataPayload.getString("type").equals("password")) {
+                newPassword = changeDataPayload.getString("newPassword");
+                changeDataPayload.remove("newPassword");
+                newUser.put("nickname", changeDataPayload.getString("nickname"));
+                newUser.put("password", newPassword);
+            } else {
+                return false;
+            }
+            changeDataPayload.remove("type");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if(registeredUsersHashMap.removeIf(value -> value.toString().equals(changeDataPayload.toString()))) {
+            registeredUsersHashMap.add(newUser);
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean checkNickname(String newNickname) {
+        for(var value: registeredUsersHashMap){
+            try {
+                if(value.getString("nickname").equals(newNickname))
+                    return false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
     }
 
     @Override

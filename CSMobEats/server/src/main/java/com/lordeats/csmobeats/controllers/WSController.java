@@ -88,4 +88,24 @@ public class WSController {
         }
         return  rejectPayload.toString();
     }
+
+    @MessageMapping("/changeUserData")
+    @SendToUser("/queue/changeData")
+    public String changeData(String message, @Header("simpSessionId") String sessionId) {
+
+        try {
+            JSONObject changeDataPayload = new JSONObject(message);
+            log.info("changeDataPayload: " + changeDataPayload);
+            boolean OK = loginAndRegisterService.changeData(changeDataPayload);
+            if(OK) {
+                log.info("Data user changed: " + message + " from session: " + sessionId);
+                return acceptPayload.toString();
+            } else {
+                return rejectPayload.toString();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return  rejectPayload.toString();
+    }
 }
