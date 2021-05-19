@@ -26,7 +26,7 @@ class MainMenuFragment : Fragment() {
 
     private fun manageAccountButtonListener(){
         binding.manageAccountButton.setOnClickListener {
-            Navigation.findNavController(it).navigate(R.id.action_mainMenuFragment_to_manageAccount)
+            Navigation.findNavController(it).navigate(R.id.action_mainMenuFragment_to_manageAccountFragment)
         }
     }
 

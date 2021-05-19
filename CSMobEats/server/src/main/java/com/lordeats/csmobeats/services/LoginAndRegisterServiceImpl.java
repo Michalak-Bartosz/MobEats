@@ -1,28 +1,58 @@
 package com.lordeats.csmobeats.services;
 
+import com.lordeats.csmobeats.dtos.GetCustomer;
+import com.lordeats.csmobeats.entities.CustomerEntity;
+import com.lordeats.csmobeats.repositories.CustomerRepository;
+import com.lordeats.csmobeats.repositories.ReservationRepository;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class LoginAndRegisterServiceImpl implements LoginAndRegisterService {
 
+    private final CustomerRepository customerRepository;
+    private final ReservationRepository reservationRepository;
+
+    @Autowired
+    public LoginAndRegisterServiceImpl(CustomerRepository customerRepository, ReservationRepository reservationRepository) {
+        this.customerRepository = customerRepository;
+        this.reservationRepository = reservationRepository;
+    }
+
     @Override
     public synchronized boolean registerUser(JSONObject registerPayload) {
-        for(var value: registeredUsersHashMap){
-            if(value.toString().equals(registerPayload.toString()))
+        try {
+            if(customerRepository.existsByNickname(registerPayload.getString("nickname"))) {
                 return false;
+            }
+            CustomerEntity customer = new CustomerEntity();
+            customer.setNickname(registerPayload.getString("nickname"));
+            customer.setPassword(registerPayload.getString("password"));
+
+            customerRepository.save(customer);
+//        registeredUsersHashMap.add(registerPayload);
+            return customerRepository.existsById(customer.getId());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return false;
         }
-        registeredUsersHashMap.add(registerPayload);
-        return true;
     }
 
     @Override
     public synchronized boolean logInUser(JSONObject loginPayload, String sessionId) {
-
-        for(var value: registeredUsersHashMap){
-            if(value.toString().equals(loginPayload.toString()))
+        try {
+            if(customerRepository.existsByNickname(loginPayload.getString("nickname"))) {
+                loginUsersHashMap.put(sessionId, loginPayload);
                 return true;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         return false;
     }
@@ -31,47 +61,49 @@ public class LoginAndRegisterServiceImpl implements LoginAndRegisterService {
     public synchronized boolean changeData(JSONObject changeDataPayload) {
         String newNickname;
         String newPassword;
-        JSONObject newUser = new JSONObject();
         try {
-            if(changeDataPayload.getString("type").equals("nickname")) {
-                newNickname = changeDataPayload.getString("newNickname");
-                changeDataPayload.remove("newNickname");
-                if(!checkNickname(newNickname)){
+            CustomerEntity customer = customerRepository.findByNickname(changeDataPayload.getString("nickname"));
+            if(customer != null) {
+                if(changeDataPayload.getString("type").equals("nickname")) {
+                    newNickname = changeDataPayload.getString("newNickname");
+                    if(customerRepository.existsByNickname(newNickname)){
+                        return false;
+                    }
+                    customer.setNickname(newNickname);
+                } else if(changeDataPayload.getString("type").equals("password")) {
+                    newPassword = changeDataPayload.getString("newPassword");
+                    customer.setPassword(newPassword);
+                } else {
                     return false;
                 }
-                newUser.put("nickname", newNickname);
-                newUser.put("password", changeDataPayload.getString("password"));
-            } else if(changeDataPayload.getString("type").equals("password")) {
-                newPassword = changeDataPayload.getString("newPassword");
-                changeDataPayload.remove("newPassword");
-                newUser.put("nickname", changeDataPayload.getString("nickname"));
-                newUser.put("password", newPassword);
-            } else {
-                return false;
+                customerRepository.save(customer);
+                return true;
             }
-            changeDataPayload.remove("type");
         } catch (JSONException e) {
             e.printStackTrace();
+            return false;
         }
-
-        if(registeredUsersHashMap.removeIf(value -> value.toString().equals(changeDataPayload.toString()))) {
-            registeredUsersHashMap.add(newUser);
-            return true;
-        }
-
         return false;
     }
 
-    private boolean checkNickname(String newNickname) {
-        for(var value: registeredUsersHashMap){
-            try {
-                if(value.getString("nickname").equals(newNickname))
-                    return false;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+    @Override
+    public synchronized boolean removeUser(JSONObject userPayload) {
+        String nickname;
+        try {
+            nickname = userPayload.getString("nickname");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return false;
         }
-        return true;
+        if(customerRepository.existsByNickname(nickname)){
+            CustomerEntity customer = customerRepository.findByNickname(nickname);
+            for(Integer reservationId: customer.getReservationsId()){
+                reservationRepository.deleteById(reservationId);
+            }
+            customerRepository.deleteById(customer.getId());
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -88,19 +120,9 @@ public class LoginAndRegisterServiceImpl implements LoginAndRegisterService {
     }
 
     @Override
-    public void removeUser(JSONObject userPayload) {
-        registeredUsersHashMap.remove(userPayload);
-    }
-
-    @Override
     public String listRegisteredUsers() {
-        var sb = new StringBuilder();
-
-        for(var value: registeredUsersHashMap){
-            sb.append(value).append("\n");
-        }
-
-        return sb.toString();
+        List<GetCustomer> listCustomers = StreamSupport.stream(customerRepository.findAll().spliterator(), false).map(customerEntity -> new GetCustomer(customerEntity.getId(),customerEntity.getNickname(),customerEntity.getPassword(),customerEntity.getReservationsId())).collect(Collectors.toList());
+        return listCustomers.toString();
     }
 
     @Override

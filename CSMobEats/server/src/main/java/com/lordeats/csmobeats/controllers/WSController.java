@@ -17,6 +17,8 @@ public class WSController {
 
     private final LoginAndRegisterService loginAndRegisterService;
     private final JSONObject acceptPayload = new JSONObject();
+    private final JSONObject acceptNicknameChangePayload = new JSONObject();
+    private final JSONObject acceptPasswordChangePayload = new JSONObject();
     private final JSONObject rejectPayload = new JSONObject();
 
     @Autowired
@@ -26,6 +28,8 @@ public class WSController {
         try {
             acceptPayload.put("value","accept");
             rejectPayload.put("value", "reject");
+            acceptNicknameChangePayload.put("value","acceptNickname");
+            acceptPasswordChangePayload.put("value", "acceptPassword");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -99,7 +103,10 @@ public class WSController {
             boolean OK = loginAndRegisterService.changeData(changeDataPayload);
             if(OK) {
                 log.info("Data user changed: " + message + " from session: " + sessionId);
-                return acceptPayload.toString();
+                if(changeDataPayload.has("newNickname"))
+                    return acceptNicknameChangePayload.toString();
+                if(changeDataPayload.has("newPassword"))
+                    return acceptPasswordChangePayload.toString();
             } else {
                 return rejectPayload.toString();
             }

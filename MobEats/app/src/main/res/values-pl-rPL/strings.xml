@@ -54,7 +54,8 @@
     <string name="changePasswordNewHint">Twoje nowe hasło</string>
     <string name="changePasswordOldHint">Twoje stare hasło</string>
 
-    <string name="changeAccepted">Zmiana zaakceptowana.</string>
+    <string name="changeNicknameAccepted">Zmiana nazwy zaakceptowana.</string>
+    <string name="changePasswordAccepted">Zmiana hasła zaakceptowana.</string>
     <string name="changeRejected">Zamiana odrzucona.</string>
     <string name="changeRejectedNickname">Zamiana odrzucona. Podana nazwa użytkownika jest już używana!</string>
     <string name="changeRejectedSameData">Zamiana odrzucona. Dane są takie same!</string>

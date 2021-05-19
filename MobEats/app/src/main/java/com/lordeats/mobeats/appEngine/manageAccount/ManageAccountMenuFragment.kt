@@ -13,7 +13,7 @@ import org.greenrobot.eventbus.EventBus
 import org.json.JSONObject
 
 
-class ManageAccountMenu : Fragment() {
+class ManageAccountMenuFragment : Fragment() {
 
     private lateinit var binding: FragmentManageAccountBinding
     private lateinit var nickname: String

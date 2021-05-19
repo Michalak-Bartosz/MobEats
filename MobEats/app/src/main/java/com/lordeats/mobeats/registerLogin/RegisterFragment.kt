@@ -1,6 +1,7 @@
 package com.lordeats.mobeats.registerLogin
 
 import android.os.Bundle
+import android.service.voice.VoiceInteractionSession
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,8 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.databinding.FragmentRegisterBinding
 import com.lordeats.mobeats.events.MessageEvent
@@ -43,7 +46,9 @@ class RegisterFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        EventBus.getDefault().unregister(this)
+        if(EventBus.getDefault().hasSubscriberForEvent(MessageReplyEvent::class.java)){
+            EventBus.getDefault().unregister(this)
+        }
     }
 
     private fun checkTextContext(): Boolean {
@@ -78,9 +83,10 @@ class RegisterFragment : Fragment() {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onRegisterEvent(event: MessageReplyEvent){
+    @Subscribe(sticky = false)
+    fun onMessageReplyEvent(event: MessageReplyEvent){
         if(event.message == "acceptRegister"){
+            EventBus.getDefault().unregister(this)
             this.view?.findNavController()?.navigate(R.id.action_registerFragment_to_loginFragment)
         }
     }

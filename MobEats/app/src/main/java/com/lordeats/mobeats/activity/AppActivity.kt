@@ -33,6 +33,7 @@ class AppActivity : AppCompatActivity() {
 
     private lateinit var userDataTmp: String
     private lateinit var userData: JSONObject
+    private lateinit var userDataChange: JSONObject
 
     private lateinit var nickname: String
     private lateinit var password: String
@@ -107,14 +108,16 @@ class AppActivity : AppCompatActivity() {
 
     @SuppressLint("CheckResult")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: MessageEvent){
+    fun onMessageEvent(event: MessageEvent) {
+        userDataChange = JSONObject()
         if(client.isConnected && event.message!!.getString("type")  == "changeData") {
             when {
                 event.message!!.getString("data") == "nickname" -> {
                     if(userData.getString("nickname") != event.message!!.getString("nickname")){
                         nickname = event.message!!.getString("nickname")
-                        userData.put("type", "nickname")
-                        userData.put("newNickname", nickname)
+                        userDataChange.put("nickname", userData.getString("nickname"))
+                        userDataChange.put("type", "nickname")
+                        userDataChange.put("newNickname", nickname)
                     } else {
                         DynamicToast.makeError(this, getString(R.string.changeRejectedSameData)).show()
                         return
@@ -123,11 +126,11 @@ class AppActivity : AppCompatActivity() {
                 event.message!!.getString("data") == "password" -> {
                     if(userData.getString("password") != event.message!!.getString("password")){
                         password = event.message!!.getString("password")
-                        userData.put("type", "password")
-                        userData.put("newPassword", password)
+                        userDataChange.put("nickname", userData.getString("nickname"))
+                        userDataChange.put("type", "password")
+                        userDataChange.put("newPassword", password)
                     } else {
                         DynamicToast.makeError(this, getString(R.string.changeRejectedSameData)).show()
-                        Log.d("Bartek nowe hasło", "Nowe hasło: " + event.message!!.getString("password") + "\nStare hasło: " + userData.getString("password"))
                         return
                     }
                 }
@@ -138,7 +141,7 @@ class AppActivity : AppCompatActivity() {
             }
 
             setOnChangeUserDataSubscribe()
-            client.send("/mobEats/changeUserData", userData.toString()).subscribe({ },
+            client.send("/mobEats/changeUserData", userDataChange.toString()).subscribe({ },
                 { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
         } else {
             DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show()
@@ -152,8 +155,17 @@ class AppActivity : AppCompatActivity() {
             changeDataReplyTmp = topicMessage.payload
             changeDataReply = JSONObject(changeDataReplyTmp)
             when {
-                changeDataReply.getString("value") == "accept" -> {
-                    this.runOnUiThread { DynamicToast.makeSuccess(this, getString(R.string.changeAccepted)).show() }
+                changeDataReply.getString("value") == "acceptNickname" -> {
+                    userData.remove("nickname")
+                    userData.put("nickname", userDataChange.getString("newNickname"))
+
+                    this.runOnUiThread { setUserData()
+                        DynamicToast.makeSuccess(this, getString(R.string.changeNicknameAccepted)).show() }
+                }
+                changeDataReply.getString("value") == "acceptPassword" -> {
+                    userData.remove("password")
+                    userData.put("password", userDataChange.getString("newPassword"))
+                    this.runOnUiThread { DynamicToast.makeSuccess(this, getString(R.string.changePasswordAccepted)).show() }
                 }
                 changeDataReply.getString("value") == "reject" -> {
                     this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.changeRejectedNickname)).show() }

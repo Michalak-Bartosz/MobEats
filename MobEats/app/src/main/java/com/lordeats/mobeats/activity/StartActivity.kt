@@ -10,6 +10,8 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.databinding.ActivityStartBinding
 import com.lordeats.mobeats.events.MessageEvent
@@ -30,8 +32,6 @@ class StartActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityStartBinding
     private lateinit var client: StompClient
-
-    private lateinit var registerReplyMessage: MessageReplyEvent
 
     private var registerReplyTmp: String = ""
     private lateinit var registerReply: JSONObject
@@ -119,9 +119,10 @@ class StartActivity : AppCompatActivity() {
             registerReply = JSONObject(registerReplyTmp)
             when {
                 registerReply.getString("value") == "accept" -> {
-                    this.runOnUiThread { DynamicToast.makeSuccess(this, getString(R.string.successfulRegister)).show() }
-                    registerReplyMessage = MessageReplyEvent("acceptRegister")
-                    EventBus.getDefault().post(registerReplyMessage)
+                    this.runOnUiThread { DynamicToast.makeSuccess(this, getString(R.string.successfulRegister)).show()
+
+                       }
+                    EventBus.getDefault().post(MessageReplyEvent("acceptRegister"))
                 }
                 registerReply.getString("value") == "reject" -> {
                     this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.failToRegister)).show() }

@@ -11,12 +11,12 @@
         android:label="fragment_main_menu"
         tools:layout="@layout/fragment_main_menu" >
         <action
-            android:id="@+id/action_mainMenuFragment_to_manageAccount"
-            app:destination="@id/manageAccountMenu"
+            android:id="@+id/action_mainMenuFragment_to_manageAccountFragment"
+            app:destination="@id/manageAccountMenuFragment"
             app:popUpTo="@id/mainMenuFragment" />
     </fragment>
     <fragment
-        android:id="@+id/manageAccountMenu"
-        android:name="com.lordeats.mobeats.appEngine.manageAccount.ManageAccountMenu"
+        android:id="@+id/manageAccountMenuFragment"
+        android:name="com.lordeats.mobeats.appEngine.manageAccount.ManageAccountMenuFragment"
         android:label="ManageAccountMenu" />
 </navigation>
