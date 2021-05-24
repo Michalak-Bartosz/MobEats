@@ -47,6 +47,7 @@
 
 <!--    Manage Account-->
 
+    <string name="deleteAccountButton">Delete Account</string>
     <string name="changeButton">Change</string>
     <string name="changeNicknameText">Change your nickname</string>
     <string name="changeNicknameHint">Your new nickname</string>
@@ -54,13 +55,15 @@
     <string name="changePasswordNewHint">Your new password</string>
     <string name="changePasswordOldHint">Your old password</string>
 
-    <string name="changeNicknameAccepted">Change nickname accepted</string>
-    <string name="changePasswordAccepted">Change password accepted</string>
+    <string name="changeNicknameAccepted">Change nickname accepted.</string>
+    <string name="changePasswordAccepted">Change password accepted.</string>
     <string name="changeRejected">Change rejected</string>
     <string name="changeRejectedNickname">Change rejected. Nickname is already used!</string>
     <string name="changeRejectedSameData">Change rejected. The data is the same!</string>
     <string name="newNicknameText">New:</string>
     <string name="newPasswordText">New:</string>
     <string name="oldPasswordText">Old:</string>
+    <string name="deleteAccountAccepted">Delete account accepted.</string>
+    <string name="deleteAccountRejected">Reject delete account!</string>
 
 </resources>

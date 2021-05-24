@@ -47,6 +47,7 @@
 
     <!--    Manage Account-->
 
+    <string name="deleteAccountButton">Usuń Konto</string>
     <string name="changeButton">Zmień</string>
     <string name="changeNicknameText">Zmień nazwę konta</string>
     <string name="changeNicknameHint">Twoja nowa nazwa</string>
@@ -62,5 +63,7 @@
     <string name="newNicknameText">Nowa:</string>
     <string name="newPasswordText">Nowe:</string>
     <string name="oldPasswordText">Stare:</string>
+    <string name="deleteAccountAccepted">Pomyślnie usunięto konto.</string>
+    <string name="deleteAccountRejected">Odrzucono usunięcie konta!</string>
 
 </resources>

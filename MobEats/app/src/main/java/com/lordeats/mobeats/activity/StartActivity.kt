@@ -31,7 +31,7 @@ import java.util.*
 class StartActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityStartBinding
-    private lateinit var client: StompClient
+    public lateinit var client: StompClient
 
     private var registerReplyTmp: String = ""
     private lateinit var registerReply: JSONObject
@@ -68,7 +68,8 @@ class StartActivity : AppCompatActivity() {
     }
 
     private fun connectToServer() {
-        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/app")
+//        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/app")
+        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "https://web-eats-server.herokuapp.com/app")
         client.connect()
     }
 

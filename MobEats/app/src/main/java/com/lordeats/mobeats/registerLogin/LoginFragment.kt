@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.lordeats.mobeats.R
+import com.lordeats.mobeats.activity.StartActivity
 import com.lordeats.mobeats.databinding.FragmentLoginBinding
 import com.lordeats.mobeats.events.MessageEvent
 import com.pranavpandey.android.dynamic.toasts.DynamicToast

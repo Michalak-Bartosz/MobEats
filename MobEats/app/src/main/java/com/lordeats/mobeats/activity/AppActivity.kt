@@ -3,6 +3,7 @@ package com.lordeats.mobeats.activity
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -12,7 +13,6 @@ import androidx.databinding.DataBindingUtil
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.databinding.ActivityAppBinding
 import com.lordeats.mobeats.events.MessageEvent
-import com.lordeats.mobeats.events.MessageReplyEvent
 import com.pranavpandey.android.dynamic.toasts.DynamicToast
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -38,8 +38,8 @@ class AppActivity : AppCompatActivity() {
     private lateinit var nickname: String
     private lateinit var password: String
 
-    private var changeDataReplyTmp: String = ""
-    private lateinit var changeDataReply: JSONObject
+    private var replyDataTmp: String = ""
+    private lateinit var replayData: JSONObject
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,7 +82,8 @@ class AppActivity : AppCompatActivity() {
 
     @SuppressLint("CheckResult")
     private fun connectToServer() {
-        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/app")
+//        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/app")
+        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "https://web-eats-server.herokuapp.com/app")
         client.connect()
         client.send("/mobEats/signIn", userDataTmp).subscribe({ },
             { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
@@ -139,9 +140,12 @@ class AppActivity : AppCompatActivity() {
                     return
                 }
             }
-
             setOnChangeUserDataSubscribe()
             client.send("/mobEats/changeUserData", userDataChange.toString()).subscribe({ },
+                { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
+        } else if(client.isConnected && event.message!!.getString("type")  == "deleteAccount"){
+            setOnDeleteAccountSubscribe()
+            client.send("/mobEats/deleteAccount", userData.toString()).subscribe({ },
                 { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
         } else {
             DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show()
@@ -152,22 +156,22 @@ class AppActivity : AppCompatActivity() {
     @SuppressLint("CheckResult")
     private fun setOnChangeUserDataSubscribe() {
         client.topic("/user/queue/changeData").subscribe { topicMessage ->
-            changeDataReplyTmp = topicMessage.payload
-            changeDataReply = JSONObject(changeDataReplyTmp)
+            replyDataTmp = topicMessage.payload
+            replayData = JSONObject(replyDataTmp)
             when {
-                changeDataReply.getString("value") == "acceptNickname" -> {
+                replayData.getString("value") == "acceptNickname" -> {
                     userData.remove("nickname")
                     userData.put("nickname", userDataChange.getString("newNickname"))
 
                     this.runOnUiThread { setUserData()
                         DynamicToast.makeSuccess(this, getString(R.string.changeNicknameAccepted)).show() }
                 }
-                changeDataReply.getString("value") == "acceptPassword" -> {
+                replayData.getString("value") == "acceptPassword" -> {
                     userData.remove("password")
                     userData.put("password", userDataChange.getString("newPassword"))
                     this.runOnUiThread { DynamicToast.makeSuccess(this, getString(R.string.changePasswordAccepted)).show() }
                 }
-                changeDataReply.getString("value") == "reject" -> {
+                replayData.getString("value") == "reject" -> {
                     this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.changeRejectedNickname)).show() }
                 }
                 else -> {
@@ -175,6 +179,34 @@ class AppActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    @SuppressLint("CheckResult")
+    private fun setOnDeleteAccountSubscribe() {
+        client.topic("/user/queue/dellAccount").subscribe { topicMessage ->
+            replyDataTmp = topicMessage.payload
+            replayData = JSONObject(replyDataTmp)
+            when {
+                replayData.getString("value") == "accept" -> {
+                    client.disconnect()
+                    goToStartAppActivity()
+                    this.runOnUiThread { setUserData()
+                        DynamicToast.makeSuccess(this, getString(R.string.deleteAccountAccepted)).show() }
+                }
+                replayData.getString("value") == "reject" -> {
+                    this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.deleteAccountRejected)).show() }
+                }
+                else -> {
+                    this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.deleteAccountRejected)).show() }
+                }
+            }
+        }
+    }
+
+    private fun goToStartAppActivity(){
+        intent = Intent(this, StartActivity::class.java)
+        startActivity(intent)
+        this.finish()
     }
 
     private fun changeLngButtonListenerConfig() {

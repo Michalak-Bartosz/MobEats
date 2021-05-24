@@ -1,16 +1,12 @@
 package com.lordeats.mobeats.registerLogin
 
 import android.os.Bundle
-import android.service.voice.VoiceInteractionSession
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.databinding.FragmentRegisterBinding
 import com.lordeats.mobeats.events.MessageEvent
@@ -18,7 +14,6 @@ import com.lordeats.mobeats.events.MessageReplyEvent
 import com.pranavpandey.android.dynamic.toasts.DynamicToast
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
 
 

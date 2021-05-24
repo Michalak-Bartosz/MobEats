@@ -18,6 +18,7 @@
 
     <style name="mainTextButton">
         <item name="android:textColor">@color/black</item>
+        <item name="android:padding">6dp</item>
         <item name="android:background">@drawable/round_corner_light</item>
     </style>
 

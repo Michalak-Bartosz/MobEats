@@ -50,7 +50,7 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="ContentDescription" />
@@ -62,10 +62,10 @@
             android:layout_height="200dp"
             app:layout_constraintBottom_toBottomOf="@+id/changeNicknameButton"
             app:layout_constraintEnd_toEndOf="@+id/changeNicknameText"
-            app:layout_constraintHorizontal_bias="0.45"
+            app:layout_constraintHorizontal_bias="0.444"
             app:layout_constraintStart_toStartOf="@+id/changeNicknameText"
             app:layout_constraintTop_toTopOf="@+id/changeNicknameText"
-            app:layout_constraintVertical_bias="0.2" />
+            app:layout_constraintVertical_bias="0.218" />
 
         <ImageView
             android:id="@+id/dataChangeBg2"
@@ -80,41 +80,44 @@
         <TextView
             android:id="@+id/changeNicknameText"
             style="@style/mainMediumText"
-            android:layout_width="280dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
             android:shadowColor="@color/ic_launcher_background"
             android:shadowDx="2"
             android:shadowDy="2"
             android:shadowRadius="3"
             android:text="@string/changeNicknameText"
             android:textAlignment="center"
-            app:layout_constraintBottom_toBottomOf="@+id/accountImage"
-            app:layout_constraintStart_toEndOf="@+id/accountImage" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/accountImage" />
 
         <TextView
             android:id="@+id/newNicknameText"
             style="@style/mainMediumText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:text="@string/newNicknameText"
             android:textSize="15dp"
             app:layout_constraintBottom_toBottomOf="@+id/editNicknameMaPlainText"
-            app:layout_constraintEnd_toStartOf="@+id/editNicknameMaPlainText"
-            app:layout_constraintStart_toStartOf="@+id/changeNicknameText" />
+            app:layout_constraintEnd_toStartOf="@+id/editNicknameMaPlainText" />
 
         <EditText
             android:id="@+id/editNicknameMaPlainText"
             style="@style/mainTextEditReverse"
-            android:layout_width="wrap_content"
+            android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
             android:ems="10"
             android:hint="@string/changeNicknameHint"
             android:inputType="textPersonName"
             android:textSize="18dp"
-            app:layout_constraintEnd_toEndOf="@+id/changeNicknameText"
+            app:layout_constraintEnd_toEndOf="@+id/dataChangeBg1"
             app:layout_constraintTop_toBottomOf="@+id/changeNicknameText" />
 
         <Button
@@ -124,75 +127,76 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="@string/changeButton"
-            android:textSize="12sp"
+            android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="@+id/editNicknameMaPlainText"
             app:layout_constraintTop_toBottomOf="@+id/editNicknameMaPlainText" />
 
         <TextView
             android:id="@+id/changePasswordText"
             style="@style/mainMediumText"
-            android:layout_width="280dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="70dp"
+            android:layout_marginEnd="16dp"
             android:shadowColor="@color/ic_launcher_background"
             android:shadowDx="2"
             android:shadowDy="2"
             android:shadowRadius="3"
             android:text="@string/changePasswordText"
             android:textAlignment="center"
-            app:layout_constraintStart_toStartOf="@+id/changeNicknameText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/changeNicknameButton" />
-
-        <TextView
-            android:id="@+id/newPasswordText"
-            style="@style/mainMediumText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:text="@string/newPasswordText"
-            android:textSize="15dp"
-            app:layout_constraintBottom_toBottomOf="@+id/keyNewMaPassword"
-            app:layout_constraintEnd_toStartOf="@+id/keyNewMaPassword"
-            app:layout_constraintStart_toStartOf="@+id/changePasswordText" />
 
         <EditText
             android:id="@+id/keyNewMaPassword"
             style="@style/mainTextEditReverse"
-            android:layout_width="wrap_content"
+            android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="16dp"
             android:ems="10"
             android:hint="@string/changePasswordNewHint"
             android:inputType="textPassword"
             android:textSize="18dp"
-            app:layout_constraintEnd_toEndOf="@+id/changePasswordText"
+            app:layout_constraintEnd_toEndOf="@+id/dataChangeBg2"
             app:layout_constraintTop_toBottomOf="@+id/changePasswordText" />
-
-        <TextView
-            android:id="@+id/textView4"
-            style="@style/mainMediumText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:text="@string/oldPasswordText"
-            android:textSize="15dp"
-            app:layout_constraintBottom_toBottomOf="@+id/keyOldMaPassword"
-            app:layout_constraintEnd_toStartOf="@+id/keyOldMaPassword"
-            app:layout_constraintStart_toStartOf="@+id/changePasswordText" />
 
         <EditText
             android:id="@+id/keyOldMaPassword"
             style="@style/mainTextEditReverse"
-            android:layout_width="wrap_content"
+            android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:ems="10"
             android:hint="@string/changePasswordOldHint"
             android:inputType="textPassword"
             android:textSize="18dp"
-            app:layout_constraintStart_toStartOf="@+id/keyNewMaPassword"
+            app:layout_constraintEnd_toEndOf="@+id/keyNewMaPassword"
             app:layout_constraintTop_toBottomOf="@+id/keyNewMaPassword" />
+
+        <TextView
+            android:id="@+id/newPasswordText"
+            style="@style/mainMediumText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="@string/newPasswordText"
+            android:textSize="15dp"
+            app:layout_constraintBottom_toBottomOf="@+id/keyNewMaPassword"
+            app:layout_constraintEnd_toStartOf="@+id/keyNewMaPassword" />
+
+        <TextView
+            android:id="@+id/oldPasswordText"
+            style="@style/mainMediumText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="@string/oldPasswordText"
+            android:textSize="15dp"
+            app:layout_constraintBottom_toBottomOf="@+id/keyOldMaPassword"
+            app:layout_constraintEnd_toStartOf="@+id/keyOldMaPassword" />
 
         <Button
             android:id="@+id/changePasswordButton"
@@ -201,9 +205,18 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="@string/changeButton"
-            android:textSize="12sp"
+            android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="@+id/keyOldMaPassword"
             app:layout_constraintTop_toBottomOf="@+id/keyOldMaPassword" />
+
+        <Button
+            android:id="@+id/dellAccountButton"
+            style="@style/mainTextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/deleteAccountButton"
+            app:layout_constraintBottom_toBottomOf="@+id/accountImage"
+            app:layout_constraintEnd_toEndOf="@+id/dataChangeBg1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

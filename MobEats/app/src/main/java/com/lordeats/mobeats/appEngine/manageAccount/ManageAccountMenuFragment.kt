@@ -28,6 +28,7 @@ class ManageAccountMenuFragment : Fragment() {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_manage_account, container, false)
         changeButtonsListener()
+        deleteAccountButtonListener()
         return binding.root
     }
 
@@ -47,6 +48,14 @@ class ManageAccountMenuFragment : Fragment() {
             userDataPayload.put("type", "changeData")
             userDataPayload.put("data", "password")
             userDataPayload.put("password", password)
+            messageToSend = MessageEvent(userDataPayload)
+            EventBus.getDefault().post(messageToSend)
+        }
+    }
+
+    private fun deleteAccountButtonListener(){
+        binding.dellAccountButton.setOnClickListener {
+            userDataPayload.put("type", "deleteAccount")
             messageToSend = MessageEvent(userDataPayload)
             EventBus.getDefault().post(messageToSend)
         }
