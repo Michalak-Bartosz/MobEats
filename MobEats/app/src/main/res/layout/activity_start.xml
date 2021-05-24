@@ -48,7 +48,7 @@
             android:layout_marginTop="40dp"
             app:defaultNavHost="true"
             app:layout_constraintTop_toTopOf="parent"
-            app:navGraph="@navigation/navigation" />
+            app:navGraph="@navigation/start_navigation" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

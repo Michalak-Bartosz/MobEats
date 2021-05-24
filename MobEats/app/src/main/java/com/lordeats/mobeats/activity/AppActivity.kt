@@ -229,7 +229,6 @@ class AppActivity : AppCompatActivity() {
             }
 
             sharedPrefsEdit.apply()
-            recreate()
         }
     }
 

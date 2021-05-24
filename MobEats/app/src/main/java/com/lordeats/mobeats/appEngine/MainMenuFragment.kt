@@ -21,12 +21,19 @@ class MainMenuFragment : Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main_menu, container, false)
         manageAccountButtonListener()
+        findFoodButtonListener()
         return binding.root
     }
 
-    private fun manageAccountButtonListener(){
+    private fun manageAccountButtonListener() {
         binding.manageAccountButton.setOnClickListener {
             Navigation.findNavController(it).navigate(R.id.action_mainMenuFragment_to_manageAccountFragment)
+        }
+    }
+
+    private fun findFoodButtonListener() {
+        binding.findFoodButton.setOnClickListener {
+            Navigation.findNavController(it).navigate(R.id.action_mainMenuFragment_to_MapsActivity)
         }
     }
 

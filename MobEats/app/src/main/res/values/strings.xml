@@ -45,7 +45,7 @@
     <string name="successfulRegister">Successful register!</string>
     <string name="failToRegister">Nickname is already used!</string>
 
-<!--    Manage Account-->
+    <!--    Manage Account-->
 
     <string name="deleteAccountButton">Delete Account</string>
     <string name="changeButton">Change</string>
@@ -65,5 +65,6 @@
     <string name="oldPasswordText">Old:</string>
     <string name="deleteAccountAccepted">Delete account accepted.</string>
     <string name="deleteAccountRejected">Reject delete account!</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>

@@ -14,9 +14,17 @@
             android:id="@+id/action_mainMenuFragment_to_manageAccountFragment"
             app:destination="@id/manageAccountMenuFragment"
             app:popUpTo="@id/mainMenuFragment" />
+        <action
+            android:id="@+id/action_mainMenuFragment_to_MapsActivity"
+            app:destination="@id/MapsActivity" />
     </fragment>
     <fragment
         android:id="@+id/manageAccountMenuFragment"
         android:name="com.lordeats.mobeats.appEngine.manageAccount.ManageAccountMenuFragment"
         android:label="ManageAccountMenu" />
+    <activity
+        android:id="@+id/MapsActivity"
+        android:name="com.lordeats.mobeats.activity.MapsActivity"
+        android:label="MapsActivity"
+        tools:layout="@layout/activity_maps" />
 </navigation>

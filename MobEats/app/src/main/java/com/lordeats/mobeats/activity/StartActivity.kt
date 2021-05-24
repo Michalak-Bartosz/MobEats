@@ -184,7 +184,6 @@ class StartActivity : AppCompatActivity() {
             }
 
             sharedPrefsEdit.apply()
-            recreate()
         }
     }
 
