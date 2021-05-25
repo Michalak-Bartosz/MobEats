@@ -17,5 +17,5 @@ public interface LoginAndRegisterService {
     void logOutUser(String sessionId);
     String listLogInUsers();
     GetReservation getReservation (int id);
-    List<GetReservation> userListReservations(String nickname);
+    String userListReservations(String nickname);
 }

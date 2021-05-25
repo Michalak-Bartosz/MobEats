@@ -142,17 +142,11 @@ public class LoginAndRegisterServiceImpl implements LoginAndRegisterService {
     }
 
     @Override
-    public List<GetReservation> userListReservations(String nickname) {
-        List<GetReservation> listReservations = new ArrayList<>();
+    public String userListReservations(String nickname) {
         if(customerRepository.existsByNickname(nickname)){
             CustomerEntity customer =  customerRepository.findByNickname(nickname);
-            for(int reservation_id: customer.getReservationsId()) {
-                GetReservation reservation = getReservation(reservation_id);
-                if(reservation != null) {
-                    listReservations.add(reservation);
-                }
-            }
+            return customer.getReservationsString();
         }
-        return listReservations;
+        return null;
     }
 }

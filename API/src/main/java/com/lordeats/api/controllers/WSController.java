@@ -142,10 +142,10 @@ public class WSController {
     @SendToUser("/queue/getReservationsList")
     public String getReservationsList(String message, @Header("simpSessionId") String sessionId) {
         log.info("User : " + message + " want reservations list.");
-        List<GetReservation> listReservations = loginAndRegisterService.userListReservations(message);
+        String listReservations = loginAndRegisterService.userListReservations(message);
         if(!listReservations.isEmpty()) {
             log.info("Reservations list: " + listReservations + " from session: " + sessionId);
-            return listReservations.toString();
+            return listReservations;
         } else {
             return rejectPayload.toString();
         }

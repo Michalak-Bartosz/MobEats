@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
@@ -69,8 +68,8 @@ class StartActivity : AppCompatActivity() {
     }
 
     private fun connectToServer() {
-//        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/app")
-        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, apiUrl)
+        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/app")
+//        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, apiUrl)
         client.connect()
     }
 
@@ -124,9 +123,7 @@ class StartActivity : AppCompatActivity() {
                     this.runOnUiThread { DynamicToast.makeSuccess(this, getString(R.string.successfulRegister)).show()
 
                        }
-                    val acceptRegister = JSONObject()
-                    acceptRegister.put("value", "acceptRegister")
-                    EventBus.getDefault().post(MessageReplyEvent(acceptRegister))
+                    EventBus.getDefault().post(MessageReplyEvent("acceptRegister"))
                 }
                 registerReply.getString("value") == "reject" -> {
                     this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.failToRegister)).show() }

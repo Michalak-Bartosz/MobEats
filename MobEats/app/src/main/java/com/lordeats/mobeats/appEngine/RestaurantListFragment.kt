@@ -10,20 +10,21 @@ import android.widget.ArrayAdapter
 
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
+import com.google.gson.JsonParser
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.databinding.FragmentRestaurantListBinding
 import com.lordeats.mobeats.events.MessageEvent
 import com.lordeats.mobeats.events.MessageReplyEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
 
 class RestaurantListFragment : Fragment() {
 
     private lateinit var binding: FragmentRestaurantListBinding
 
-    private lateinit var adapter: ArrayAdapter<*>
-    private lateinit var restaurantList: ArrayList<String>
+    private var restaurantList: ArrayList<String> = ArrayList()
 
     private lateinit var messageToSend: MessageEvent
 
@@ -32,12 +33,17 @@ class RestaurantListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_restaurant_list, container, false)
+        if(!EventBus.getDefault().hasSubscriberForEvent(MessageReplyEvent::class.java)){
+            EventBus.getDefault().register(this)
+        }
         return binding.root
     }
 
     override fun onStart() {
         super.onStart()
-        EventBus.getDefault().register(this)
+        if(!EventBus.getDefault().hasSubscriberForEvent(MessageReplyEvent::class.java)){
+            EventBus.getDefault().register(this)
+        }
         val getRestaurantsList = JSONObject()
         getRestaurantsList.put("type", "getRestaurantsList")
         messageToSend = MessageEvent(getRestaurantsList)
@@ -49,16 +55,25 @@ class RestaurantListFragment : Fragment() {
         EventBus.getDefault().unregister(this)
     }
 
-    private fun addRestaurantsToList(){
 
-        adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, restaurantList)
-        binding.restaurantListView.adapter = adapter
-    }
 
-    @Subscribe(sticky = false)
+
+    @Suppress("DEPRECATION")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageReplyEvent(event: MessageReplyEvent){
-        if(event.message?.getString("value") == "acceptListRestaurants"){
+        if(event.message != null){
+            val adapter: ArrayAdapter<*> = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, restaurantList)
+            if(restaurantList.isNotEmpty())
+                adapter.clear()
             Log.d("Bartek", event.message.toString())
+            val jsonParser = JsonParser()
+            val jsonElement = jsonParser.parse(event.message.toString())
+            val replayDataList = jsonElement.asJsonArray
+            for(value in replayDataList) {
+                val valueJ = JSONObject(value.toString())
+                restaurantList.add(valueJ.toString())
+            }
+            binding.restaurantListView.adapter = adapter
         }
     }
 }

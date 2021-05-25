@@ -10,6 +10,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
+import com.google.gson.JsonParser
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.databinding.ActivityAppBinding
 import com.lordeats.mobeats.events.MessageEvent
@@ -18,6 +19,7 @@ import com.pranavpandey.android.dynamic.toasts.DynamicToast
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.json.JSONArray
 import org.json.JSONObject
 import ua.naiksoftware.stomp.Stomp
 import ua.naiksoftware.stomp.StompClient
@@ -42,8 +44,6 @@ class AppActivity : AppCompatActivity() {
 
     private var replyDataTmp: String = ""
     private lateinit var replayData: JSONObject
-
-    private lateinit var restaurantList: List<JSONObject>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,8 +86,8 @@ class AppActivity : AppCompatActivity() {
 
     @SuppressLint("CheckResult")
     private fun connectToServer() {
-//        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/app")
-        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, apiUrl)
+        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/app")
+//        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, apiUrl)
         client.connect()
         client.send("/mobEats/signIn", userDataTmp).subscribe({ },
             { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
@@ -228,15 +228,13 @@ class AppActivity : AppCompatActivity() {
     private fun setOnGetRestaurantsListSubscribe() {
         client.topic("/user/queue/getReservationsList").subscribe { topicMessage ->
             replyDataTmp = topicMessage.payload
-            replayData = JSONObject(replyDataTmp)
             when {
-                replayData.has("value") -> {
+                replyDataTmp.isEmpty() -> {
                     this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.failGetRestaurantList)).show() }
                 }
                 else -> {
-                    replayData.put("type", "acceptListRestaurants")
-                    EventBus.getDefault().post(MessageReplyEvent(replayData))
-                    this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.succeedGetRestaurantList)).show() }
+                    EventBus.getDefault().post(MessageReplyEvent(replyDataTmp))
+                    this.runOnUiThread { DynamicToast.makeSuccess(this, getString(R.string.succeedGetRestaurantList)).show() }
                 }
             }
         }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.json.JSONObject;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -42,6 +43,14 @@ public class CustomerEntity {
             idList.add(reservation.getId());
         }
         return idList;
+    }
+
+    public String getReservationsString() {
+        Set<JSONObject> JSONList = new HashSet<>();
+        for(ReservationEntity reservation: reservations){
+            JSONList.add(reservation.reservationToJsonObject());
+        }
+        return JSONList.toString();
     }
 
     public boolean hasReservations() {
