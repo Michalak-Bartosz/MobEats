@@ -1,18 +1,27 @@
 package com.lordeats.api.services;
 
+import com.lordeats.api.dtos.GetReservation;
 import com.lordeats.api.entities.CustomerEntity;
+import com.lordeats.api.entities.ReservationEntity;
 import com.lordeats.api.repositories.CustomerRepository;
 import com.lordeats.api.repositories.ReservationRepository;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.security.SecureRandom;
+import java.util.*;
 
 @Service
 public class LoginAndRegisterServiceImpl implements LoginAndRegisterService {
 
     private final CustomerRepository customerRepository;
     private final ReservationRepository reservationRepository;
+    private final int strength = 10;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(strength, new SecureRandom());
 
     @Autowired
     public LoginAndRegisterServiceImpl(CustomerRepository customerRepository, ReservationRepository reservationRepository) {
@@ -28,7 +37,8 @@ public class LoginAndRegisterServiceImpl implements LoginAndRegisterService {
             }
             CustomerEntity customer = new CustomerEntity();
             customer.setNickname(registerPayload.getString("nickname"));
-            customer.setPassword(registerPayload.getString("password"));
+            String encodedPassword = bCryptPasswordEncoder.encode(registerPayload.getString("password"));
+            customer.setPassword(encodedPassword);
 
             customerRepository.save(customer);
             return customerRepository.existsById(customer.getId());
@@ -41,9 +51,14 @@ public class LoginAndRegisterServiceImpl implements LoginAndRegisterService {
     @Override
     public synchronized boolean logInUser(JSONObject loginPayload, String sessionId) {
         try {
-            if(customerRepository.existsByNickname(loginPayload.getString("nickname"))) {
-                loginUsersHashMap.put(sessionId, loginPayload);
-                return true;
+            String nickname = loginPayload.getString("nickname");
+            String password = loginPayload.getString("password");
+            if(customerRepository.existsByNickname(nickname)) {
+                CustomerEntity customer = customerRepository.findByNickname(nickname);
+                if(bCryptPasswordEncoder.matches(password,customer.getPassword())){
+                    loginUsersHashMap.put(sessionId, nickname);
+                    return true;
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -66,7 +81,8 @@ public class LoginAndRegisterServiceImpl implements LoginAndRegisterService {
                     customer.setNickname(newNickname);
                 } else if(changeDataPayload.getString("type").equals("password")) {
                     newPassword = changeDataPayload.getString("newPassword");
-                    customer.setPassword(newPassword);
+                    String encodedPassword = bCryptPasswordEncoder.encode(newPassword);
+                    customer.setPassword(encodedPassword);
                 } else {
                     return false;
                 }
@@ -108,13 +124,34 @@ public class LoginAndRegisterServiceImpl implements LoginAndRegisterService {
 
     @Override
     public String listLogInUsers() {
-
-        StringBuilder sb = new StringBuilder();
-
-        for(JSONObject value: loginUsersHashMap.values()){
-            sb.append(value).append("\n");
+        if(!loginUsersHashMap.isEmpty()){
+            return loginUsersHashMap.toString();
         }
+        return "No logged in users";
+    }
 
-        return sb.toString();
+    @Override
+    public GetReservation getReservation(int id) {
+        ReservationEntity reservationEntity = reservationRepository.findById(id);
+        if(reservationEntity != null)
+            return new GetReservation(reservationEntity.getId(), reservationEntity.getName(),
+                    reservationEntity.getAddress(), reservationEntity.getFonNumber(), reservationEntity.getEmailAddress(),
+                    reservationEntity.getRatingPoints(), reservationEntity.getWebPage(),reservationEntity.getPrice(),
+                    reservationEntity.getCustomer().getId());
+        return null;
+    }
+
+    @Override
+    public List<GetReservation> userListReservations(String nickname) {
+        List<GetReservation> listReservations = new ArrayList<>();
+        if(customerRepository.existsByNickname(nickname)){
+            CustomerEntity customer =  customerRepository.findByNickname(nickname);
+            for(int reservation_id: customer.getReservationsId()) {
+                GetReservation reservation = getReservation(reservation_id);
+                if(reservation != null)
+                    listReservations.add(reservation);
+            }
+        }
+        return listReservations;
     }
 }

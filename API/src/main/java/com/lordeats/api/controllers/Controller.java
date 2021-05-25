@@ -4,7 +4,6 @@ import com.lordeats.api.dtos.*;
 import com.lordeats.api.services.CustomerService;
 import com.lordeats.api.services.LoginAndRegisterService;
 import com.lordeats.api.services.ReservationService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -79,6 +78,15 @@ public class Controller {
         return new ResponseEntity<>(reservationService.getAllReservations(), HttpStatus.OK);
     }
 
+    @GetMapping("/api/getReservation")
+    public ResponseEntity<GetReservation> getReservation(@RequestBody int id) {
+        GetReservation reservation = reservationService.getReservation(id);
+        if (reservation != null){
+            return new ResponseEntity<>(reservation, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
+
     @PostMapping("/api/addReservation")
     public ResponseEntity addNewReservation(@RequestBody PostReservation postReservation) {
         boolean isCreated = reservationService.addNewReservation(postReservation);
@@ -111,7 +119,7 @@ public class Controller {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    // Dane logowania
+    // Login Data
 
     @GetMapping("/api/getLoginCustomers")
     public ResponseEntity<String> getLoginCustomers() {

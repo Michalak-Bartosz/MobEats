@@ -9,6 +9,8 @@ import java.util.List;
 public interface ReservationService {
     List<GetReservation> getAllReservations();
 
+    GetReservation getReservation(int id);
+
     boolean addNewReservation(PostReservation request);
 
     boolean updateReservation(UpdateReservation updateReservation);

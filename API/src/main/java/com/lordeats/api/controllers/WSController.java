@@ -1,5 +1,6 @@
 package com.lordeats.api.controllers;
 
+import com.lordeats.api.dtos.GetReservation;
 import com.lordeats.api.services.CustomerService;
 import com.lordeats.api.services.LoginAndRegisterService;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,8 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
+
+import java.util.List;
 
 @Controller
 @Slf4j
@@ -33,7 +36,6 @@ public class WSController {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
     //TODO Funkcja chatu do rozbudowy
@@ -134,5 +136,18 @@ public class WSController {
             e.printStackTrace();
         }
         return  rejectPayload.toString();
+    }
+
+    @MessageMapping("/getReservations")
+    @SendToUser("/queue/getReservationsList")
+    public String getReservationsList(String message, @Header("simpSessionId") String sessionId) {
+        log.info("User : " + message + " want reservations list.");
+        List<GetReservation> listReservations = loginAndRegisterService.userListReservations(message);
+        if(!listReservations.isEmpty()) {
+            log.info("Reservations list: " + listReservations + " from session: " + sessionId);
+            return listReservations.toString();
+        } else {
+            return rejectPayload.toString();
+        }
     }
 }

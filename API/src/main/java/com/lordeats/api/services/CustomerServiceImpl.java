@@ -7,8 +7,10 @@ import com.lordeats.api.entities.CustomerEntity;
 import com.lordeats.api.repositories.CustomerRepository;
 import com.lordeats.api.repositories.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -18,6 +20,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final ReservationRepository reservationRepository;
+    private final int strength = 10;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(strength, new SecureRandom());
+
 
     @Autowired
     public CustomerServiceImpl(CustomerRepository customerRepository, ReservationRepository reservationRepository) {
@@ -36,7 +41,8 @@ public class CustomerServiceImpl implements CustomerService {
             return false;
         CustomerEntity customerEntity = new CustomerEntity();
         customerEntity.setNickname(postCustomer.getNickname());
-        customerEntity.setPassword(postCustomer.getPassword());
+        String encodedPassword = bCryptPasswordEncoder.encode(postCustomer.getPassword());
+        customerEntity.setPassword(encodedPassword);
 
         customerRepository.save(customerEntity);
         return customerRepository.existsById(customerEntity.getId());
@@ -47,7 +53,8 @@ public class CustomerServiceImpl implements CustomerService {
         if(customerRepository.existsById(updateCustomer.getId())) {
             CustomerEntity customer = customerRepository.findById(updateCustomer.getId());
             customer.setNickname(updateCustomer.getNickname());
-            customer.setPassword(updateCustomer.getPassword());
+            String encodedPassword = bCryptPasswordEncoder.encode(updateCustomer.getPassword());
+            customer.setPassword(encodedPassword);
             customerRepository.save(customer);
             return true;
         }

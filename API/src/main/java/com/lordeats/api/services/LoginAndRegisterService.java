@@ -1,12 +1,14 @@
 package com.lordeats.api.services;
 
+import com.lordeats.api.dtos.GetReservation;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 
 public interface LoginAndRegisterService {
 
-    HashMap<String, JSONObject> loginUsersHashMap = new HashMap<>();
+    HashMap<String, String> loginUsersHashMap = new HashMap<>();
 
     boolean registerUser(JSONObject registerPayload);
     boolean logInUser(JSONObject loginPayload, String sessionId);
@@ -14,4 +16,6 @@ public interface LoginAndRegisterService {
     boolean removeUser(JSONObject userPayload);
     void logOutUser(String sessionId);
     String listLogInUsers();
+    GetReservation getReservation (int id);
+    List<GetReservation> userListReservations(String nickname);
 }

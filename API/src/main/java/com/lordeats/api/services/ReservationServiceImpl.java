@@ -35,6 +35,17 @@ public class ReservationServiceImpl implements ReservationService{
                         reservationEntity.getCustomer().getId())).collect(Collectors.toList());
     }
 
+    @Override
+    public GetReservation getReservation(int id) {
+        ReservationEntity reservationEntity = reservationRepository.findById(id);
+        if(reservationEntity != null)
+            return new GetReservation(reservationEntity.getId(), reservationEntity.getName(),
+                reservationEntity.getAddress(), reservationEntity.getFonNumber(), reservationEntity.getEmailAddress(),
+                reservationEntity.getRatingPoints(), reservationEntity.getWebPage(),reservationEntity.getPrice(),
+                reservationEntity.getCustomer().getId());
+        return null;
+    }
+
     private void setNewReservation(ReservationEntity reservationEntity, String name, String address, int fonNumber, String emailAddress, String ratingPoints, String webPage, BigDecimal price) {
         reservationEntity.setName(name);
         reservationEntity.setAddress(address);
