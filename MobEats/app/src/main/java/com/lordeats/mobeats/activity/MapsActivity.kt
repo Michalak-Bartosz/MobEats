@@ -23,10 +23,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.android.libraries.places.api.Places
 import com.lordeats.mobeats.Common.Common
 import com.lordeats.mobeats.Model.MyPlaces
@@ -171,9 +168,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     .title("You are here ;-)")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
                 mMarker = map!!.addMarker(markerOptions)
-                Log.d("", "latlgn" + latitude + longitude);
-                map.moveCamera(CameraUpdateFactory.newLatLng(latLng))
-                map.animateCamera(CameraUpdateFactory.zoomTo(15f))
+                val cameraPosition = CameraPosition.Builder()
+                    .target(latLng).zoom(16f).build()
+                map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+//                map.animateCamera(CameraUpdateFactory.zoomTo(7f))
             }
         }
     }
