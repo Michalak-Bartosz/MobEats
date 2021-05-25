@@ -1,8 +1,11 @@
 package com.lordeats.mobeats.activity
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.DataBindingUtil.setContentView
 
@@ -14,6 +17,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.databinding.ActivityMapsBinding
+import java.util.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -25,6 +29,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        changeLngButtonListenerConfig()
+        changeModeButtonListenerConfig()
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -59,6 +65,68 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             map.addMarker(
                 MarkerOptions()
                     .position(latLng))
+        }
+    }
+
+    private fun changeLngButtonListenerConfig() {
+        val appSettingPrefs: SharedPreferences = getSharedPreferences("AppSettingPrefs", 0)
+        val sharedPrefsEdit: SharedPreferences.Editor = appSettingPrefs.edit()
+
+        binding.changeLngAppButton.setOnClickListener {
+            when {
+                binding.changeLngAppButton.text == "PL" -> {
+                    sharedPrefsEdit.putString("Locale.Helper.Selected.Language", "pl")
+                    updateResources(this, "pl")
+                    binding.changeLngAppButton.text = getString(R.string.additionalLng)
+                }
+                binding.changeLngAppButton.text == "ENG" -> {
+                    sharedPrefsEdit.putString("Locale.Helper.Selected.Language", "en")
+                    updateResources(this, "en")
+                    binding.changeLngAppButton.text = getString(R.string.additionalLng)
+                }
+                else -> { }
+            }
+
+            sharedPrefsEdit.apply()
+        }
+    }
+
+    private fun updateResources(context: Context, language: String) {
+        val locale = Locale(language)
+        Locale.setDefault(locale)
+        val resources = context.resources
+        val configuration = resources.configuration
+        configuration.locale = locale
+        resources.updateConfiguration(configuration, resources.displayMetrics)
+    }
+
+    private fun changeModeButtonListenerConfig() {
+
+        val appSettingPrefs: SharedPreferences = getSharedPreferences("AppSettingPrefs", 0)
+        val sharedPrefsEdit: SharedPreferences.Editor = appSettingPrefs.edit()
+        val isNightModeOn: Boolean = appSettingPrefs.getBoolean("NightMode", false)
+
+        if(isNightModeOn){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            binding.changeModeApptButton.setImageResource(R.drawable.ic_light_mode)
+        }
+        else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            binding.changeModeApptButton.setImageResource(R.drawable.ic_dark_mode)
+        }
+
+        binding.changeModeApptButton.setOnClickListener {
+
+            if (isNightModeOn){
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                sharedPrefsEdit.putBoolean("NightMode", false)
+                binding.changeModeApptButton.setImageResource(R.drawable.ic_dark_mode)
+            }else{
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                sharedPrefsEdit.putBoolean("NightMode", true)
+                binding.changeModeApptButton.setImageResource(R.drawable.ic_light_mode)
+            }
+            sharedPrefsEdit.apply()
         }
     }
 }

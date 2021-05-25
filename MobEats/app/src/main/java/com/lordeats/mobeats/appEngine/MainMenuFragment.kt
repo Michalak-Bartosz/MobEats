@@ -20,8 +20,9 @@ class MainMenuFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main_menu, container, false)
-        manageAccountButtonListener()
         findFoodButtonListener()
+        favouriteRestaurantButtonListener()
+        manageAccountButtonListener()
         return binding.root
     }
 
@@ -34,6 +35,12 @@ class MainMenuFragment : Fragment() {
     private fun findFoodButtonListener() {
         binding.findFoodButton.setOnClickListener {
             Navigation.findNavController(it).navigate(R.id.action_mainMenuFragment_to_MapsActivity)
+        }
+    }
+
+    private fun favouriteRestaurantButtonListener() {
+        binding.favouriteRestaurantButton.setOnClickListener {
+            Navigation.findNavController(it).navigate(R.id.action_mainMenuFragment_to_restaurantListFragment)
         }
     }
 

@@ -7,11 +7,10 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.databinding.ActivityStartBinding
 import com.lordeats.mobeats.events.MessageEvent
@@ -31,7 +30,8 @@ import java.util.*
 class StartActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityStartBinding
-    public lateinit var client: StompClient
+    private lateinit var client: StompClient
+    private var apiUrl: String = "https://web-eats-server.herokuapp.com/app"
 
     private var registerReplyTmp: String = ""
     private lateinit var registerReply: JSONObject
@@ -48,6 +48,7 @@ class StartActivity : AppCompatActivity() {
         changeModeButtonListenerConfig()
         connectToServer()
         clientLifecycleConfig()
+
     }
 
     override fun onStart() {
@@ -69,7 +70,7 @@ class StartActivity : AppCompatActivity() {
 
     private fun connectToServer() {
 //        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/app")
-        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "https://web-eats-server.herokuapp.com/app")
+        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, apiUrl)
         client.connect()
     }
 
@@ -123,7 +124,9 @@ class StartActivity : AppCompatActivity() {
                     this.runOnUiThread { DynamicToast.makeSuccess(this, getString(R.string.successfulRegister)).show()
 
                        }
-                    EventBus.getDefault().post(MessageReplyEvent("acceptRegister"))
+                    val acceptRegister = JSONObject()
+                    acceptRegister.put("value", "acceptRegister")
+                    EventBus.getDefault().post(MessageReplyEvent(acceptRegister))
                 }
                 registerReply.getString("value") == "reject" -> {
                     this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.failToRegister)).show() }
@@ -156,6 +159,7 @@ class StartActivity : AppCompatActivity() {
     }
 
     private fun goToMainAppActivity(){
+        client.disconnect()
         intent = Intent(this, AppActivity::class.java)
         intent.action = Intent.ACTION_SEND
         intent.putExtra("User Data", userData)

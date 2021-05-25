@@ -12,8 +12,9 @@
 
     <!--    AppActivity-->
 
-    <string name="manageAccount">Zarządzaj kontem</string>
-    <string name="findFood">Znajdź jedzenie!</string>
+    <string name="manageAccount">Zarządzaj\nkontem</string>
+    <string name="findFood">Znajdź\njedzenie!</string>
+    <string name="favouriteRestaurantsButton">Ulubione\nRestauracje</string>
     <string name="greetingText">Witaj</string>
 
     <!--    Login and Register Fragment Section-->
@@ -65,5 +66,11 @@
     <string name="oldPasswordText">Stare:</string>
     <string name="deleteAccountAccepted">Pomyślnie usunięto konto.</string>
     <string name="deleteAccountRejected">Odrzucono usunięcie konta!</string>
+
+    <string name="title_activity_maps">Map</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+<!--    Restaurants List-->
 
 </resources>

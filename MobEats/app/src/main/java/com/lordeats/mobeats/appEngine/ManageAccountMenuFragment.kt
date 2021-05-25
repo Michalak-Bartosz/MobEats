@@ -1,4 +1,4 @@
-package com.lordeats.mobeats.appEngine.manageAccount
+package com.lordeats.mobeats.appEngine
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

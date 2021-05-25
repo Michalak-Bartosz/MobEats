@@ -1,4 +1,6 @@
 package com.lordeats.mobeats.events
 
-data class MessageReplyEvent(var message: String) {
+import org.json.JSONObject
+
+data class MessageReplyEvent(var message: JSONObject?) {
 }

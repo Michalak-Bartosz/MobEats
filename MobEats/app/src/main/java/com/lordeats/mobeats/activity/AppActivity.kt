@@ -30,6 +30,7 @@ class AppActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAppBinding
 
     private lateinit var client: StompClient
+    private var apiUrl: String = "https://web-eats-server.herokuapp.com/app"
 
     private lateinit var userDataTmp: String
     private lateinit var userData: JSONObject
@@ -83,7 +84,7 @@ class AppActivity : AppCompatActivity() {
     @SuppressLint("CheckResult")
     private fun connectToServer() {
 //        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/app")
-        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "https://web-eats-server.herokuapp.com/app")
+        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, apiUrl)
         client.connect()
         client.send("/mobEats/signIn", userDataTmp).subscribe({ },
             { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
@@ -160,15 +161,22 @@ class AppActivity : AppCompatActivity() {
             replayData = JSONObject(replyDataTmp)
             when {
                 replayData.getString("value") == "acceptNickname" -> {
+
                     userData.remove("nickname")
                     userData.put("nickname", userDataChange.getString("newNickname"))
+                    client.send("/mobEats/signIn", userData.toString()).subscribe({ },
+                        { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
 
                     this.runOnUiThread { setUserData()
                         DynamicToast.makeSuccess(this, getString(R.string.changeNicknameAccepted)).show() }
                 }
                 replayData.getString("value") == "acceptPassword" -> {
+
                     userData.remove("password")
                     userData.put("password", userDataChange.getString("newPassword"))
+                    client.send("/mobEats/signIn", userData.toString()).subscribe({ },
+                        { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
+
                     this.runOnUiThread { DynamicToast.makeSuccess(this, getString(R.string.changePasswordAccepted)).show() }
                 }
                 replayData.getString("value") == "reject" -> {

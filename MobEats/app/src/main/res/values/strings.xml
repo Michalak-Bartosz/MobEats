@@ -12,8 +12,9 @@
 
     <!--    AppActivity-->
 
-    <string name="manageAccount">Manage Account</string>
-    <string name="findFood">Find Food!</string>
+    <string name="manageAccount">Manage\nAccount</string>
+    <string name="findFood">Find\nFood!</string>
+    <string name="favouriteRestaurantsButton">Favourite\nRestaurants</string>
     <string name="greetingText">Welcome</string>
 
     <!--    Login and Register Fragment Section-->
@@ -65,6 +66,11 @@
     <string name="oldPasswordText">Old:</string>
     <string name="deleteAccountAccepted">Delete account accepted.</string>
     <string name="deleteAccountRejected">Reject delete account!</string>
+
     <string name="title_activity_maps">Map</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--    Restaurants List-->
 
 </resources>

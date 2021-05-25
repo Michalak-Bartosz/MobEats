@@ -17,14 +17,21 @@
         <action
             android:id="@+id/action_mainMenuFragment_to_MapsActivity"
             app:destination="@id/MapsActivity" />
+        <action
+            android:id="@+id/action_mainMenuFragment_to_restaurantListFragment"
+            app:destination="@id/restaurantListFragment" />
     </fragment>
     <fragment
         android:id="@+id/manageAccountMenuFragment"
-        android:name="com.lordeats.mobeats.appEngine.manageAccount.ManageAccountMenuFragment"
+        android:name="com.lordeats.mobeats.appEngine.ManageAccountMenuFragment"
         android:label="ManageAccountMenu" />
     <activity
         android:id="@+id/MapsActivity"
         android:name="com.lordeats.mobeats.activity.MapsActivity"
         android:label="MapsActivity"
         tools:layout="@layout/activity_maps" />
+    <fragment
+        android:id="@+id/restaurantListFragment"
+        android:name="com.lordeats.mobeats.appEngine.RestaurantListFragment"
+        android:label="RestaurantListFragment" />
 </navigation>

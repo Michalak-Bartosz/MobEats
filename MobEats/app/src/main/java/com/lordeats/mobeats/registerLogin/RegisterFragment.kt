@@ -80,7 +80,7 @@ class RegisterFragment : Fragment() {
 
     @Subscribe(sticky = false)
     fun onMessageReplyEvent(event: MessageReplyEvent){
-        if(event.message == "acceptRegister"){
+        if(event.message?.getString("value") == "acceptRegister"){
             EventBus.getDefault().unregister(this)
             this.view?.findNavController()?.navigate(R.id.action_registerFragment_to_loginFragment)
         }
