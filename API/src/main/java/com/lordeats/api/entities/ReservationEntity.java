@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -50,5 +52,21 @@ public class ReservationEntity {
         this.address = address;
         this.price = price;
         this.customer = customer;
+    }
+
+    public JSONObject reservationToJsonObject(){
+        JSONObject reservationJ = new JSONObject();
+        try {
+            reservationJ.put("name", this.name);
+            reservationJ.put("address", this.address);
+            reservationJ.put("fonNumber", this.fonNumber);
+            reservationJ.put("emailAddress", this.emailAddress);
+            reservationJ.put("ratingPoints", this.ratingPoints);
+            reservationJ.put("webPage", this.webPage);
+            reservationJ.put("price", this.price);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return reservationJ;
     }
 }
