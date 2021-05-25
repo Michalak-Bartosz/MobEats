@@ -148,8 +148,9 @@ public class LoginAndRegisterServiceImpl implements LoginAndRegisterService {
             CustomerEntity customer =  customerRepository.findByNickname(nickname);
             for(int reservation_id: customer.getReservationsId()) {
                 GetReservation reservation = getReservation(reservation_id);
-                if(reservation != null)
+                if(reservation != null) {
                     listReservations.add(reservation);
+                }
             }
         }
         return listReservations;
