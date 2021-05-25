@@ -73,4 +73,7 @@
 
 <!--    Restaurants List-->
 
+    <string name="failGetRestaurantList">Pobranie listy restauracji nie powiodło się!</string>
+    <string name="succeedGetRestaurantList">Pobranie listy restauracji nie powiodło się.</string>
+
 </resources>

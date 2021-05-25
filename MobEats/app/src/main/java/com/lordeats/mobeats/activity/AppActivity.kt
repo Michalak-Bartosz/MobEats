@@ -153,7 +153,7 @@ class AppActivity : AppCompatActivity() {
                 { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
         } else if(client.isConnected && event.message!!.getString("type") == "getRestaurantsList") {
             setOnGetRestaurantsListSubscribe()
-            client.send("/mobEats/getReservations", userDataChange.getString("nickname")).subscribe({ },
+            client.send("/mobEats/getReservations", userData.getString("nickname")).subscribe({ },
                 { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
         } else {
             DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show()
@@ -231,15 +231,14 @@ class AppActivity : AppCompatActivity() {
             replayData = JSONObject(replyDataTmp)
             when {
                 replayData.has("value") -> {
-                    this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.deleteAccountRejected)).show() }
+                    this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.failGetRestaurantList)).show() }
                 }
                 else -> {
                     replayData.put("type", "acceptListRestaurants")
                     EventBus.getDefault().post(MessageReplyEvent(replayData))
-                    this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.deleteAccountRejected)).show() }
+                    this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.succeedGetRestaurantList)).show() }
                 }
             }
-
         }
     }
 

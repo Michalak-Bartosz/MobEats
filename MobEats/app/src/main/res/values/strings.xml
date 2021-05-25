@@ -73,6 +73,7 @@
 
     <!--    Restaurants List-->
 
-    <string name="accept"
+    <string name="failGetRestaurantList">Failed to retrieve the restaurant list!</string>
+    <string name="succeedGetRestaurantList">Succeed to retrieve the restaurant list.</string>
 
 </resources>

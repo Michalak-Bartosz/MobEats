@@ -1,6 +1,7 @@
 package com.lordeats.mobeats.appEngine
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -38,7 +39,7 @@ class RestaurantListFragment : Fragment() {
         super.onStart()
         EventBus.getDefault().register(this)
         val getRestaurantsList = JSONObject()
-        getRestaurantsList.put("value", "getRestaurantsList")
+        getRestaurantsList.put("type", "getRestaurantsList")
         messageToSend = MessageEvent(getRestaurantsList)
         EventBus.getDefault().post(messageToSend)
     }
@@ -57,7 +58,7 @@ class RestaurantListFragment : Fragment() {
     @Subscribe(sticky = false)
     fun onMessageReplyEvent(event: MessageReplyEvent){
         if(event.message?.getString("value") == "acceptListRestaurants"){
-
+            Log.d("Bartek", event.message.toString())
         }
     }
 }
