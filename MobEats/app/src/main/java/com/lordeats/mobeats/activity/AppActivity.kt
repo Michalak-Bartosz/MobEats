@@ -13,6 +13,7 @@ import androidx.databinding.DataBindingUtil
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.databinding.ActivityAppBinding
 import com.lordeats.mobeats.events.MessageEvent
+import com.lordeats.mobeats.events.MessageReplyEvent
 import com.pranavpandey.android.dynamic.toasts.DynamicToast
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -41,6 +42,8 @@ class AppActivity : AppCompatActivity() {
 
     private var replyDataTmp: String = ""
     private lateinit var replayData: JSONObject
+
+    private lateinit var restaurantList: List<JSONObject>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -144,9 +147,13 @@ class AppActivity : AppCompatActivity() {
             setOnChangeUserDataSubscribe()
             client.send("/mobEats/changeUserData", userDataChange.toString()).subscribe({ },
                 { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
-        } else if(client.isConnected && event.message!!.getString("type")  == "deleteAccount"){
+        } else if(client.isConnected && event.message!!.getString("type")  == "deleteAccount") {
             setOnDeleteAccountSubscribe()
             client.send("/mobEats/deleteAccount", userData.toString()).subscribe({ },
+                { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
+        } else if(client.isConnected && event.message!!.getString("type") == "getRestaurantsList") {
+            setOnGetRestaurantsListSubscribe()
+            client.send("/mobEats/getReservations", userDataChange.getString("nickname")).subscribe({ },
                 { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
         } else {
             DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show()
@@ -215,6 +222,25 @@ class AppActivity : AppCompatActivity() {
         intent = Intent(this, StartActivity::class.java)
         startActivity(intent)
         this.finish()
+    }
+
+    @SuppressLint("CheckResult")
+    private fun setOnGetRestaurantsListSubscribe() {
+        client.topic("/user/queue/getReservationsList").subscribe { topicMessage ->
+            replyDataTmp = topicMessage.payload
+            replayData = JSONObject(replyDataTmp)
+            when {
+                replayData.has("value") -> {
+                    this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.deleteAccountRejected)).show() }
+                }
+                else -> {
+                    replayData.put("type", "acceptListRestaurants")
+                    EventBus.getDefault().post(MessageReplyEvent(replayData))
+                    this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.deleteAccountRejected)).show() }
+                }
+            }
+
+        }
     }
 
     private fun changeLngButtonListenerConfig() {
