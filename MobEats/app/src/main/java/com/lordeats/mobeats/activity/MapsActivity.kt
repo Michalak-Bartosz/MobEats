@@ -58,7 +58,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     lateinit var mService: IGoogleAPIService
-    internal var currentPlace: MyPlaces?=null
+    internal lateinit var currentPlace: MyPlaces
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,21 +109,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun nearByPlace () {
         Log.d("URL_DEBUG", "Rozpoczynam");
         map.clear()
-        val typePlace = "restaurant"
+        val typePlace = "bar"
         val url = getUrl(latitude,longitude,typePlace)
 
         mService.getNearbyPlaces(url)
             .enqueue(object : Callback<MyPlaces> {
-                override fun onResponse(call: Call<MyPlaces>, response: Response<MyPlaces>) {
-                    currentPlace = response.body()!!
+                override fun onResponse(call: Call<MyPlaces>?, response: Response<MyPlaces>?) {
+                    currentPlace = response!!.body()!!
                     if (response.isSuccessful)
                     {
                         for(i in 0 until response.body()!!.results!!.size)
                         {
                             val markerOptions = MarkerOptions()
                             val googlePlace = response.body()!!.results!![i]
-                            val lat = googlePlace.geometry!!.location!!.latitude
-                            val lng = googlePlace.geometry!!.location!!.longitude
+                            val lat = googlePlace.geometry!!.location!!.lat
+                            val lng = googlePlace.geometry!!.location!!.lng
                             val placeName = googlePlace.name
                             val latLng = LatLng(lat,lng)
 
@@ -131,23 +131,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             markerOptions.title(placeName)
                             markerOptions.snippet(i.toString())
 
-                            map.addMarker(markerOptions)
-                            Log.d("URL_DEBUG", "Dodanie markera");
+                            map!!.addMarker(markerOptions)
+//                            map!!.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+//                            map!!.animateCamera(CameraUpdateFactory.zoomTo(15f))
                         }
                     }
                 }
-                override fun onFailure(call: Call<MyPlaces>, t: Throwable) {
-                    Toast.makeText(baseContext,""+t.message, Toast.LENGTH_SHORT).show()
+                override fun onFailure(call: Call<MyPlaces>?, t: Throwable) {
+                    Toast.makeText(baseContext,""+t!!.message, Toast.LENGTH_SHORT).show()
+                    Log.d("URL_DEBUG", ""+ t!!.message);
                 }
             })
     }
 
     private fun getUrl(latitude: Double, longitude: Double, typePlace: String): String {
-        val googlePlaceUrl = java.lang.StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json")
+        val googlePlaceUrl = StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json")
         googlePlaceUrl.append("?location=$latitude,$longitude")
-        googlePlaceUrl.append("&radius=5000")
+        googlePlaceUrl.append("&radius=1000")
         googlePlaceUrl.append("&type=$typePlace")
-        googlePlaceUrl.append("&key=AIzaSyC3OiPsQ04J88K34GwlN8x83swt3Igi9Ko")
+        googlePlaceUrl.append("&key=AIzaSyCoZwNDKs4JRA3HNZCKmB_c09GH0bLPnEE")
         Log.d("URL_DEBUG", "Request: " + googlePlaceUrl.toString());
 
         return googlePlaceUrl.toString()
@@ -215,7 +217,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         {
             MY_PERMISSION_CODE -> {
                 if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         if (checkLocationPermission()) {
                             buildLocationRequest()
                             buildLocationCallback()

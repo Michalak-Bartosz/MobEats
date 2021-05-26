@@ -1,6 +1,5 @@
 package com.lordeats.mobeats.Model
 
-import android.location.Location
 
 class Geometry {
 
