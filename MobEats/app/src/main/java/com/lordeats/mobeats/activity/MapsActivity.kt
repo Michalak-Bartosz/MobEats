@@ -63,6 +63,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         setContentView(binding.root)
         changeLngButtonListenerConfig()
         changeModeButtonListenerConfig()
+        findFoodButtonListenerConfig()
 
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -229,6 +230,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    private fun findFoodButtonListenerConfig() {
+        binding.findFoodOnMapButton.setOnClickListener {
+            nearByPlace()
+        }
+    }
+
     private fun changeLngButtonListenerConfig() {
         val appSettingPrefs: SharedPreferences = getSharedPreferences("AppSettingPrefs", 0)
         val sharedPrefsEdit: SharedPreferences.Editor = appSettingPrefs.edit()
@@ -260,6 +267,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         conf.locale = myLocale
         res.updateConfiguration(conf, dm)
         onConfigurationChanged(conf)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        binding.findFoodOnMapButton.text = getString(R.string.findFoodOnMap)
     }
 
     private fun changeModeButtonListenerConfig() {

@@ -1,9 +1,9 @@
 package com.lordeats.mobeats.appEngine
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +15,7 @@ import android.widget.Toast
 
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.JsonArray
 import com.google.gson.JsonParser
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.adapter.CustomAdapter
@@ -36,6 +37,7 @@ class RestaurantListFragment : Fragment(), CustomListeners {
 
     private lateinit var adapter : CustomAdapter
     private lateinit var itemList : MutableList<CustomViewModel>
+    private lateinit var informationItemList: JsonArray
     private var icon: Int = 0
 
     private lateinit var binding: FragmentRestaurantListBinding
@@ -78,7 +80,7 @@ class RestaurantListFragment : Fragment(), CustomListeners {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(KEY_TEXT_LIST_RESTAURANT, textListRestaurant)
+        outState.putString(KEY_TEXT_LIST_RESTAURANT, informationItemList.toString())
     }
 
     private fun setRecyclerView() {
@@ -94,7 +96,7 @@ class RestaurantListFragment : Fragment(), CustomListeners {
         itemList.clear()
         val jsonParser = JsonParser()
         val jsonElement = jsonParser.parse(textListRestaurant)
-        val replayDataList = jsonElement.asJsonArray
+        informationItemList = jsonElement.asJsonArray
 
         when (context?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)) {
             Configuration.UI_MODE_NIGHT_YES -> {icon = R.drawable.ic_restaurant_light}
@@ -102,37 +104,51 @@ class RestaurantListFragment : Fragment(), CustomListeners {
             Configuration.UI_MODE_NIGHT_UNDEFINED -> {icon = R.drawable.ic_restaurant_dark}
         }
 
-        for(value in replayDataList) {
+        for(value in informationItemList) {
             val valueJ = JSONObject(value.toString())
-            itemList.add(CustomViewModel(icon, "Name\n" + valueJ.getString("name")))
+            itemList.add(CustomViewModel(icon, valueJ.getString("name")))
         }
         adapter.setItems(itemList)
     }
 
     override fun onClickLeft(item : CustomViewModel, position : Int) {
-        showDialog("New Dialog")
-        Toast.makeText(this.context,"Left Arrow Clicked! $position",Toast.LENGTH_SHORT).show()
+        val valueJ = JSONObject(informationItemList[position].toString())
+        showDialog(valueJ.getString("name"), valueJ.getString("ratingPoints"), valueJ.getString("address"), valueJ.getString("fonNumber"), valueJ.getString("emailAddress"), valueJ.getString("webPage"))
     }
 
     override fun onClickRight(item : CustomViewModel, position : Int) {
-        Toast.makeText(this.context,"Right Arrow Clicked! $position",Toast.LENGTH_SHORT).show()
         itemList.remove(item)
+        informationItemList.remove(position)
         adapter.setItems(itemList)
     }
 
-    private fun showDialog(title: String) {
+
+
+    @SuppressLint("CutPasteId")
+    @Suppress("NAME_SHADOWING")
+    private fun showDialog(titleText: String, ratingText: String, addressText: String, fonNumberText: String, emailText: String, webPageText: String) {
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
         dialog.setContentView(R.layout.custom_dialog)
-        val body = dialog.findViewById(R.id.tvTitle) as TextView
-        body.text = title
-        val yesBtn = dialog.findViewById(R.id.btn_yes) as Button
-//        val noBtn = dialog.findViewById(R.id.btn_yes) as TextView
-        yesBtn.setOnClickListener {
+
+        val title = (dialog.findViewById(R.id.dialogTitle) as TextView)
+        title.text = titleText
+        val rating = (dialog.findViewById(R.id.ratingText) as TextView)
+        rating.text = ratingText
+        val address = (dialog.findViewById(R.id.addressText) as TextView)
+        address.text = addressText
+        val fonNumber = (dialog.findViewById(R.id.fonNumberText) as TextView)
+        fonNumber.text = fonNumberText
+        val email = (dialog.findViewById(R.id.emailText) as TextView)
+        email.text = emailText
+        val webPage = (dialog.findViewById(R.id.webPageText) as TextView)
+        webPage.text = webPageText
+
+        val okBtn = dialog.findViewById(R.id.okButton) as Button
+        okBtn.setOnClickListener {
             dialog.dismiss()
         }
-//        noBtn.setOnClickListener { dialog.dismiss() }
         dialog.show()
     }
 
@@ -148,7 +164,5 @@ class RestaurantListFragment : Fragment(), CustomListeners {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         binding.restaurantsTextView.text = getString(R.string.restaurants)
-        Log.d("BARTEK", textListRestaurant)
-//        setItems()
     }
 }

@@ -28,6 +28,7 @@
 
         <Button
             android:id="@+id/changeLngMapButton"
+            style="@style/mainTextButton"
             android:layout_width="55dp"
             android:layout_height="30dp"
             android:layout_marginEnd="16dp"
@@ -45,11 +46,23 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="40dp"
+            android:layout_marginBottom="60dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:context=".activity.MapsActivity" />
+
+        <Button
+            android:id="@+id/findFoodOnMapButton"
+            style="@style/findFoodOnMapButton"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="@string/findFoodOnMap"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/map" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

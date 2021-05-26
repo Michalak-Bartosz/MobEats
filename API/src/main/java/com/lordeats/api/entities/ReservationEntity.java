@@ -57,6 +57,7 @@ public class ReservationEntity {
     public JSONObject reservationToJsonObject(){
         JSONObject reservationJ = new JSONObject();
         try {
+            reservationJ.put("id", this.id);
             reservationJ.put("name", this.name);
             reservationJ.put("address", this.address);
             reservationJ.put("fonNumber", this.fonNumber);

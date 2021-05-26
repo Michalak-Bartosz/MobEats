@@ -35,7 +35,8 @@
         <activity
             android:name=".activity.MapsActivity"
             android:label="@string/title_activity_maps"
-            android:configChanges="locale"/>
+            android:configChanges="locale"
+            android:theme="@style/Theme.Design.Light.NoActionBar" />
         <activity
             android:name=".activity.AppActivity"
             android:configChanges="locale"

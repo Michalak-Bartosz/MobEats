@@ -150,4 +150,17 @@ public class WSController {
             return rejectPayload.toString();
         }
     }
+
+    @MessageMapping("/deleteReservation")
+    @SendToUser("/queue/dellReservation")
+    public String dellReservation(String message, @Header("simpSessionId") String sessionId) {
+        log.info("Dell reservation: " + message + " want reservations list.");
+        String listReservations = loginAndRegisterService.userListReservations(message);
+        if(!listReservations.isEmpty()) {
+            log.info("Reservations list: " + listReservations + " from session: " + sessionId);
+            return listReservations;
+        } else {
+            return rejectPayload.toString();
+        }
+    }
 }

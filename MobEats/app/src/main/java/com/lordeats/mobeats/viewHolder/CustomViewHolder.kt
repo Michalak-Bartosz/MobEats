@@ -27,7 +27,7 @@ class CustomViewHolder : BaseViewHolder {
 
     constructor(context : Context, itemView : View,customListeners : CustomListeners) : super(context, itemView, customListeners) {
         imageView = itemView.findViewById(R.id.image_view)
-        textView = itemView.findViewById(R.id.text_view)
+        textView = itemView.findViewById(R.id.restaurantNameTextView)
         cardView = itemView.findViewById(R.id.card_view)
         leftImage = itemView.findViewById(R.id.infoButton)
         rightImage = itemView.findViewById(R.id.deleteButton)

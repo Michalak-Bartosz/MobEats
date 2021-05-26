@@ -32,9 +32,9 @@ class CustomAdapter : RecyclerView.Adapter<BaseViewHolder> {
     }
 
     override fun onCreateViewHolder(parent : ViewGroup, viewType : Int) : BaseViewHolder {
-        val layoutInflater : LayoutInflater = LayoutInflater.from(parent.getContext())
+        val layoutInflater : LayoutInflater = LayoutInflater.from(parent.context)
         val view : View = layoutInflater.inflate(R.layout.item_cell, parent, false)
-        return CustomViewHolder(parent.getContext(), view, customListeners)
+        return CustomViewHolder(parent.context, view, customListeners)
     }
 
     override fun onBindViewHolder(holder : BaseViewHolder, position : Int) {
@@ -45,7 +45,7 @@ class CustomAdapter : RecyclerView.Adapter<BaseViewHolder> {
         return list.size
     }
 
-    public fun setItems(items : MutableList<CustomViewModel>) {
+    fun setItems(items : MutableList<CustomViewModel>) {
         list.clear()
         list.addAll(items)
         notifyDataSetChanged()

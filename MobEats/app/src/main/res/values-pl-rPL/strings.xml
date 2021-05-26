@@ -70,11 +70,21 @@
 <!--    Restaurants List-->
 
     <string name="restaurants">Restauracje</string>
+    <string name="restaurantData">Dane restauracji</string>
     <string name="failGetRestaurantList">Pobranie listy restauracji nie powiodło się!</string>
     <string name="succeedGetRestaurantList">Pobranie listy restauracji powiodło się.</string>
+
+    <string name="ratingHead">Ocena:</string>
+    <string name="addressHead">Ades:</string>
+    <string name="fonNumberHead">Numer tel.:</string>
+    <string name="emailHead">Email:</string>
+    <string name="webPageHead">Strona inter.:</string>
+
+    <string name="okButton">OK</string>
 
     <!--    Find Food Map-->
 
     <string name="title_activity_maps">MobEats: Znajdź Jedzenie!</string>
+    <string name="findFoodOnMap">Znajdź jedzenie!</string>
 
 </resources>
