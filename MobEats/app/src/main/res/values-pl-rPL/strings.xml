@@ -74,6 +74,9 @@
     <string name="failGetRestaurantList">Pobranie listy restauracji nie powiodło się!</string>
     <string name="succeedGetRestaurantList">Pobranie listy restauracji powiodło się.</string>
 
+    <string name="deleteRestaurantAccepted">Pomyślnie usunięto restauracje.</string>
+    <string name="deleteRestaurantRejected">Odrzucono usunięcie restauracji!</string>
+
     <string name="ratingHead">Ocena:</string>
     <string name="addressHead">Ades:</string>
     <string name="fonNumberHead">Numer tel.:</string>

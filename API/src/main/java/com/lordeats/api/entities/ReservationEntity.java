@@ -29,7 +29,7 @@ public class ReservationEntity {
     private String address;
 
     @Column(name="fonNumber")
-    private int fonNumber;
+    private String fonNumber;
 
     @Column(name="emailAddress")
     private String emailAddress;

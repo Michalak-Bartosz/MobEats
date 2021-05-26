@@ -118,6 +118,20 @@ public class LoginAndRegisterServiceImpl implements LoginAndRegisterService {
     }
 
     @Override
+    public boolean removeReservation(JSONObject reservationPayload) {
+        try {
+            int id = Integer.parseInt(reservationPayload.getString("id"));
+            if(reservationRepository.existsById(id)) {
+                reservationRepository.deleteById(id);
+                return true;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
     public void logOutUser(String sessionId) {
         loginUsersHashMap.remove(sessionId);
     }

@@ -46,7 +46,7 @@ public class ReservationServiceImpl implements ReservationService{
         return null;
     }
 
-    private void setNewReservation(ReservationEntity reservationEntity, String name, String address, int fonNumber, String emailAddress, String ratingPoints, String webPage, BigDecimal price) {
+    private void setNewReservation(ReservationEntity reservationEntity, String name, String address, String fonNumber, String emailAddress, String ratingPoints, String webPage, BigDecimal price) {
         reservationEntity.setName(name);
         reservationEntity.setAddress(address);
         reservationEntity.setFonNumber(fonNumber);

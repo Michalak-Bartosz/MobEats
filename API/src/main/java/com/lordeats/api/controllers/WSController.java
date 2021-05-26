@@ -154,13 +154,19 @@ public class WSController {
     @MessageMapping("/deleteReservation")
     @SendToUser("/queue/dellReservation")
     public String dellReservation(String message, @Header("simpSessionId") String sessionId) {
-        log.info("Dell reservation: " + message + " want reservations list.");
-        String listReservations = loginAndRegisterService.userListReservations(message);
-        if(!listReservations.isEmpty()) {
-            log.info("Reservations list: " + listReservations + " from session: " + sessionId);
-            return listReservations;
-        } else {
-            return rejectPayload.toString();
+        try {
+            JSONObject deleteReservationPayload = new JSONObject(message);
+            log.info("Remove Reservation Payload: " + deleteReservationPayload);
+            boolean OK  = loginAndRegisterService.removeReservation(deleteReservationPayload);
+            if(OK) {
+                log.info("Reservation removed: " + message + " from session: " + sessionId);
+                return acceptPayload.toString();
+            } else {
+                return rejectPayload.toString();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+        return rejectPayload.toString();
     }
 }

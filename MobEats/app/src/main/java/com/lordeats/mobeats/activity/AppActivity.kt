@@ -84,8 +84,8 @@ class AppActivity : AppCompatActivity() {
 
     @SuppressLint("CheckResult")
     private fun connectToServer() {
-//        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/app")
-        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, apiUrl)
+        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/app")
+//        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, apiUrl)
         client.connect()
         client.send("/mobEats/signIn", userDataTmp).subscribe({ },
             { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
@@ -152,6 +152,10 @@ class AppActivity : AppCompatActivity() {
         } else if(client.isConnected && event.message!!.getString("type") == "getRestaurantsList") {
             setOnGetRestaurantsListSubscribe()
             client.send("/mobEats/getReservations", userData.getString("nickname")).subscribe({ },
+                { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
+        } else if(client.isConnected && event.message!!.getString("type") == "removeRestaurant") {
+            setOnDeleteReservationSubscribe()
+            client.send("/mobEats/deleteReservation", event.message!!.getString("value")).subscribe({ },
                 { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
         } else {
             DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show()
@@ -233,6 +237,25 @@ class AppActivity : AppCompatActivity() {
                 else -> {
                     EventBus.getDefault().post(MessageReplyEvent(replyDataTmp))
                     this.runOnUiThread { DynamicToast.makeSuccess(this, getString(R.string.succeedGetRestaurantList)).show() }
+                }
+            }
+        }
+    }
+
+    @SuppressLint("CheckResult")
+    private fun setOnDeleteReservationSubscribe() {
+        client.topic("/user/queue/dellReservation").subscribe { topicMessage ->
+            replyDataTmp = topicMessage.payload
+            replayData = JSONObject(replyDataTmp)
+            when {
+                replayData.getString("value") == "accept" -> {
+                    this.runOnUiThread { DynamicToast.makeSuccess(this, getString(R.string.deleteRestaurantAccepted)).show() }
+                }
+                replayData.getString("value") == "reject" -> {
+                    this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.deleteRestaurantRejected)).show() }
+                }
+                else -> {
+                    this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.deleteRestaurantRejected)).show() }
                 }
             }
         }

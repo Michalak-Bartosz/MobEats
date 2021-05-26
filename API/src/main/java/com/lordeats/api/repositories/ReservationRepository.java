@@ -12,4 +12,5 @@ import java.util.List;
 public interface ReservationRepository extends CrudRepository<ReservationEntity, Integer> {
     List<ReservationEntity> findByCustomer(CustomerEntity customer, Sort sort);
     ReservationEntity findById(int id);
+    boolean existsById(int id);
 }

@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 public class PostReservation {
     private String name;
     private String address;
-    private int fonNumber;
+    private String fonNumber;
     private String emailAddress;
     private String ratingPoints;
     private String webPage;

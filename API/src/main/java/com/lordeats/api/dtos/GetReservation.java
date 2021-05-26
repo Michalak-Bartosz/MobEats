@@ -15,7 +15,7 @@ public class GetReservation {
     private int id;
     private String name;
     private String address;
-    private int fonNumber;
+    private String fonNumber;
     private String emailAddress;
     private String ratingPoints;
     private String webPage;

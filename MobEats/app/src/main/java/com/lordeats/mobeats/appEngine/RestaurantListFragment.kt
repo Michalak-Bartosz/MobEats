@@ -3,7 +3,10 @@ package com.lordeats.mobeats.appEngine
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.res.Configuration
+import android.graphics.Paint
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -117,6 +120,12 @@ class RestaurantListFragment : Fragment(), CustomListeners {
     }
 
     override fun onClickRight(item : CustomViewModel, position : Int) {
+        val removeRestaurant = JSONObject()
+        removeRestaurant.put("type", "removeRestaurant")
+        removeRestaurant.put("value", informationItemList[position].toString())
+        messageToSend = MessageEvent(removeRestaurant)
+        EventBus.getDefault().post(messageToSend)
+        Log.d("REMOVE RESERVATION", informationItemList[position].toString())
         itemList.remove(item)
         informationItemList.remove(position)
         adapter.setItems(itemList)
@@ -134,6 +143,7 @@ class RestaurantListFragment : Fragment(), CustomListeners {
 
         val title = (dialog.findViewById(R.id.dialogTitle) as TextView)
         title.text = titleText
+        title.paintFlags = title.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         val rating = (dialog.findViewById(R.id.ratingText) as TextView)
         rating.text = ratingText
         val address = (dialog.findViewById(R.id.addressText) as TextView)
@@ -144,6 +154,7 @@ class RestaurantListFragment : Fragment(), CustomListeners {
         email.text = emailText
         val webPage = (dialog.findViewById(R.id.webPageText) as TextView)
         webPage.text = webPageText
+//        webPage.movementMethod = LinkMovementMethod.getInstance();
 
         val okBtn = dialog.findViewById(R.id.okButton) as Button
         okBtn.setOnClickListener {

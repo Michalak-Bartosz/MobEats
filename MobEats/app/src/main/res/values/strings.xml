@@ -74,6 +74,9 @@
     <string name="failGetRestaurantList">Failed to retrieve the restaurant list!</string>
     <string name="succeedGetRestaurantList">Succeed to retrieve the restaurant list.</string>
 
+    <string name="deleteRestaurantAccepted">Delete restaurant accepted.</string>
+    <string name="deleteRestaurantRejected">Reject delete restaurant!</string>
+
     <string name="ratingHead">Rating Points:</string>
     <string name="addressHead">Address:</string>
     <string name="fonNumberHead">Fon. Number:</string>
