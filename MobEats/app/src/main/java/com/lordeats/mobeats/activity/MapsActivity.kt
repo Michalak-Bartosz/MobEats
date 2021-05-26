@@ -101,13 +101,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             map.isMyLocationEnabled = true
         }
         map.uiSettings.isZoomControlsEnabled = true
-        map.setOnMapClickListener { click ->
-            nearByPlace()
+        map.setOnMarkerClickListener { marker ->
+            if (marker == mMarker) {
+                nearByPlace()
+            }
+            if (marker.isInfoWindowShown) {
+                marker.hideInfoWindow()
+            } else {
+                marker.showInfoWindow()
+            }
+            true
         }
     }
 
     private fun nearByPlace () {
-        Log.d("URL_DEBUG", "Rozpoczynam");
         map.clear()
         val typePlace = "bar"
         val url = getUrl(latitude,longitude,typePlace)
@@ -172,6 +179,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     .position(latLng)
                     .title("You are here ;-)")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+
                 mMarker = map!!.addMarker(markerOptions)
                 val cameraPosition = CameraPosition.Builder()
                     .target(latLng).zoom(16f).build()

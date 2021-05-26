@@ -88,8 +88,8 @@ class AppActivity : AppCompatActivity() {
 
     @SuppressLint("CheckResult")
     private fun connectToServer() {
-        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/app")
-//        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, apiUrl)
+//        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/app")
+        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, apiUrl)
         client.connect()
         client.send("/mobEats/signIn", userDataTmp).subscribe({ },
             { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
