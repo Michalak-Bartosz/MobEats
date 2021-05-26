@@ -1,5 +1,6 @@
 package com.lordeats.mobeats.appEngine
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,7 +10,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.Navigation
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.databinding.FragmentMainMenuBinding
-import com.lordeats.mobeats.events.ChangeLangEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -30,16 +30,6 @@ class MainMenuFragment : Fragment() {
         return binding.root
     }
 
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        EventBus.getDefault().unregister(this)
-    }
-
     private fun manageAccountButtonListener() {
         binding.manageAccountButton.setOnClickListener {
             Navigation.findNavController(it).navigate(R.id.action_mainMenuFragment_to_manageAccountFragment)
@@ -58,13 +48,10 @@ class MainMenuFragment : Fragment() {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onChangeLangEvent(event: ChangeLangEvent){
-        if(event.message == "newLang"){
-            binding.findFoodButton.text = getString(R.string.findFoodButton)
-            binding.favouriteRestaurantButton.text = getString(R.string.favouriteRestaurantsButton)
-            binding.manageAccountButton.text =getString(R.string.manageAccountButton)
-        }
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        binding.findFoodButton.text = getString(R.string.findFoodButton)
+        binding.favouriteRestaurantButton.text = getString(R.string.favouriteRestaurantsButton)
+        binding.manageAccountButton.text =getString(R.string.manageAccountButton)
     }
-
 }

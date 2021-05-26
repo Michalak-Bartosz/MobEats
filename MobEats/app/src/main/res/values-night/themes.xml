@@ -8,6 +8,10 @@
         <item name="android:background">#404040</item>
     </style>
 
+    <style name="itemCellBackground">
+        <item name="android:src">@drawable/round_corner_with_border_dark</item>
+    </style>
+
     <style name="changeDataBackground">
         <item name="android:src">@drawable/round_corner_light_gray</item>
     </style>
@@ -67,11 +71,27 @@
         <item name="android:fontFamily">sans-serif-black"</item>
     </style>
 
-    <style name="accountImage">
+    <style name="leadText">
+        <item name="android:background">@drawable/round_corner_launcher_background_dark</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:paddingBottom">6dp</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:fontFamily">sans-serif-black"</item>
+    </style>
+
+    <style name="accountIcon">
         <item name="android:background">@drawable/circle_light</item>
         <item name="android:padding">6dp</item>
         <item name="android:src">@drawable/ic_account_dark</item>
     </style>
+
+    <style name="itemCellIcon">
+        <item name="srcCompat">@drawable/ic_restaurant_light</item>
+    </style>
+
 
     <!-- Base application theme. -->
     <style name="Theme.MobEats" parent="Theme.MaterialComponents.DayNight">

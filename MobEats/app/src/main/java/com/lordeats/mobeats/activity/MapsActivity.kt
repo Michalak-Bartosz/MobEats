@@ -1,7 +1,6 @@
 package com.lordeats.mobeats.activity
 
 import android.Manifest
-import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -15,8 +14,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.DataBindingUtil.setContentView
 import com.example.applicationfinal.Remote.IGoogleAPIService
 import com.google.android.gms.location.*
 
@@ -30,7 +27,6 @@ import com.lordeats.mobeats.Common.Common
 import com.lordeats.mobeats.Model.MyPlaces
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.databinding.ActivityMapsBinding
-import com.lordeats.mobeats.events.ChangeLangEvent
 import org.greenrobot.eventbus.EventBus
 import retrofit2.Call
 import retrofit2.Callback
@@ -272,11 +268,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         conf.locale = myLocale
         res.updateConfiguration(conf, dm)
         onConfigurationChanged(conf)
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        EventBus.getDefault().post(ChangeLangEvent("newLang"))
-        super.onConfigurationChanged(newConfig)
     }
 
     private fun changeModeButtonListenerConfig() {

@@ -2,7 +2,6 @@ package com.lordeats.mobeats.activity
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
@@ -11,17 +10,14 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
-import com.google.gson.JsonParser
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.databinding.ActivityAppBinding
-import com.lordeats.mobeats.events.ChangeLangEvent
 import com.lordeats.mobeats.events.MessageEvent
 import com.lordeats.mobeats.events.MessageReplyEvent
 import com.pranavpandey.android.dynamic.toasts.DynamicToast
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.json.JSONArray
 import org.json.JSONObject
 import ua.naiksoftware.stomp.Stomp
 import ua.naiksoftware.stomp.StompClient
@@ -272,11 +268,6 @@ class AppActivity : AppCompatActivity() {
         conf.locale = myLocale
         res.updateConfiguration(conf, dm)
         onConfigurationChanged(conf)
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        EventBus.getDefault().post(ChangeLangEvent("newLang"))
-        super.onConfigurationChanged(newConfig)
     }
 
     private fun changeModeButtonListenerConfig() {
