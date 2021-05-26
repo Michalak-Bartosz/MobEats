@@ -1,5 +1,6 @@
 package com.lordeats.mobeats.registerLogin
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.databinding.FragmentRegisterBinding
-import com.lordeats.mobeats.events.ChangeLangEvent
 import com.lordeats.mobeats.events.MessageEvent
 import com.lordeats.mobeats.events.MessageReplyEvent
 import com.pranavpandey.android.dynamic.toasts.DynamicToast
@@ -88,14 +88,12 @@ class RegisterFragment : Fragment() {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onChangeLangEvent(event: ChangeLangEvent){
-        if(event.message == "newLang"){
-            binding.signUpTextView.text = getString(R.string.signUp)
-            binding.nicknameRegisterPlainText.hint = getString(R.string.hintNickname)
-            binding.keyOnePassword.hint = getString(R.string.hintPassword)
-            binding.keyTwoPassword.hint = getString(R.string.hintRepeatPassword)
-            binding.registerButton.text = getString(R.string.registerButton)
-        }
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        binding.signUpTextView.text = getString(R.string.signUp)
+        binding.nicknameRegisterPlainText.hint = getString(R.string.hintNickname)
+        binding.keyOnePassword.hint = getString(R.string.hintPassword)
+        binding.keyTwoPassword.hint = getString(R.string.hintRepeatPassword)
+        binding.registerButton.text = getString(R.string.registerButton)
     }
 }

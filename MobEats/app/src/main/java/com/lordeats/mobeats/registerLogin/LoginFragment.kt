@@ -1,6 +1,7 @@
 package com.lordeats.mobeats.registerLogin
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +10,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.lordeats.mobeats.R
-import com.lordeats.mobeats.activity.StartActivity
 import com.lordeats.mobeats.databinding.FragmentLoginBinding
-import com.lordeats.mobeats.events.ChangeLangEvent
 import com.lordeats.mobeats.events.MessageEvent
-import com.lordeats.mobeats.events.MessageReplyEvent
 import com.pranavpandey.android.dynamic.toasts.DynamicToast
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -39,16 +37,6 @@ class LoginFragment : Fragment() {
         singUpButtonListener()
         singInButtonListener()
         return binding.root
-    }
-
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        EventBus.getDefault().unregister(this)
     }
 
     private fun checkTextContext(): Boolean {
@@ -83,15 +71,13 @@ class LoginFragment : Fragment() {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onChangeLangEvent(event: ChangeLangEvent){
-        if(event.message == "newLang"){
-            binding.signInTextView.text = getString(R.string.signIn)
-            binding.nicknameLoginPlainText.hint = getString(R.string.hintNickname)
-            binding.keyPassword.hint = getString(R.string.hintPassword)
-            binding.signInButton.text = getString(R.string.loginButton)
-            binding.notSingUpComTextView.text = getString(R.string.notSingUpCom)
-            binding.singUpButton.text = getString(R.string.singUpButton)
-        }
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        binding.signInTextView.text = getString(R.string.signIn)
+        binding.nicknameLoginPlainText.hint = getString(R.string.hintNickname)
+        binding.keyPassword.hint = getString(R.string.hintPassword)
+        binding.signInButton.text = getString(R.string.loginButton)
+        binding.notSingUpComTextView.text = getString(R.string.notSingUpCom)
+        binding.singUpButton.text = getString(R.string.singUpButton)
     }
 }

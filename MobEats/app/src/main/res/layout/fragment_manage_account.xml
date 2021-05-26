@@ -46,7 +46,7 @@
 
         <ImageView
             android:id="@+id/accountImage"
-            style="@style/accountImage"
+            style="@style/accountIcon"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginStart="8dp"
@@ -61,11 +61,10 @@
             android:layout_width="300dp"
             android:layout_height="200dp"
             app:layout_constraintBottom_toBottomOf="@+id/changeNicknameButton"
-            app:layout_constraintEnd_toEndOf="@+id/changeNicknameText"
-            app:layout_constraintHorizontal_bias="0.444"
-            app:layout_constraintStart_toStartOf="@+id/changeNicknameText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/changeNicknameText"
-            app:layout_constraintVertical_bias="0.218" />
+            app:layout_constraintVertical_bias="0.22000003" />
 
         <ImageView
             android:id="@+id/dataChangeBg2"
@@ -73,8 +72,8 @@
             android:layout_width="300dp"
             android:layout_height="270dp"
             app:layout_constraintBottom_toBottomOf="@+id/changePasswordButton"
-            app:layout_constraintEnd_toEndOf="@+id/changePasswordText"
-            app:layout_constraintStart_toStartOf="@+id/changePasswordText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/changePasswordText" />
 
         <TextView

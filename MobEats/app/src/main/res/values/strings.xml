@@ -67,13 +67,14 @@
     <string name="deleteAccountAccepted">Delete account accepted.</string>
     <string name="deleteAccountRejected">Reject delete account!</string>
 
-    <string name="title_activity_maps">Map</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <!--    Restaurants List-->
 
+    <string name="restaurants">Restaurants</string>
     <string name="failGetRestaurantList">Failed to retrieve the restaurant list!</string>
     <string name="succeedGetRestaurantList">Succeed to retrieve the restaurant list.</string>
+
+<!--    Find Food Map-->
+
+    <string name="title_activity_maps">MobEats: Find Food!</string>
 
 </resources>

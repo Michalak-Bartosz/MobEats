@@ -1,5 +1,6 @@
 package com.lordeats.mobeats
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,11 +9,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.Navigation
 import com.lordeats.mobeats.databinding.FragmentTitleBinding
-import com.lordeats.mobeats.events.ChangeLangEvent
-import com.lordeats.mobeats.events.MessageReplyEvent
 import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 /**
  * A simple [Fragment] subclass.
@@ -33,20 +30,9 @@ class TitleFragment : Fragment() {
         return binding.root
     }
 
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this)
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        binding.playButton.text = getString(R.string.start)
     }
 
-    override fun onStop() {
-        super.onStop()
-        EventBus.getDefault().unregister(this)
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onChangeLangEvent(event: ChangeLangEvent){
-        if(event.message == "newLang"){
-            binding.playButton.text = getString(R.string.start)
-        }
-    }
 }

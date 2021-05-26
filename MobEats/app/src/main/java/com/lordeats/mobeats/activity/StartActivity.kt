@@ -2,20 +2,16 @@ package com.lordeats.mobeats.activity
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
-import android.content.res.Resources
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.databinding.ActivityStartBinding
-import com.lordeats.mobeats.events.ChangeLangEvent
 import com.lordeats.mobeats.events.MessageEvent
 import com.lordeats.mobeats.events.MessageReplyEvent
 import com.pranavpandey.android.dynamic.toasts.DynamicToast
@@ -199,11 +195,6 @@ class StartActivity : AppCompatActivity() {
         conf.locale = myLocale
         res.updateConfiguration(conf, dm)
         onConfigurationChanged(conf)
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        EventBus.getDefault().post(ChangeLangEvent("newLang"))
-        super.onConfigurationChanged(newConfig)
     }
 
     private fun changeModeButtonListenerConfig() {

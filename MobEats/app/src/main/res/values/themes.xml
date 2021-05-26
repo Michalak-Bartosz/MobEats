@@ -8,6 +8,10 @@
         <item name="android:background">#B8B8B8</item>
     </style>
 
+    <style name="itemCellBackground">
+        <item name="android:src">@drawable/round_corner_with_border_light</item>
+    </style>
+
     <style name="changeDataBackground">
         <item name="android:src">@drawable/round_corner_dark_gray</item>
     </style>
@@ -67,7 +71,18 @@
         <item name="android:fontFamily">sans-serif-black"</item>
     </style>
 
-    <style name="accountImage">
+    <style name="leadText">
+        <item name="android:background">@drawable/round_corner_launcher_background_light</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:paddingBottom">6dp</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:textSize">40sp</item>
+        <item name="android:fontFamily">sans-serif-black"</item>
+    </style>
+
+    <style name="accountIcon">
         <item name="android:background">@drawable/circle_dark</item>
         <item name="android:padding">6dp</item>
         <item name="android:src">@drawable/ic_account_light</item>
