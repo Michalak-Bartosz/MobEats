@@ -112,7 +112,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun nearByPlace () {
         map.clear()
-        val typePlace = "bar"
+        val typePlace = "restaurant"
         val url = getUrl(latitude,longitude,typePlace)
 
         mService.getNearbyPlaces(url)
