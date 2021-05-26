@@ -27,6 +27,7 @@ import com.lordeats.mobeats.Common.Common
 import com.lordeats.mobeats.Model.MyPlaces
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.databinding.ActivityMapsBinding
+import okhttp3.internal.wait
 import org.greenrobot.eventbus.EventBus
 import retrofit2.Call
 import retrofit2.Callback
@@ -99,9 +100,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         map.uiSettings.isZoomControlsEnabled = true
         map.setOnMarkerClickListener { marker ->
-            if (marker == mMarker) {
-                nearByPlace()
-            }
             if (marker.isInfoWindowShown) {
                 marker.hideInfoWindow()
             } else {
@@ -111,17 +109,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun nearByPlace () {
-        map.clear()
+    private fun nearByPlace (nextPageToken: String) {
+        if (nextPageToken.length <= 0) {
+            map.clear()
+        }
         val typePlace = "restaurant"
-        val url = getUrl(latitude,longitude,typePlace)
-
+        val url = getUrl(latitude,longitude,typePlace,nextPageToken)
+        var pageToken = ""
         mService.getNearbyPlaces(url)
             .enqueue(object : Callback<MyPlaces> {
                 override fun onResponse(call: Call<MyPlaces>?, response: Response<MyPlaces>?) {
-                    currentPlace = response!!.body()!!
-                    if (response.isSuccessful)
+                    if (response!!.isSuccessful)
                     {
+                        Log.d("URL_TOKIKIK", "" + response.body()!!.results!!.size)
                         for(i in 0 until response.body()!!.results!!.size)
                         {
                             val markerOptions = MarkerOptions()
@@ -136,8 +136,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             markerOptions.snippet(i.toString())
 
                             map!!.addMarker(markerOptions)
-//                            map!!.moveCamera(CameraUpdateFactory.newLatLng(latLng))
-//                            map!!.animateCamera(CameraUpdateFactory.zoomTo(15f))
+                            map!!.addMarker(markerOptions)
+                            Log.d("URL_TOKENNNN", "I made "+ i.toString());
+                        }
+                        if (response.body()!!.next_page_token != null) {
+                            pageToken = response.body()!!.next_page_token.toString()
+                            Log.d("URL_TOKENNNN", "PageToken "+ pageToken);
+//                            Log.d("URL_RESPONSE", "Responsee "+ response.body()!!.next_page_token);
+                            nearByPlace(pageToken)
+                        } else {
+                            pageToken = ""
+                            Log.d("URL_TOKENNNN", "PageTokenZE "+ pageToken);
                         }
                     }
                 }
@@ -148,12 +157,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             })
     }
 
-    private fun getUrl(latitude: Double, longitude: Double, typePlace: String): String {
+    private fun getUrl(latitude: Double, longitude: Double, typePlace: String, nextPage: String): String {
         val googlePlaceUrl = StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json")
-        googlePlaceUrl.append("?location=$latitude,$longitude")
-        googlePlaceUrl.append("&radius=1000")
-        googlePlaceUrl.append("&type=$typePlace")
-        googlePlaceUrl.append("&key=AIzaSyCoZwNDKs4JRA3HNZCKmB_c09GH0bLPnEE")
+        if (nextPage.length > 0) {
+            googlePlaceUrl.append("?key=AIzaSyCoZwNDKs4JRA3HNZCKmB_c09GH0bLPnEE")
+            googlePlaceUrl.append("&pagetoken=$nextPage")
+        } else {
+            googlePlaceUrl.append("?location=$latitude,$longitude")
+            googlePlaceUrl.append("&radius=1000")
+            googlePlaceUrl.append("&type=$typePlace")
+            googlePlaceUrl.append("&key=AIzaSyCoZwNDKs4JRA3HNZCKmB_c09GH0bLPnEE")
+        }
         Log.d("URL_DEBUG", "Request: " + googlePlaceUrl.toString());
 
         return googlePlaceUrl.toString()
@@ -240,7 +254,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun findFoodButtonListenerConfig() {
         binding.findFoodOnMapButton.setOnClickListener {
-            nearByPlace()
+            nearByPlace("")
         }
     }
 
