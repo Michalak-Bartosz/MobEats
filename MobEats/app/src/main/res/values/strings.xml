@@ -12,8 +12,8 @@
 
     <!--    AppActivity-->
 
-    <string name="manageAccount">Manage\nAccount</string>
-    <string name="findFood">Find\nFood!</string>
+    <string name="manageAccountButton">Manage\nAccount</string>
+    <string name="findFoodButton">Find\nFood!</string>
     <string name="favouriteRestaurantsButton">Favourite\nRestaurants</string>
     <string name="greetingText">Welcome</string>
 

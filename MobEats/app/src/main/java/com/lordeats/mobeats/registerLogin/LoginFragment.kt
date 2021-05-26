@@ -11,9 +11,13 @@ import androidx.navigation.Navigation
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.activity.StartActivity
 import com.lordeats.mobeats.databinding.FragmentLoginBinding
+import com.lordeats.mobeats.events.ChangeLangEvent
 import com.lordeats.mobeats.events.MessageEvent
+import com.lordeats.mobeats.events.MessageReplyEvent
 import com.pranavpandey.android.dynamic.toasts.DynamicToast
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
 
 
@@ -35,6 +39,16 @@ class LoginFragment : Fragment() {
         singUpButtonListener()
         singInButtonListener()
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
     }
 
     private fun checkTextContext(): Boolean {
@@ -66,6 +80,18 @@ class LoginFragment : Fragment() {
     private fun singUpButtonListener(){
         binding.singUpButton.setOnClickListener { view: View ->
             Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_registerFragment)
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onChangeLangEvent(event: ChangeLangEvent){
+        if(event.message == "newLang"){
+            binding.signInTextView.text = getString(R.string.signIn)
+            binding.nicknameLoginPlainText.hint = getString(R.string.hintNickname)
+            binding.keyPassword.hint = getString(R.string.hintPassword)
+            binding.signInButton.text = getString(R.string.loginButton)
+            binding.notSingUpComTextView.text = getString(R.string.notSingUpCom)
+            binding.singUpButton.text = getString(R.string.singUpButton)
         }
     }
 }

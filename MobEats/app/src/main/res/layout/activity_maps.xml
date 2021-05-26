@@ -10,7 +10,7 @@
         android:layout_height="match_parent">
 
         <ImageButton
-            android:id="@+id/changeModeApptButton"
+            android:id="@+id/changeModeMapButton"
             style="@style/mainImageButton"
             android:layout_width="55dp"
             android:layout_height="30dp"
@@ -21,13 +21,13 @@
             android:focusable="true"
             android:scaleType="centerInside"
             app:layout_constraintBottom_toTopOf="@+id/map"
-            app:layout_constraintEnd_toStartOf="@+id/changeLngAppButton"
+            app:layout_constraintEnd_toStartOf="@+id/changeLngMapButton"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_dark_mode"
             tools:ignore="VectorDrawableCompat" />
 
         <Button
-            android:id="@+id/changeLngAppButton"
+            android:id="@+id/changeLngMapButton"
             style="@style/mainTextButton"
             android:layout_width="55dp"
             android:layout_height="30dp"

@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.location.Location
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +30,8 @@ import com.lordeats.mobeats.Common.Common
 import com.lordeats.mobeats.Model.MyPlaces
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.databinding.ActivityMapsBinding
+import com.lordeats.mobeats.events.ChangeLangEvent
+import org.greenrobot.eventbus.EventBus
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -228,37 +231,42 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-
     private fun changeLngButtonListenerConfig() {
         val appSettingPrefs: SharedPreferences = getSharedPreferences("AppSettingPrefs", 0)
         val sharedPrefsEdit: SharedPreferences.Editor = appSettingPrefs.edit()
 
-        binding.changeLngAppButton.setOnClickListener {
-            when {
-                binding.changeLngAppButton.text == "PL" -> {
+        binding.changeLngMapButton.setOnClickListener {
+            when (binding.changeLngMapButton.text) {
+                "PL" -> {
                     sharedPrefsEdit.putString("Locale.Helper.Selected.Language", "pl")
-                    updateResources(this, "pl")
-                    binding.changeLngAppButton.text = getString(R.string.additionalLng)
+                    updateResources("pl")
+                    binding.changeLngMapButton.text = getString(R.string.additionalLng)
                 }
-                binding.changeLngAppButton.text == "ENG" -> {
+                "ENG" -> {
                     sharedPrefsEdit.putString("Locale.Helper.Selected.Language", "en")
-                    updateResources(this, "en")
-                    binding.changeLngAppButton.text = getString(R.string.additionalLng)
+                    updateResources("en")
+                    binding.changeLngMapButton.text = getString(R.string.additionalLng)
                 }
                 else -> { }
             }
-
             sharedPrefsEdit.apply()
         }
     }
 
-    private fun updateResources(context: Context, language: String) {
-        val locale = Locale(language)
-        Locale.setDefault(locale)
-        val resources = context.resources
-        val configuration = resources.configuration
-        configuration.locale = locale
-        resources.updateConfiguration(configuration, resources.displayMetrics)
+    @Suppress("DEPRECATION")
+    private fun updateResources(language: String) {
+        val myLocale = Locale(language)
+        val res = resources
+        val dm = res.displayMetrics
+        val conf = res.configuration
+        conf.locale = myLocale
+        res.updateConfiguration(conf, dm)
+        onConfigurationChanged(conf)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        EventBus.getDefault().post(ChangeLangEvent("newLang"))
+        super.onConfigurationChanged(newConfig)
     }
 
     private fun changeModeButtonListenerConfig() {
@@ -269,23 +277,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         if(isNightModeOn){
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            binding.changeModeApptButton.setImageResource(R.drawable.ic_light_mode)
+            binding.changeModeMapButton.setImageResource(R.drawable.ic_light_mode)
         }
         else{
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            binding.changeModeApptButton.setImageResource(R.drawable.ic_dark_mode)
+            binding.changeModeMapButton.setImageResource(R.drawable.ic_dark_mode)
         }
 
-        binding.changeModeApptButton.setOnClickListener {
+        binding.changeModeMapButton.setOnClickListener {
 
             if (isNightModeOn){
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 sharedPrefsEdit.putBoolean("NightMode", false)
-                binding.changeModeApptButton.setImageResource(R.drawable.ic_dark_mode)
+                binding.changeModeMapButton.setImageResource(R.drawable.ic_dark_mode)
             }else{
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 sharedPrefsEdit.putBoolean("NightMode", true)
-                binding.changeModeApptButton.setImageResource(R.drawable.ic_light_mode)
+                binding.changeModeMapButton.setImageResource(R.drawable.ic_light_mode)
             }
             sharedPrefsEdit.apply()
         }

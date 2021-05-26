@@ -13,6 +13,7 @@ import androidx.navigation.findNavController
 import com.google.gson.JsonParser
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.databinding.FragmentRestaurantListBinding
+import com.lordeats.mobeats.events.ChangeLangEvent
 import com.lordeats.mobeats.events.MessageEvent
 import com.lordeats.mobeats.events.MessageReplyEvent
 import org.greenrobot.eventbus.EventBus
@@ -74,6 +75,13 @@ class RestaurantListFragment : Fragment() {
                 restaurantList.add(valueJ.toString())
             }
             binding.restaurantListView.adapter = adapter
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onChangeLangEvent(event: ChangeLangEvent){
+        if(event.message == "newLang"){
+            //TODO dopisać aktualizację tekstu jak się pojawi
         }
     }
 }

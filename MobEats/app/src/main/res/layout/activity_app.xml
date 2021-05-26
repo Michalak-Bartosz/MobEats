@@ -20,7 +20,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-            android:id="@+id/changeModeApptButton"
+            android:id="@+id/changeModeAppButton"
             style="@style/mainImageButton"
             android:layout_width="55dp"
             android:layout_height="30dp"

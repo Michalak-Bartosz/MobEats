@@ -12,8 +12,8 @@
 
     <!--    AppActivity-->
 
-    <string name="manageAccount">Zarządzaj\nkontem</string>
-    <string name="findFood">Znajdź\njedzenie!</string>
+    <string name="manageAccountButton">Zarządzaj\nkontem</string>
+    <string name="findFoodButton">Znajdź\njedzenie!</string>
     <string name="favouriteRestaurantsButton">Ulubione\nRestauracje</string>
     <string name="greetingText">Witaj</string>
 
@@ -74,6 +74,6 @@
 <!--    Restaurants List-->
 
     <string name="failGetRestaurantList">Pobranie listy restauracji nie powiodło się!</string>
-    <string name="succeedGetRestaurantList">Pobranie listy restauracji nie powiodło się.</string>
+    <string name="succeedGetRestaurantList">Pobranie listy restauracji powiodło się.</string>
 
 </resources>
