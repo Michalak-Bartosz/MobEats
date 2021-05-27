@@ -14,13 +14,15 @@ class InfoWindowModification(context: Context) : GoogleMap.InfoWindowAdapter {
     var mWindow = (context as Activity).layoutInflater.inflate(R.layout.info_window, null)
 
     private fun rendowWindowText(marker: Marker, view: View){
-
-        val tvTitle = view.findViewById<TextView>(R.id.title)
-//        val tvSnippet = view.findViewById<TextView>(R.id.snippet)
-
-        tvTitle.text = marker.title
+        //        val tvSnippet = view.findViewById<TextView>(R.id.snippet)
 //        tvSnippet.text = marker.snippet
 
+        val tvTitle = view.findViewById<TextView>(R.id.title)
+        tvTitle.text = marker.title
+
+        val ratingPoint = view.findViewById<TextView>(R.id.ratingText)
+
+//        ratingPointText: String, addressText: String, priceLevelText: String, fonNumberText: String, webPageText: String
     }
 
     override fun getInfoContents(marker: Marker): View {

@@ -90,6 +90,7 @@
     <string name="title_activity_maps">MobEats: Find Food!</string>
     <string name="findFoodOnMap">Find Food!</string>
     <string name="typeOfPremises">Type: </string>
+    <string name="pressToAddRestaurantText">Add to Fav.</string>
 
 <!--    Map Filters-->
 
@@ -99,7 +100,7 @@
         <item>Bar</item>
     </string-array>
 
-    <!--    Prive Level Value-->
+    <!--    Price Level Value-->
 
     <string-array name="priceLevelsArray">
         <item>Free</item>

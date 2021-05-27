@@ -16,6 +16,14 @@
         <item name="android:src">@drawable/round_corner_dark_gray</item>
     </style>
 
+    <style name="DialogWindowBackground">
+        <item name="android:background">@drawable/spinner_launcher_background_dark</item>
+    </style>
+
+    <style name="InfoWindowBackground">
+        <item name="android:background">@drawable/spinner_launcher_background_light</item>
+    </style>
+
     <style name="logoMobEats">
         <item name="android:textColor">@color/black</item>
     </style>
@@ -41,6 +49,10 @@
     
     <style name="mainImageButton">
         <item name="android:background">@drawable/round_corner_dark</item>
+    </style>
+
+    <style name="mainImageButtonReverse">
+        <item name="android:background">@drawable/round_corner_light</item>
     </style>
 
     <style name="mainTextEdit">

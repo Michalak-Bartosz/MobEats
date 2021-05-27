@@ -1,51 +1,209 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/common_google_signin_btn_icon_dark_normal_background"
-    android:orientation="horizontal"
-    android:padding="10dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#99A2D6"
-        android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/titleConstraint"
+        style="@style/InfoWindowBackground"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
 
         <TextView
             android:id="@+id/title"
+            style="@style/mainMediumText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="#000"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-<!--        <TextView-->
-<!--            android:id="@+id/snippet"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:ellipsize="end"-->
-<!--            android:maxLines="10"-->
-<!--            android:textColor="#000"-->
-<!--            android:textSize="14sp" />-->
+        <!--        <TextView-->
+        <!--            android:id="@+id/snippet"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:ellipsize="end"-->
+        <!--            android:maxLines="10"-->
+        <!--            android:textColor="#000"-->
+        <!--            android:textSize="14sp" />-->
+
+        <TextView
+            android:id="@+id/ratingHead"
+            style="@style/mainMediumText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/ratingHead"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title" />
+
+        <TextView
+            android:id="@+id/ratingText"
+            style="@style/mainMediumText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text=""
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/ratingHead"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/ratingHead" />
+
+        <TextView
+            android:id="@+id/addressHead"
+            style="@style/mainMediumText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/addressHead"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/ratingHead"
+            app:layout_constraintTop_toBottomOf="@+id/ratingHead" />
+
+        <TextView
+            android:id="@+id/addressText"
+            style="@style/mainMediumText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:autoLink="map"
+            android:text=""
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/addressHead"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/addressHead" />
+
+        <TextView
+            android:id="@+id/priceLevelHead"
+            style="@style/mainMediumText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/priceLevelHead"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/addressHead"
+            app:layout_constraintTop_toBottomOf="@+id/addressHead" />
+
+        <TextView
+            android:id="@+id/priceLevelText"
+            style="@style/mainMediumText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text=""
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/priceLevelHead"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/priceLevelHead" />
+
+        <TextView
+            android:id="@+id/fonNumberHead"
+            style="@style/mainMediumText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/fonNumberHead"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/priceLevelHead"
+            app:layout_constraintTop_toBottomOf="@+id/priceLevelHead" />
+
+        <TextView
+            android:id="@+id/fonNumberText"
+            style="@style/mainMediumText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:autoLink="phone"
+            android:text=""
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/fonNumberHead"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/fonNumberHead" />
+
+        <TextView
+            android:id="@+id/webPageHead"
+            style="@style/mainMediumText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/webPageHead"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/fonNumberHead"
+            app:layout_constraintTop_toBottomOf="@+id/fonNumberHead" />
+
+        <TextView
+            android:id="@+id/webPageText"
+            style="@style/mainMediumText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:autoLink="web"
+            android:text=""
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/webPageHead"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/webPageHead" />
+
+
+        <TextView
+            android:id="@+id/pressToAddRestaurantTextView"
+            style="@style/mainMediumText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/pressToAddRestaurantText"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/infoWindowButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/webPageHead" />
+
 
         <ImageButton
             android:id="@+id/infoWindowButton"
-            style="@style/Widget.AppCompat.ImageButton"
-            android:layout_width="100dp"
-            android:layout_height="35dp"
-            android:layout_gravity="center_horizontal"
-            android:alpha="0.9"
-            android:backgroundTint="#858585"
+            style="@style/mainImageButtonReverse"
+            android:layout_width="70dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="8dp"
             android:clickable="true"
             android:elevation="30dp"
+            android:focusable="true"
             android:scaleType="fitCenter"
-            android:src="@android:drawable/btn_star_big_on" />
-    </LinearLayout>
+            android:src="@android:drawable/btn_star_big_on"
+            app:layout_constraintBottom_toBottomOf="@+id/pressToAddRestaurantTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/pressToAddRestaurantTextView" />
 
 
-</LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
