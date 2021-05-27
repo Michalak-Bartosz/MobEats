@@ -32,7 +32,6 @@ import com.lordeats.mobeats.Model.MyPlaces
 import com.lordeats.mobeats.Model.PlaceDetail
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.databinding.ActivityMapsBinding
-import okhttp3.internal.wait
 import org.greenrobot.eventbus.EventBus
 import retrofit2.Call
 import retrofit2.Callback
@@ -66,13 +65,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var mDetails: IGoogleAPIService
     internal lateinit var currentPlace: MyPlaces
     var mPlace:PlaceDetail?=null
+    var typePlace = "restaurant"
 
     var name:String?=null
-    var rating:Double=0.0
+    var rating:String?=null
     var address:String?=null
     var phoneNumber:String?=null
     var website:String?=null
-    var priceLevel:Int=0
+    var priceLevel:String?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -134,11 +134,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         ) {
                             mPlace = response!!.body()
                             name = mPlace!!.result!!.name
-                            rating = mPlace!!.result!!.rating
+                            rating = mPlace!!.result!!.rating.toString()
                             address = mPlace!!.result!!.formatted_address
                             phoneNumber = mPlace!!.result!!.formatted_phone_number
                             website = mPlace!!.result!!.website
-                            priceLevel = mPlace!!.result!!.price_level
+                            priceLevel = mPlace!!.result!!.price_level.toString()
                             Log.d("URL_PHONE", "" + name)
                             Log.d("URL_PHONE", "" + rating)
                             Log.d("URL_PHONE", "" + address)
@@ -166,7 +166,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun nearByPlace (nextPageToken: String) {
         map.clear()
         var pageToken = ""
-        val typePlace = "restaurant"
         val url = getUrl(latitude,longitude,typePlace,nextPageToken)
         mService.getNearbyPlaces(url)
             .enqueue(object : Callback<MyPlaces> {
