@@ -26,11 +26,14 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
 import com.lordeats.mobeats.Common.Common
 import com.lordeats.mobeats.Model.MyPlaces
+import com.lordeats.mobeats.Model.PlaceDetail
 import com.lordeats.mobeats.R
+import com.lordeats.mobeats.Remote.InfoWindowModification
 import com.lordeats.mobeats.databinding.ActivityMapsBinding
-import okhttp3.internal.wait
+import com.lordeats.mobeats.databinding.InfoWindowBinding
 import org.greenrobot.eventbus.EventBus
 import retrofit2.Call
 import retrofit2.Callback
@@ -61,7 +64,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     lateinit var mService: IGoogleAPIService
+    lateinit var mDetails: IGoogleAPIService
     internal lateinit var currentPlace: MyPlaces
+    var mPlace:PlaceDetail?=null
+    var typePlace = "restaurant"
+
+    var name:String?=null
+    var rating:String?=null
+    var address:String?=null
+    var phoneNumber:String?=null
+    var website:String?=null
+    var priceLevel:String?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,6 +92,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         //Inicjalizacja serwisu
         mService = Common.googleApiService
+        mDetails = Common.googleApiService
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkLocationPermission()) {
@@ -107,28 +121,62 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         map.uiSettings.isZoomControlsEnabled = true
         map.setOnMarkerClickListener { marker ->
-            if (marker.isInfoWindowShown) {
-                marker.hideInfoWindow()
-            } else {
-                marker.showInfoWindow()
+            if(marker != mMarker) {
+                if (marker.isInfoWindowShown) {
+                    marker.hideInfoWindow()
+                } else {
+                    marker.showInfoWindow()
+                }
+                Common.currentResult = currentPlace!!.results!![Integer.parseInt(marker.snippet)]
+                mDetails.getDetailPlace(getPlaceDetailUrl(Common.currentResult!!.place_id!!))
+                    .enqueue(object : retrofit2.Callback<PlaceDetail> {
+                        override fun onResponse(
+                            call: Call<PlaceDetail>,
+                            response: Response<PlaceDetail>
+                        ) {
+                            mPlace = response!!.body()
+                            name = mPlace!!.result!!.name
+                            rating = mPlace!!.result!!.rating.toString()
+                            address = mPlace!!.result!!.formatted_address
+                            phoneNumber = mPlace!!.result!!.formatted_phone_number
+                            website = mPlace!!.result!!.website
+                            priceLevel = mPlace!!.result!!.price_level.toString()
+                            Log.d("URL_PHONE", "" + name)
+                            Log.d("URL_PHONE", "" + rating)
+                            Log.d("URL_PHONE", "" + address)
+                            Log.d("URL_PHONE", "" + phoneNumber)
+                            Log.d("URL_PHONE", "" + website)
+                            Log.d("URL_PHONE", "" + priceLevel)
+                        }
+
+                        override fun onFailure(call: Call<PlaceDetail>, t: Throwable) {
+                            Toast.makeText(baseContext, "" + t.message, Toast.LENGTH_SHORT).show()
+                        }
+                    })
             }
             true
         }
+        map.setInfoWindowAdapter(InfoWindowModification(this))
     }
 
+    private fun getPlaceDetailUrl(place_id:String) : String {
+        val url = StringBuilder("https://maps.googleapis.com/maps/api/place/details/json")
+        url.append("?placeid=$place_id")
+        url.append("&key=AIzaSyCoZwNDKs4JRA3HNZCKmB_c09GH0bLPnEE")
+        Log.d("URL_DETAIL", "" + url.toString())
+        return url.toString()
+    }
     private fun nearByPlace (nextPageToken: String) {
-        if (nextPageToken.length <= 0) {
-            map.clear()
-        }
-        val typePlace = "restaurant"
-        val url = getUrl(latitude,longitude,typePlace,nextPageToken)
+        map.clear()
         var pageToken = ""
+        val url = getUrl(latitude,longitude,typePlace,nextPageToken)
         mService.getNearbyPlaces(url)
             .enqueue(object : Callback<MyPlaces> {
                 override fun onResponse(call: Call<MyPlaces>?, response: Response<MyPlaces>?) {
+                    currentPlace = response!!.body()!!
                     if (response!!.isSuccessful)
                     {
-                        Log.d("URL_TOKIKIK", "" + response.body()!!.results!!.size)
+//                        Log.d("URL_TOKIKIK", "" + response.body()!!.results!!.size)
                         for(i in 0 until response.body()!!.results!!.size)
                         {
                             val markerOptions = MarkerOptions()
@@ -141,20 +189,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             markerOptions.position(latLng)
                             markerOptions.title(placeName)
                             markerOptions.snippet(i.toString())
-
                             map!!.addMarker(markerOptions)
-                            map!!.addMarker(markerOptions)
-                            Log.d("URL_TOKENNNN", "I made "+ i.toString());
                         }
-                        if (response.body()!!.next_page_token != null) {
-                            pageToken = response.body()!!.next_page_token.toString()
-                            Log.d("URL_TOKENNNN", "PageToken "+ pageToken);
-//                            Log.d("URL_RESPONSE", "Responsee "+ response.body()!!.next_page_token);
-                            nearByPlace(pageToken)
-                        } else {
-                            pageToken = ""
-                            Log.d("URL_TOKENNNN", "PageTokenZE "+ pageToken);
-                        }
+//                        if (response.body()!!.next_page_token != null) {
+//                            pageToken = response.body()!!.next_page_token.toString()
+////                            Log.d("URL_TOKENNNN", "PageToken "+ pageToken);
+//                            nearByPlace(pageToken)
+//                        } else {
+//                            pageToken = ""
+////                            Log.d("URL_TOKENNNN", "PageTokenZE "+ pageToken);
+//                        }
                     }
                 }
                 override fun onFailure(call: Call<MyPlaces>?, t: Throwable) {
