@@ -69,7 +69,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var mDetails: IGoogleAPIService
     internal lateinit var currentPlace: MyPlaces
     var mPlace:PlaceDetail?=null
-    var typePlace = "restaurant"
 
     var name:String?=null
     var rating:String?=null
@@ -77,6 +76,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     var phoneNumber:String?=null
     var website:String?=null
     var priceLevel:String?=null
+    var typePlace:String="restaurant"
     var infoWindowPayload: JSONObject = JSONObject()
     private lateinit var messageToSend: MessageEvent
 
@@ -335,12 +335,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 } else {
                     typePlace = "bar"
                 }
-                nearByPlace("")
+
             }
             override fun onNothingSelected(parent: AdapterView<*>) { }
         }
     }
-
+////// Tutaj dokonczyc
     private fun findFoodButtonListenerConfig() {
         binding.findFoodOnMapButton.setOnClickListener {
             nearByPlace("")
