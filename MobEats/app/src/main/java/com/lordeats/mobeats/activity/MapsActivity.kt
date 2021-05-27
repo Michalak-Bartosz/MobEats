@@ -261,13 +261,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun onSelectedItemSpinnerListener() {
         filterList = resources.getStringArray(R.array.MapFilters)
-        spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, filterList)
+        spinnerAdapter = ArrayAdapter(this, R.layout.spinner_item, filterList)
         binding.mapFilterSpinner.adapter = spinnerAdapter
         binding.mapFilterSpinner.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>,
                                         view: View?, position: Int, id: Long) {
-                Toast.makeText(this@MapsActivity, "Selected item: "+"" + filterList[position], Toast.LENGTH_SHORT).show()
+                // Toast.makeText(this@MapsActivity, "Selected item: "+"" + filterList[position], Toast.LENGTH_SHORT).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -320,7 +320,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.findFoodOnMapButton.text = getString(R.string.findFoodOnMap)
         binding.typeOfPremisesTextView.text = getString(R.string.typeOfPremises)
         filterList = resources.getStringArray(R.array.MapFilters)
-        spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, filterList)
+        spinnerAdapter = ArrayAdapter(this, R.layout.spinner_item, filterList)
         binding.mapFilterSpinner.adapter = spinnerAdapter
     }
 

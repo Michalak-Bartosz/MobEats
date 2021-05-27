@@ -28,11 +28,11 @@ public class ReservationEntity {
     @Column(name="address", nullable = false)
     private String address;
 
+    @Column(name="priceLevel")
+    private String priceLevel;
+
     @Column(name="fonNumber")
     private String fonNumber;
-
-    @Column(name="emailAddress")
-    private String emailAddress;
 
     @Column(name="ratingPoints")
     private String ratingPoints;
@@ -40,17 +40,13 @@ public class ReservationEntity {
     @Column(name="webPage")
     private String webPage;
 
-    @Column(name="price")
-    private BigDecimal price;
-
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "customer_id", nullable = false)
     private CustomerEntity customer;
 
-    public ReservationEntity(String name, String address, BigDecimal price, CustomerEntity customer) {
+    public ReservationEntity(String name, String address, CustomerEntity customer) {
         this.name = name;
         this.address = address;
-        this.price = price;
         this.customer = customer;
     }
 
@@ -61,10 +57,9 @@ public class ReservationEntity {
             reservationJ.put("name", this.name);
             reservationJ.put("address", this.address);
             reservationJ.put("fonNumber", this.fonNumber);
-            reservationJ.put("emailAddress", this.emailAddress);
+            reservationJ.put("priceLevel", this.priceLevel);
             reservationJ.put("ratingPoints", this.ratingPoints);
             reservationJ.put("webPage", this.webPage);
-            reservationJ.put("price", this.price);
         } catch (JSONException e) {
             e.printStackTrace();
         }

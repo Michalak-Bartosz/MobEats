@@ -59,6 +59,7 @@
             android:text=""
             app:layout_constraintBottom_toBottomOf="@+id/ratingHead"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/ratingHead" />
 
         <TextView
@@ -66,7 +67,7 @@
             style="@style/mainText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             android:text="@string/addressHead"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/ratingHead"
@@ -83,7 +84,32 @@
             android:text=""
             app:layout_constraintBottom_toBottomOf="@+id/addressHead"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/addressHead" />
+
+        <TextView
+            android:id="@+id/priceLevelHead"
+            style="@style/mainText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/priceLevelHead"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/addressHead"
+            app:layout_constraintTop_toBottomOf="@+id/addressHead" />
+
+        <TextView
+            android:id="@+id/priceLevelText"
+            style="@style/mainText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:text=""
+            app:layout_constraintBottom_toBottomOf="@+id/priceLevelHead"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/priceLevelHead" />
 
         <TextView
             android:id="@+id/fonNumberHead"
@@ -93,8 +119,8 @@
             android:layout_marginTop="8dp"
             android:text="@string/fonNumberHead"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/addressHead"
-            app:layout_constraintTop_toBottomOf="@+id/addressHead" />
+            app:layout_constraintStart_toStartOf="@+id/priceLevelHead"
+            app:layout_constraintTop_toBottomOf="@+id/priceLevelHead" />
 
         <TextView
             android:id="@+id/fonNumberText"
@@ -107,31 +133,8 @@
             android:text=""
             app:layout_constraintBottom_toBottomOf="@+id/fonNumberHead"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/fonNumberHead" />
-
-        <TextView
-            android:id="@+id/emailHead"
-            style="@style/mainText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/priceLevelHead"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/fonNumberHead"
-            app:layout_constraintTop_toBottomOf="@+id/fonNumberHead" />
-
-        <TextView
-            android:id="@+id/emailText"
-            style="@style/mainText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="16dp"
-            android:autoLink="email"
-            android:text=""
-            app:layout_constraintBottom_toBottomOf="@+id/emailHead"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/emailHead" />
 
         <TextView
             android:id="@+id/webPageHead"
@@ -141,20 +144,21 @@
             android:layout_marginTop="8dp"
             android:text="@string/webPageHead"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/emailHead"
-            app:layout_constraintTop_toBottomOf="@+id/emailHead" />
+            app:layout_constraintStart_toStartOf="@+id/fonNumberHead"
+            app:layout_constraintTop_toBottomOf="@+id/fonNumberHead" />
 
         <TextView
             android:id="@+id/webPageText"
             style="@style/mainText"
-            android:autoLink="web"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="16dp"
+            android:autoLink="web"
             android:text=""
             app:layout_constraintBottom_toBottomOf="@+id/webPageHead"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/webPageHead" />
 
         <Button

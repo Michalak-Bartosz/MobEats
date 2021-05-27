@@ -30,8 +30,8 @@ public class ReservationServiceImpl implements ReservationService{
     public List<GetReservation> getAllReservations() {
         return StreamSupport.stream(reservationRepository.findAll().spliterator(), false).map(
                 reservationEntity -> new GetReservation(reservationEntity.getId(), reservationEntity.getName(),
-                        reservationEntity.getAddress(), reservationEntity.getFonNumber(), reservationEntity.getEmailAddress(),
-                        reservationEntity.getRatingPoints(), reservationEntity.getWebPage(),reservationEntity.getPrice(),
+                        reservationEntity.getAddress(), reservationEntity.getPriceLevel(), reservationEntity.getFonNumber(),
+                        reservationEntity.getRatingPoints(), reservationEntity.getWebPage(),
                         reservationEntity.getCustomer().getId())).collect(Collectors.toList());
     }
 
@@ -40,20 +40,19 @@ public class ReservationServiceImpl implements ReservationService{
         ReservationEntity reservationEntity = reservationRepository.findById(id);
         if(reservationEntity != null)
             return new GetReservation(reservationEntity.getId(), reservationEntity.getName(),
-                reservationEntity.getAddress(), reservationEntity.getFonNumber(), reservationEntity.getEmailAddress(),
-                reservationEntity.getRatingPoints(), reservationEntity.getWebPage(),reservationEntity.getPrice(),
+                reservationEntity.getAddress(), reservationEntity.getFonNumber(), reservationEntity.getPriceLevel(),
+                reservationEntity.getRatingPoints(), reservationEntity.getWebPage(),
                 reservationEntity.getCustomer().getId());
         return null;
     }
 
-    private void setNewReservation(ReservationEntity reservationEntity, String name, String address, String fonNumber, String emailAddress, String ratingPoints, String webPage, BigDecimal price) {
+    private void setNewReservation(ReservationEntity reservationEntity, String name, String address, String priceLevel, String fonNumber, String ratingPoints, String webPage) {
         reservationEntity.setName(name);
         reservationEntity.setAddress(address);
         reservationEntity.setFonNumber(fonNumber);
-        reservationEntity.setEmailAddress(emailAddress);
+        reservationEntity.setPriceLevel(priceLevel);
         reservationEntity.setRatingPoints(ratingPoints);
         reservationEntity.setWebPage(webPage);
-        reservationEntity.setPrice(price);
     }
 
     @Override
@@ -61,9 +60,9 @@ public class ReservationServiceImpl implements ReservationService{
         if(!customerRepository.existsById(postReservation.getCustomer_id()))
             return false;
         ReservationEntity reservationEntity = new ReservationEntity();
-        setNewReservation(reservationEntity, postReservation.getName(), postReservation.getAddress(),
-                postReservation.getFonNumber(), postReservation.getEmailAddress(), postReservation.getRatingPoints(),
-                postReservation.getWebPage(), postReservation.getPrice());
+        setNewReservation(reservationEntity, postReservation.getName(), postReservation.getAddress(), postReservation.getPriceLevel(),
+                postReservation.getFonNumber(), postReservation.getRatingPoints(),
+                postReservation.getWebPage());
 
         reservationEntity.setCustomer(customerRepository.findById(postReservation.getCustomer_id()));
         reservationRepository.save(reservationEntity);
@@ -76,9 +75,9 @@ public class ReservationServiceImpl implements ReservationService{
     public boolean updateReservation(UpdateReservation updateReservation) {
         if(reservationRepository.existsById(updateReservation.getId())) {
             ReservationEntity reservationEntity = reservationRepository.findById(updateReservation.getId());
-            setNewReservation(reservationEntity, updateReservation.getName(), updateReservation.getAddress(),
-                    updateReservation.getFonNumber(), updateReservation.getEmailAddress(), updateReservation.getRatingPoints(),
-                    updateReservation.getWebPage(), updateReservation.getPrice());
+            setNewReservation(reservationEntity, updateReservation.getName(), updateReservation.getAddress(), updateReservation.getPriceLevel(),
+                    updateReservation.getFonNumber(), updateReservation.getRatingPoints(),
+                    updateReservation.getWebPage());
 
             reservationRepository.save(reservationEntity);
             return true;
