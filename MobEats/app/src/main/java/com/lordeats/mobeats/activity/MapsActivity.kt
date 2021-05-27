@@ -139,9 +139,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             response: Response<PlaceDetail>
                         ) {
                             mPlace = response!!.body()
-                            name = mPlace!!.result!!.name
-                            rating = mPlace!!.result!!.rating.toString()
-                            address = mPlace!!.result!!.formatted_address
                             if (mPlace!!.result!!.name == null) "-" else name = mPlace!!.result!!.name
                             if (mPlace!!.result!!.rating.toString() == null) "-" else rating = mPlace!!.result!!.rating.toString()
                             if (mPlace!!.result!!.formatted_address == null) "-" else address = mPlace!!.result!!.formatted_address
@@ -209,7 +206,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     currentPlace = response!!.body()!!
                     if (response!!.isSuccessful)
                     {
-//                        Log.d("URL_TOKIKIK", "" + response.body()!!.results!!.size)
                         for(i in 0 until response.body()!!.results!!.size)
                         {
                             val markerOptions = MarkerOptions()
@@ -224,14 +220,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             markerOptions.snippet(i.toString())
                             map!!.addMarker(markerOptions)
                         }
-//                        if (response.body()!!.next_page_token != null) {
-//                            pageToken = response.body()!!.next_page_token.toString()
-////                            Log.d("URL_TOKENNNN", "PageToken "+ pageToken);
-//                            nearByPlace(pageToken)
-//                        } else {
-//                            pageToken = ""
-////                            Log.d("URL_TOKENNNN", "PageTokenZE "+ pageToken);
-//                        }
                     }
                 }
                 override fun onFailure(call: Call<MyPlaces>?, t: Throwable) {
@@ -279,7 +267,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 val cameraPosition = CameraPosition.Builder()
                     .target(latLng).zoom(16f).build()
                 map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
-//                map.animateCamera(CameraUpdateFactory.zoomTo(7f))
             }
         }
     }
