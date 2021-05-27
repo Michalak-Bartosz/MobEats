@@ -26,15 +26,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!--        <TextView-->
-        <!--            android:id="@+id/snippet"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:ellipsize="end"-->
-        <!--            android:maxLines="10"-->
-        <!--            android:textColor="#000"-->
-        <!--            android:textSize="14sp" />-->
-
         <TextView
             android:id="@+id/ratingHead"
             style="@style/mainMediumText"
@@ -76,18 +67,19 @@
 
         <TextView
             android:id="@+id/addressText"
-            style="@style/mainMediumText"
+            style="@style/mainTextReverse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
             android:autoLink="map"
+            android:gravity="center"
             android:text=""
             android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@+id/addressHead"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/addressHead" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addressHead" />
 
         <TextView
             android:id="@+id/priceLevelHead"
@@ -96,10 +88,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/priceLevelHead"
-            android:textStyle="bold"
             android:textSize="14sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/addressHead"
-            app:layout_constraintTop_toBottomOf="@+id/addressHead" />
+            app:layout_constraintTop_toBottomOf="@+id/addressText" />
 
         <TextView
             android:id="@+id/priceLevelText"
@@ -156,18 +148,19 @@
 
         <TextView
             android:id="@+id/webPageText"
-            style="@style/mainMediumText"
+            style="@style/mainTextReverse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
             android:autoLink="web"
+            android:gravity="center"
             android:text=""
             android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@+id/webPageHead"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/webPageHead" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/webPageHead" />
 
 
         <TextView
@@ -184,8 +177,9 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/infoWindowButton"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/webPageHead" />
+            app:layout_constraintTop_toBottomOf="@+id/webPageText" />
 
 
         <ImageButton

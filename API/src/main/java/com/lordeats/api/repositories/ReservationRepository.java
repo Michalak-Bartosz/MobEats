@@ -13,4 +13,5 @@ public interface ReservationRepository extends CrudRepository<ReservationEntity,
     List<ReservationEntity> findByCustomer(CustomerEntity customer, Sort sort);
     ReservationEntity findById(int id);
     boolean existsById(int id);
+    boolean existsByName(String name);
 }

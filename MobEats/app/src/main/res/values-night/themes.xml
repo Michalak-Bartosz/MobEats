@@ -84,6 +84,11 @@
         <item name="android:textSize">20sp</item>
     </style>
 
+    <style name="mainTextReverse">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
     <style name="mainMediumText">
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">20sp</item>
