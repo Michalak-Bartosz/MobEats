@@ -41,9 +41,7 @@ class MainMenuFragment : Fragment() {
 
     private fun findFoodButtonListener() {
         binding.findFoodButton.setOnClickListener {
-//            Navigation.findNavController(it).navigate(R.id.action_mainMenuFragment_to_MapsActivity)
-            activity?.intent = android.content.Intent(context,MapsActivity::class.java)
-            startActivity(activity?.intent)
+            Navigation.findNavController(it).navigate(R.id.action_mainMenuFragment_to_MapsActivity)
         }
     }
 

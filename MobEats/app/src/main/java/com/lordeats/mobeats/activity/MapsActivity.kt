@@ -84,11 +84,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMapsBinding.inflate(layoutInflater)
-        onSelectedItemSpinnerListener()
-        setContentView(binding.root)
-        changeLngButtonListenerConfig()
-        changeModeButtonListenerConfig()
-        findFoodButtonListenerConfig()
 
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -111,6 +106,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
         }
+
+        onSelectedItemSpinnerListener()
+        changeLngButtonListenerConfig()
+        changeModeButtonListenerConfig()
+        findFoodButtonListenerConfig()
+
+        setContentView(binding.root)
     }
 
     override fun onStop() {
@@ -335,7 +337,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
                 nearByPlace("")
             }
-
             override fun onNothingSelected(parent: AdapterView<*>) { }
         }
     }
