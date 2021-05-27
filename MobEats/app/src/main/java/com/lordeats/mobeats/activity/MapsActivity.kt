@@ -34,7 +34,9 @@ import com.lordeats.mobeats.R
 import com.lordeats.mobeats.Remote.InfoWindowModification
 import com.lordeats.mobeats.databinding.ActivityMapsBinding
 import com.lordeats.mobeats.databinding.InfoWindowBinding
+import com.lordeats.mobeats.events.MessageEvent
 import org.greenrobot.eventbus.EventBus
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -75,6 +77,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     var phoneNumber:String?=null
     var website:String?=null
     var priceLevel:String?=null
+    var infoWindowPayload: JSONObject = JSONObject()
+    private lateinit var messageToSend: MessageEvent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,6 +113,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    override fun onStop() {
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+        super.onStop()
+    }
+
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         Places.initialize(applicationContext, R.string.google_maps_key.toString())
@@ -122,11 +131,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         map.uiSettings.isZoomControlsEnabled = true
         map.setOnMarkerClickListener { marker ->
             if(marker != mMarker) {
-                if (marker.isInfoWindowShown) {
-                    marker.hideInfoWindow()
-                } else {
-                    marker.showInfoWindow()
-                }
                 Common.currentResult = currentPlace!!.results!![Integer.parseInt(marker.snippet)]
                 mDetails.getDetailPlace(getPlaceDetailUrl(Common.currentResult!!.place_id!!))
                     .enqueue(object : retrofit2.Callback<PlaceDetail> {
@@ -150,6 +154,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             Log.d("URL_PHONE", "" + phoneNumber)
                             Log.d("URL_PHONE", "" + website)
                             Log.d("URL_PHONE", "" + priceLevel)
+
+                            infoWindowPayload = JSONObject()
+                            infoWindowPayload.put("type", "addRestaurant")
+                            infoWindowPayload.put("name", name)
+                            infoWindowPayload.put("ratingPoints", rating)
+                            infoWindowPayload.put("address", address)
+                            infoWindowPayload.put("fonNumber", phoneNumber)
+                            infoWindowPayload.put("webPage", website)
+                            infoWindowPayload.put("priceLevel", priceLevel)
+                            setInfoWindowListenerConfig()
+                            infoWindowPayload.remove("priceLevel")
+                            val priceLevelArray = resources.getStringArray(R.array.priceLevelsArray)
+                            infoWindowPayload.put("priceLevel", priceLevelArray[priceLevel?.toInt()!!])
+
+                            map.setInfoWindowAdapter(InfoWindowModification(context = this@MapsActivity, content = infoWindowPayload.toString()))
+                            if (marker.isInfoWindowShown) {
+                                marker.hideInfoWindow()
+                            } else {
+                                marker.showInfoWindow()
+                            }
                         }
 
                         override fun onFailure(call: Call<PlaceDetail>, t: Throwable) {
@@ -159,7 +183,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
             true
         }
-        map.setInfoWindowAdapter(InfoWindowModification(this))
+    }
+
+    private fun setInfoWindowListenerConfig() {
+        map.setOnInfoWindowClickListener {
+            messageToSend = MessageEvent(infoWindowPayload)
+            EventBus.getDefault().post(messageToSend)
+        }
     }
 
     private fun getPlaceDetailUrl(place_id:String) : String {
@@ -277,11 +307,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         locationRequest.interval = 5000
         locationRequest.fastestInterval = 3000
         locationRequest.smallestDisplacement = 10f
-    }
-
-    override fun onStop() {
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
-        super.onStop()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

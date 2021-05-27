@@ -15,6 +15,7 @@ public interface LoginAndRegisterService {
     boolean changeData(JSONObject changeDataPayload);
     boolean removeUser(JSONObject userPayload);
     boolean removeReservation(JSONObject reservationPayload);
+    boolean addReservation(JSONObject reservationPayload);
     void logOutUser(String sessionId);
     String listLogInUsers();
     GetReservation getReservation (int id);

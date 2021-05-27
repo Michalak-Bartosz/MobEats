@@ -131,6 +131,35 @@ public class LoginAndRegisterServiceImpl implements LoginAndRegisterService {
         return false;
     }
 
+    private void setNewReservation(ReservationEntity reservationEntity, String name, String address, String priceLevel, String fonNumber, String ratingPoints, String webPage) {
+        reservationEntity.setName(name);
+        reservationEntity.setAddress(address);
+        reservationEntity.setFonNumber(fonNumber);
+        reservationEntity.setPriceLevel(priceLevel);
+        reservationEntity.setRatingPoints(ratingPoints);
+        reservationEntity.setWebPage(webPage);
+    }
+
+    @Override
+    public boolean addReservation(JSONObject reservationPayload) {
+        try {
+            String nickname = reservationPayload.getString("nickname");
+            if(!customerRepository.existsByNickname(nickname))
+                return false;
+            ReservationEntity reservationEntity = new ReservationEntity();
+            setNewReservation(reservationEntity, reservationPayload.getString("name"), reservationPayload.getString("address"), reservationPayload.getString("priceLevel"),
+                    reservationPayload.getString("fonNumber"), reservationPayload.getString("ratingPoints"),
+                    reservationPayload.getString("webPage"));
+
+            reservationEntity.setCustomer(customerRepository.findByNickname(nickname));
+            reservationRepository.save(reservationEntity);
+            return reservationRepository.existsById(reservationEntity.getId());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     @Override
     public void logOutUser(String sessionId) {
         loginUsersHashMap.remove(sessionId);

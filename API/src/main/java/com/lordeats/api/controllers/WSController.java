@@ -169,4 +169,23 @@ public class WSController {
         }
         return rejectPayload.toString();
     }
+
+    @MessageMapping("/addReservation")
+    @SendToUser("/queue/addNewReservation")
+    public String addNewReservation(String message, @Header("simpSessionId") String sessionId) {
+        try {
+            JSONObject addReservationPayload = new JSONObject(message);
+            log.info("Add Reservation Payload: " + addReservationPayload);
+            boolean OK  = loginAndRegisterService.addReservation(addReservationPayload);
+            if(OK) {
+                log.info("Reservation add: " + message + " from session: " + sessionId);
+                return acceptPayload.toString();
+            } else {
+                return rejectPayload.toString();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return rejectPayload.toString();
+    }
 }

@@ -77,6 +77,9 @@
     <string name="deleteRestaurantAccepted">Pomyślnie usunięto restauracje.</string>
     <string name="deleteRestaurantRejected">Odrzucono usunięcie restauracji!</string>
 
+    <string name="addRestaurantAccepted">Pomyślnie dodano restauracje.</string>
+    <string name="addRestaurantRejected">Odrzucono dodanie restauracji!</string>
+
     <string name="ratingHead">Ocena:</string>
     <string name="addressHead">Ades:</string>
     <string name="fonNumberHead">Numer tel.:</string>
@@ -103,11 +106,11 @@
 <!--    Price Level Value-->
 
     <string-array name="priceLevelsArray">
-        <item>Free</item>
-        <item>Inexpensive</item>
-        <item>Moderate</item>
-        <item>Expensive</item>
-        <item>Very Expensive</item>
+        <item>Bezpłatna</item>
+        <item>Niedrogo</item>
+        <item>Umiarkowanie</item>
+        <item>Drogo</item>
+        <item>Bardzo drogo</item>
     </string-array>
 
 </resources>

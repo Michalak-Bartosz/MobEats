@@ -37,6 +37,9 @@ class AppActivity : AppCompatActivity() {
     private lateinit var userData: JSONObject
     private lateinit var userDataChange: JSONObject
 
+    private lateinit var restaurantDataTmp: String
+    private lateinit var restaurantData: JSONObject
+
     private lateinit var nickname: String
     private lateinit var password: String
 
@@ -59,16 +62,14 @@ class AppActivity : AppCompatActivity() {
         if(client.isConnected){
             client.disconnect()
         }
+        EventBus.getDefault().unregister(this)
     }
 
     override fun onStart() {
         super.onStart()
-        EventBus.getDefault().register(this)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        EventBus.getDefault().unregister(this)
+        if(!EventBus.getDefault().hasSubscriberForEvent(MessageEvent::class.java)){
+            EventBus.getDefault().register(this)
+        }
     }
 
     private fun getUserData() {
@@ -84,8 +85,8 @@ class AppActivity : AppCompatActivity() {
 
     @SuppressLint("CheckResult")
     private fun connectToServer() {
-        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/app")
-//        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, apiUrl)
+//        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/app")
+        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, apiUrl)
         client.connect()
         client.send("/mobEats/signIn", userDataTmp).subscribe({ },
             { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
@@ -156,6 +157,14 @@ class AppActivity : AppCompatActivity() {
         } else if(client.isConnected && event.message!!.getString("type") == "removeRestaurant") {
             setOnDeleteReservationSubscribe()
             client.send("/mobEats/deleteReservation", event.message!!.getString("value")).subscribe({ },
+                { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
+        } else if(client.isConnected && event.message!!.getString("type") == "addRestaurant") {
+            restaurantDataTmp = event.message!!.toString()
+            restaurantData = JSONObject(restaurantDataTmp)
+            restaurantData.remove("type")
+            restaurantData.put("nickname", userData.getString("nickname"))
+            setOnAddReservationSubscribe()
+            client.send("/mobEats/addReservation", restaurantData.toString()).subscribe({ },
                 { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
         } else {
             DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show()
@@ -256,6 +265,25 @@ class AppActivity : AppCompatActivity() {
                 }
                 else -> {
                     this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.deleteRestaurantRejected)).show() }
+                }
+            }
+        }
+    }
+
+    @SuppressLint("CheckResult")
+    private fun setOnAddReservationSubscribe() {
+        client.topic("/user/queue/addNewReservation").subscribe { topicMessage ->
+            replyDataTmp = topicMessage.payload
+            replayData = JSONObject(replyDataTmp)
+            when {
+                replayData.getString("value") == "accept" -> {
+                    this.runOnUiThread { DynamicToast.makeSuccess(this, getString(R.string.addRestaurantAccepted)).show() }
+                }
+                replayData.getString("value") == "reject" -> {
+                    this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.addRestaurantRejected)).show() }
+                }
+                else -> {
+                    this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.addRestaurantRejected)).show() }
                 }
             }
         }
