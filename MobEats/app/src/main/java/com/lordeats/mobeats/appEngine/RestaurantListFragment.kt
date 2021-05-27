@@ -5,7 +5,6 @@ import android.app.Dialog
 import android.content.res.Configuration
 import android.graphics.Paint
 import android.os.Bundle
-import android.text.method.LinkMovementMethod
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,7 +13,6 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -116,7 +114,7 @@ class RestaurantListFragment : Fragment(), CustomListeners {
 
     override fun onClickLeft(item : CustomViewModel, position : Int) {
         val valueJ = JSONObject(informationItemList[position].toString())
-        showDialog(valueJ.getString("name"), valueJ.getString("ratingPoints"), valueJ.getString("address"), valueJ.getString("fonNumber"), valueJ.getString("emailAddress"), valueJ.getString("webPage"))
+        showDialog(valueJ.getString("name"), valueJ.getString("ratingPoints"), valueJ.getString("address"), valueJ.getString("priceLevel"), valueJ.getString("fonNumber"), valueJ.getString("webPage"))
     }
 
     override fun onClickRight(item : CustomViewModel, position : Int) {
@@ -135,7 +133,7 @@ class RestaurantListFragment : Fragment(), CustomListeners {
 
     @SuppressLint("CutPasteId")
     @Suppress("NAME_SHADOWING")
-    private fun showDialog(titleText: String, ratingText: String, addressText: String, fonNumberText: String, emailText: String, webPageText: String) {
+    private fun showDialog(titleText: String, ratingText: String, addressText: String, priceLevelText: String, fonNumberText: String, webPageText: String) {
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -147,11 +145,12 @@ class RestaurantListFragment : Fragment(), CustomListeners {
         val rating = (dialog.findViewById(R.id.ratingText) as TextView)
         rating.text = ratingText
         val address = (dialog.findViewById(R.id.addressText) as TextView)
+        val priceLevel = (dialog.findViewById(R.id.priceLevelText) as TextView)
+        val priceLevelArray = resources.getStringArray(R.array.priceLevelsArray)
+        priceLevel.text = priceLevelArray[priceLevelText.toInt()]
         address.text = addressText
         val fonNumber = (dialog.findViewById(R.id.fonNumberText) as TextView)
         fonNumber.text = fonNumberText
-        val email = (dialog.findViewById(R.id.emailText) as TextView)
-        email.text = emailText
         val webPage = (dialog.findViewById(R.id.webPageText) as TextView)
         webPage.text = webPageText
 

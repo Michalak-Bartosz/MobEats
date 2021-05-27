@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,10 +13,9 @@ public class GetReservation {
     private int id;
     private String name;
     private String address;
+    private String priceLevel;
     private String fonNumber;
-    private String emailAddress;
     private String ratingPoints;
     private String webPage;
-    private BigDecimal price;
     private int customer_id;
 }

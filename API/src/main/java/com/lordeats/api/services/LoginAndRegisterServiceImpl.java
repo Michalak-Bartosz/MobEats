@@ -149,8 +149,8 @@ public class LoginAndRegisterServiceImpl implements LoginAndRegisterService {
         ReservationEntity reservationEntity = reservationRepository.findById(id);
         if(reservationEntity != null)
             return new GetReservation(reservationEntity.getId(), reservationEntity.getName(),
-                    reservationEntity.getAddress(), reservationEntity.getFonNumber(), reservationEntity.getEmailAddress(),
-                    reservationEntity.getRatingPoints(), reservationEntity.getWebPage(),reservationEntity.getPrice(),
+                    reservationEntity.getAddress(), reservationEntity.getPriceLevel(), reservationEntity.getFonNumber(),
+                    reservationEntity.getRatingPoints(), reservationEntity.getWebPage(),
                     reservationEntity.getCustomer().getId());
         return null;
     }

@@ -32,9 +32,11 @@ public class WSConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/changeData").withSockJS();
         registry.addEndpoint("/deleteAccount");
         registry.addEndpoint("/deleteAccount").withSockJS();
-        registry.addEndpoint("getReservations");
-        registry.addEndpoint("getReservations").withSockJS();
-        registry.addEndpoint("deleteReservation");
-        registry.addEndpoint("deleteReservation").withSockJS();
+        registry.addEndpoint("/getReservations");
+        registry.addEndpoint("/getReservations").withSockJS();
+        registry.addEndpoint("/deleteReservation");
+        registry.addEndpoint("/deleteReservation").withSockJS();
+        registry.addEndpoint("/addReservation");
+        registry.addEndpoint("/addReservation").withSockJS();
     }
 }
