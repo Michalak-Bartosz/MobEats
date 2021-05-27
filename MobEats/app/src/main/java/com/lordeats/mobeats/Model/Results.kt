@@ -17,5 +17,15 @@ class Results {
     var scope:String?=null
     var types:Array<String>?=null
     var vicinity:String?=null
+    var address_components:Array<AddressComponent>?=null
+    var adr_address:String?=null
+    var formatted_address:String?=null
+    var formatted_phone_number:String?=null
+    var international_phone_number:String?=null
+    var url:String?=null
+    var reviews:Array<Review>?=null
+    var utc_offest:Int=0
+    var website:String?=null
+    var business_status:String?=null
 //    var opening_hours:OpeningHours?=null
 }
