@@ -45,6 +45,14 @@ public class CustomerEntity {
         return idList;
     }
 
+    public boolean existsReservation(String name) {
+        for(ReservationEntity reservation: reservations){
+            if(reservation.getName().equals(name))
+                return true;
+        }
+        return false;
+    }
+
     public String getReservationsString() {
         Set<JSONObject> JSONList = new HashSet<>();
         for(ReservationEntity reservation: reservations){

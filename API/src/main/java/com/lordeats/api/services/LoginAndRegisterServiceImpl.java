@@ -146,6 +146,9 @@ public class LoginAndRegisterServiceImpl implements LoginAndRegisterService {
             String nickname = reservationPayload.getString("nickname");
             if(!customerRepository.existsByNickname(nickname))
                 return false;
+            CustomerEntity customer = customerRepository.findByNickname(nickname);
+            if(customer.existsReservation(reservationPayload.getString("name")))
+                return false;
             ReservationEntity reservationEntity = new ReservationEntity();
             setNewReservation(reservationEntity, reservationPayload.getString("name"), reservationPayload.getString("address"), reservationPayload.getString("priceLevel"),
                     reservationPayload.getString("fonNumber"), reservationPayload.getString("ratingPoints"),
