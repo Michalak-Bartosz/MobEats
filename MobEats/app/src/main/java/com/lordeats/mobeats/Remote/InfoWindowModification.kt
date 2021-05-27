@@ -2,6 +2,7 @@ package com.lordeats.mobeats.Remote
 
 import android.app.Activity
 import android.content.Context
+import android.content.res.Configuration
 import android.util.Log
 import android.view.View
 import android.widget.TextView

@@ -91,6 +91,11 @@ class AppActivity : AppCompatActivity() {
         client.connect()
         client.send("/mobEats/signIn", userDataTmp).subscribe({ },
             { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
+        setOnChangeUserDataSubscribe()
+        setOnDeleteAccountSubscribe()
+        setOnGetRestaurantsListSubscribe()
+        setOnDeleteReservationSubscribe()
+        setOnAddReservationSubscribe()
     }
 
     @SuppressLint("CheckResult")
@@ -144,19 +149,15 @@ class AppActivity : AppCompatActivity() {
                     return
                 }
             }
-            setOnChangeUserDataSubscribe()
             client.send("/mobEats/changeUserData", userDataChange.toString()).subscribe({ },
                 { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
         } else if(client.isConnected && event.message!!.getString("type")  == "deleteAccount") {
-            setOnDeleteAccountSubscribe()
             client.send("/mobEats/deleteAccount", userData.toString()).subscribe({ },
                 { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
         } else if(client.isConnected && event.message!!.getString("type") == "getRestaurantsList") {
-            setOnGetRestaurantsListSubscribe()
             client.send("/mobEats/getReservations", userData.getString("nickname")).subscribe({ },
                 { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
         } else if(client.isConnected && event.message!!.getString("type") == "removeRestaurant") {
-            setOnDeleteReservationSubscribe()
             client.send("/mobEats/deleteReservation", event.message!!.getString("value")).subscribe({ },
                 { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
         } else if(client.isConnected && event.message!!.getString("type") == "addRestaurant") {
@@ -164,7 +165,6 @@ class AppActivity : AppCompatActivity() {
             restaurantData = JSONObject(restaurantDataTmp)
             restaurantData.remove("type")
             restaurantData.put("nickname", userData.getString("nickname"))
-            setOnAddReservationSubscribe()
             client.send("/mobEats/addReservation", restaurantData.toString()).subscribe({ },
                 { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
         } else {

@@ -16,10 +16,12 @@
             app:popUpTo="@id/mainMenuFragment" />
         <action
             android:id="@+id/action_mainMenuFragment_to_MapsActivity"
-            app:destination="@id/MapsActivity" />
+            app:destination="@id/MapsActivity"
+            app:popUpTo="@id/mainMenuFragment" />
         <action
             android:id="@+id/action_mainMenuFragment_to_restaurantListFragment"
-            app:destination="@id/restaurantListFragment" />
+            app:destination="@id/restaurantListFragment"
+            app:popUpTo="@id/mainMenuFragment" />
     </fragment>
     <fragment
         android:id="@+id/manageAccountMenuFragment"
