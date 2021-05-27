@@ -80,7 +80,7 @@
     <string name="ratingHead">Rating Points:</string>
     <string name="addressHead">Address:</string>
     <string name="fonNumberHead">Fon. Number:</string>
-    <string name="emailHead">Email:</string>
+    <string name="priceLevelHead">Price Level:</string>
     <string name="webPageHead">Web Page:</string>
 
     <string name="okButton">OK</string>
@@ -89,5 +89,24 @@
 
     <string name="title_activity_maps">MobEats: Find Food!</string>
     <string name="findFoodOnMap">Find Food!</string>
+    <string name="typeOfPremises">Type: </string>
+
+<!--    Map Filters-->
+
+    <string-array name="MapFilters">
+        <item>Restaurant</item>
+        <item>Cafe</item>
+        <item>Bar</item>
+    </string-array>
+
+    <!--    Prive Level Value-->
+
+    <string-array name="priceLevelsArray">
+        <item>Free</item>
+        <item>Inexpensive</item>
+        <item>Moderate</item>
+        <item>Expensive</item>
+        <item>Very Expensive</item>
+    </string-array>
 
 </resources>
