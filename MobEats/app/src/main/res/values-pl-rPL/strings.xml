@@ -80,7 +80,7 @@
     <string name="ratingHead">Ocena:</string>
     <string name="addressHead">Ades:</string>
     <string name="fonNumberHead">Numer tel.:</string>
-    <string name="emailHead">Email:</string>
+    <string name="priceLevelHead">Pułap cenowy:</string>
     <string name="webPageHead">Strona inter.:</string>
 
     <string name="okButton">OK</string>
@@ -89,5 +89,24 @@
 
     <string name="title_activity_maps">MobEats: Znajdź Jedzenie!</string>
     <string name="findFoodOnMap">Znajdź jedzenie!</string>
+    <string name="typeOfPremises">Typ: </string>
+
+    <!--    Map Filters-->
+
+    <string-array name="MapFilters">
+        <item>Restauracja</item>
+        <item>Kawiarnia</item>
+        <item>Bar</item>
+    </string-array>
+
+<!--    Prive Level Value-->
+
+    <string-array name="priceLevelsArray">
+        <item>Free</item>
+        <item>Inexpensive</item>
+        <item>Moderate</item>
+        <item>Expensive</item>
+        <item>Very Expensive</item>
+    </string-array>
 
 </resources>

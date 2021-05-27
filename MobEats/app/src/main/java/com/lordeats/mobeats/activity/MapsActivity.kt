@@ -10,6 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
@@ -52,6 +55,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var locationRequest: LocationRequest
     lateinit var locationCallback: LocationCallback
 
+    lateinit var filterList: Array<String>
+    lateinit var spinnerAdapter: ArrayAdapter<*>
+
     companion object {
         private const val MY_PERMISSION_CODE: Int = 1000
     }
@@ -72,6 +78,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMapsBinding.inflate(layoutInflater)
+        onSelectedItemSpinnerListener()
         setContentView(binding.root)
         changeLngButtonListenerConfig()
         changeModeButtonListenerConfig()
@@ -297,6 +304,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    private fun onSelectedItemSpinnerListener() {
+        filterList = resources.getStringArray(R.array.MapFilters)
+        spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, filterList)
+        binding.mapFilterSpinner.adapter = spinnerAdapter
+        binding.mapFilterSpinner.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>,
+                                        view: View?, position: Int, id: Long) {
+                Toast.makeText(this@MapsActivity, "Selected item: "+"" + filterList[position], Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // write code to perform some action
+            }
+        }
+    }
+
     private fun findFoodButtonListenerConfig() {
         binding.findFoodOnMapButton.setOnClickListener {
             nearByPlace("")
@@ -339,6 +363,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         binding.findFoodOnMapButton.text = getString(R.string.findFoodOnMap)
+        binding.typeOfPremisesTextView.text = getString(R.string.typeOfPremises)
+        filterList = resources.getStringArray(R.array.MapFilters)
+        spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, filterList)
+        binding.mapFilterSpinner.adapter = spinnerAdapter
     }
 
     private fun changeModeButtonListenerConfig() {

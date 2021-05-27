@@ -154,7 +154,6 @@ class RestaurantListFragment : Fragment(), CustomListeners {
         email.text = emailText
         val webPage = (dialog.findViewById(R.id.webPageText) as TextView)
         webPage.text = webPageText
-//        webPage.movementMethod = LinkMovementMethod.getInstance();
 
         val okBtn = dialog.findViewById(R.id.okButton) as Button
         okBtn.setOnClickListener {
