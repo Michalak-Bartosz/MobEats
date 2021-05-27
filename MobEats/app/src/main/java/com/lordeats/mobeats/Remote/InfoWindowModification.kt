@@ -17,6 +17,7 @@ class InfoWindowModification(context: Context) : GoogleMap.InfoWindowAdapter {
         //        val tvSnippet = view.findViewById<TextView>(R.id.snippet)
 //        tvSnippet.text = marker.snippet
 
+
         val tvTitle = view.findViewById<TextView>(R.id.title)
         tvTitle.text = marker.title
 

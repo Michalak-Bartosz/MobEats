@@ -138,9 +138,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             name = mPlace!!.result!!.name
                             rating = mPlace!!.result!!.rating.toString()
                             address = mPlace!!.result!!.formatted_address
-                            phoneNumber = mPlace!!.result!!.formatted_phone_number
-                            website = mPlace!!.result!!.website
-                            priceLevel = mPlace!!.result!!.price_level.toString()
+                            if (mPlace!!.result!!.name == null) "-" else name = mPlace!!.result!!.name
+                            if (mPlace!!.result!!.rating.toString() == null) "-" else rating = mPlace!!.result!!.rating.toString()
+                            if (mPlace!!.result!!.formatted_address == null) "-" else address = mPlace!!.result!!.formatted_address
+                            if (mPlace!!.result!!.formatted_phone_number == null) phoneNumber = "-" else phoneNumber = mPlace!!.result!!.formatted_phone_number
+                            if (mPlace!!.result!!.website == null) website = "-" else website = mPlace!!.result!!.website
+                            if (mPlace!!.result!!.price_level.toString() == null ) "-" else priceLevel = mPlace!!.result!!.price_level.toString()
                             Log.d("URL_PHONE", "" + name)
                             Log.d("URL_PHONE", "" + rating)
                             Log.d("URL_PHONE", "" + address)
