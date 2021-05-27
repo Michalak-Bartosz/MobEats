@@ -31,7 +31,9 @@ import com.lordeats.mobeats.Common.Common
 import com.lordeats.mobeats.Model.MyPlaces
 import com.lordeats.mobeats.Model.PlaceDetail
 import com.lordeats.mobeats.R
+import com.lordeats.mobeats.Remote.InfoWindowModification
 import com.lordeats.mobeats.databinding.ActivityMapsBinding
+import com.lordeats.mobeats.databinding.InfoWindowBinding
 import org.greenrobot.eventbus.EventBus
 import retrofit2.Call
 import retrofit2.Callback
@@ -119,12 +121,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         map.uiSettings.isZoomControlsEnabled = true
         map.setOnMarkerClickListener { marker ->
-            if (marker.isInfoWindowShown) {
-                marker.hideInfoWindow()
-            } else {
-                marker.showInfoWindow()
-            }
             if(marker != mMarker) {
+                if (marker.isInfoWindowShown) {
+                    marker.hideInfoWindow()
+                } else {
+                    marker.showInfoWindow()
+                }
                 Common.currentResult = currentPlace!!.results!![Integer.parseInt(marker.snippet)]
                 mDetails.getDetailPlace(getPlaceDetailUrl(Common.currentResult!!.place_id!!))
                     .enqueue(object : retrofit2.Callback<PlaceDetail> {
@@ -154,6 +156,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
             true
         }
+        map.setInfoWindowAdapter(InfoWindowModification(this))
     }
 
     private fun getPlaceDetailUrl(place_id:String) : String {
@@ -186,8 +189,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             markerOptions.position(latLng)
                             markerOptions.title(placeName)
                             markerOptions.snippet(i.toString())
-
-                            map!!.addMarker(markerOptions)
                             map!!.addMarker(markerOptions)
                         }
 //                        if (response.body()!!.next_page_token != null) {
