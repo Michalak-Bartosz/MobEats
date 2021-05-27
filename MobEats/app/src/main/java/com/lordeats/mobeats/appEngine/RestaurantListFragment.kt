@@ -147,7 +147,7 @@ class RestaurantListFragment : Fragment(), CustomListeners {
         val address = (dialog.findViewById(R.id.addressText) as TextView)
         val priceLevel = (dialog.findViewById(R.id.priceLevelText) as TextView)
         val priceLevelArray = resources.getStringArray(R.array.priceLevelsArray)
-        priceLevel.text = priceLevelArray[priceLevelText.toInt()]
+        priceLevel.text = priceLevelText
         address.text = addressText
         val fonNumber = (dialog.findViewById(R.id.fonNumberText) as TextView)
         fonNumber.text = fonNumberText

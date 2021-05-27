@@ -1,5 +1,6 @@
 package com.lordeats.mobeats.appEngine
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,6 +10,8 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.Navigation
 import com.lordeats.mobeats.R
+import com.lordeats.mobeats.activity.AppActivity
+import com.lordeats.mobeats.activity.MapsActivity
 import com.lordeats.mobeats.databinding.FragmentMainMenuBinding
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -38,7 +41,9 @@ class MainMenuFragment : Fragment() {
 
     private fun findFoodButtonListener() {
         binding.findFoodButton.setOnClickListener {
-            Navigation.findNavController(it).navigate(R.id.action_mainMenuFragment_to_MapsActivity)
+//            Navigation.findNavController(it).navigate(R.id.action_mainMenuFragment_to_MapsActivity)
+            activity?.intent = android.content.Intent(context,MapsActivity::class.java)
+            startActivity(activity?.intent)
         }
     }
 

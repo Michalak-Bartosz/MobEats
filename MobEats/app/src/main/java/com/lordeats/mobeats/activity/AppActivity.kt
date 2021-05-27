@@ -55,6 +55,7 @@ class AppActivity : AppCompatActivity() {
         getUserData()
         connectToServer()
         clientLifecycleConfig()
+        EventBus.getDefault().register(this)
     }
 
     override fun onDestroy() {

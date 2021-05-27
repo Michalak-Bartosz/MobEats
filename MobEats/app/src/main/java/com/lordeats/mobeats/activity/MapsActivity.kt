@@ -339,7 +339,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>,
                                         view: View?, position: Int, id: Long) {
-                // Toast.makeText(this@MapsActivity, "Selected item: "+"" + filterList[position], Toast.LENGTH_SHORT).show()
                 if (position == 0){
                     typePlace = "restaurant"
                 } else if (position == 1){
@@ -350,9 +349,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 nearByPlace("")
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // write code to perform some action
-            }
+            override fun onNothingSelected(parent: AdapterView<*>) { }
         }
     }
 
