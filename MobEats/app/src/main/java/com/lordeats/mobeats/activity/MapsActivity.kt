@@ -126,7 +126,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
             if(marker != mMarker) {
                 Common.currentResult = currentPlace!!.results!![Integer.parseInt(marker.snippet)]
-                Log.d("URL_DETAIL", "" + Integer.parseInt(marker.snippet))
                 mDetails.getDetailPlace(getPlaceDetailUrl(Common.currentResult!!.place_id!!))
                     .enqueue(object : retrofit2.Callback<PlaceDetail> {
                         override fun onResponse(
@@ -140,12 +139,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             phoneNumber = mPlace!!.result!!.formatted_phone_number
                             website = mPlace!!.result!!.website
                             priceLevel = mPlace!!.result!!.price_level
-//                            Log.d("URL_PHONE", "" + name)
-//                            Log.d("URL_PHONE", "" + rating)
-//                            Log.d("URL_PHONE", "" + address)
-//                            Log.d("URL_PHONE", "" + phoneNumber)
-//                            Log.d("URL_PHONE", "" + website)
-//                            Log.d("URL_PHONE", "" + priceLevel)
+                            Log.d("URL_PHONE", "" + name)
+                            Log.d("URL_PHONE", "" + rating)
+                            Log.d("URL_PHONE", "" + address)
+                            Log.d("URL_PHONE", "" + phoneNumber)
+                            Log.d("URL_PHONE", "" + website)
+                            Log.d("URL_PHONE", "" + priceLevel)
                         }
 
                         override fun onFailure(call: Call<PlaceDetail>, t: Throwable) {
