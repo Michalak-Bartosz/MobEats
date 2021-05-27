@@ -340,6 +340,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             override fun onItemSelected(parent: AdapterView<*>,
                                         view: View?, position: Int, id: Long) {
                 // Toast.makeText(this@MapsActivity, "Selected item: "+"" + filterList[position], Toast.LENGTH_SHORT).show()
+                if (position == 0){
+                    typePlace = "restaurant"
+                } else if (position == 1){
+                    typePlace = "cafe"
+                } else {
+                    typePlace = "bar"
+                }
+                nearByPlace("")
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
