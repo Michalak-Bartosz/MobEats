@@ -84,7 +84,7 @@
             android:shadowDy="10"
             android:shadowRadius="3"
             android:text="@string/findFoodButton"
-            android:textSize="60sp"
+            android:textSize="50sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

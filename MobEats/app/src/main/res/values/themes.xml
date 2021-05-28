@@ -74,7 +74,7 @@
 
     <style name="mainTextSpinner">
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/spinner_launcher_background_light</item>
     </style>
