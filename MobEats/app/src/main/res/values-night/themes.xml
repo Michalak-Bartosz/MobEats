@@ -51,6 +51,10 @@
         <item name="android:background">@drawable/round_corner_light</item>
     </style>
 
+    <style name="mainImageButtonWithStroke">
+        <item name="android:background">@drawable/round_corner_light_with_stroke</item>
+    </style>
+
     <style name="mainImageButtonReverse">
         <item name="android:background">@drawable/round_corner_dark</item>
     </style>

@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 
@@ -38,23 +39,19 @@ public class WSController {
         }
     }
 
-    //TODO Funkcja chatu do rozbudowy
-//    @MessageMapping("/chat")
-//    @SendTo("/topic/messages")
-//    public String processMessage(String message, @Header("simpSessionId") String sessionId){
-//
-//        log.info("Received message from: " + loginAndRegisterService.getUser(sessionId) + ": " + message);
-//        try {
-//            if (message.startsWith("q!")) {
-//                message = "User: " + loginAndRegisterService.getUser(sessionId).getString("name") + " disconnected.";
-//            }
-//            return loginAndRegisterService.getUser(sessionId).getString("name") + ": " + message;
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        return "Message Error";
-//        return "";
-//    }
+    @MessageMapping("/findPpl")
+    @SendTo("/topic/messages")
+    public String processMessage(String message, @Header("simpSessionId") String sessionId){
+        try {
+            JSONObject findPplPayload = new JSONObject(message);
+            log.info("User: " + findPplPayload + " looking for ppl to eat.");
+            findPplPayload.put("message", "Hi! I'm " + findPplPayload.getString("nickname") + " and I'm looking for someone to eat with me. Check it out");
+            return findPplPayload.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return "Message Error";
+    }
 
     @MessageMapping("/signUp")
     @SendToUser("queue/register")

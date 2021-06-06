@@ -1,14 +1,21 @@
 package com.lordeats.mobeats.activity
 
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.res.Configuration
+import android.graphics.BitmapFactory
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.databinding.DataBindingUtil
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.databinding.ActivityAppBinding
@@ -40,11 +47,17 @@ class AppActivity : AppCompatActivity() {
     private lateinit var restaurantDataTmp: String
     private lateinit var restaurantData: JSONObject
 
+    private lateinit var findPplDataTmp: String
+    private lateinit var findPplData: JSONObject
+
     private lateinit var nickname: String
     private lateinit var password: String
 
     private var replyDataTmp: String = ""
-    private lateinit var replayData: JSONObject
+    private lateinit var replyData: JSONObject
+
+    private val CHANNEL_ID = "channel_id_01"
+    private val notificationId = 101
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +68,7 @@ class AppActivity : AppCompatActivity() {
         getUserData()
         connectToServer()
         clientLifecycleConfig()
+        createNotificationChannel()
         EventBus.getDefault().register(this)
     }
 
@@ -84,6 +98,38 @@ class AppActivity : AppCompatActivity() {
         binding.greetingText.text = getString(R.string.greetingText) + " " + userData.getString("nickname") + "!"
     }
 
+    private fun createNotificationChannel() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.findPplTitle)
+            val descriptionText = getString(R.string.findPplText)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun sendNotification(userData: JSONObject) {
+        val intent = Intent(this, MapsActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+
+        val builder =NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.mipmap.ic_launcher_foreground)
+            .setContentIntent(pendingIntent)
+            .setContentTitle(getString(R.string.findPplTitle))
+            .setContentText(getString(R.string.findPplText))
+            .setStyle(NotificationCompat.BigTextStyle().bigText(userData.getString("message")))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+        with(NotificationManagerCompat.from(this)) {
+            notify(notificationId, builder.build())
+        }
+    }
+
     @SuppressLint("CheckResult")
     private fun connectToServer() {
 //        client = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/app")
@@ -91,6 +137,7 @@ class AppActivity : AppCompatActivity() {
         client.connect()
         client.send("/mobEats/signIn", userDataTmp).subscribe({ },
             { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
+        setOnFindPll()
         setOnChangeUserDataSubscribe()
         setOnDeleteAccountSubscribe()
         setOnGetRestaurantsListSubscribe()
@@ -167,6 +214,13 @@ class AppActivity : AppCompatActivity() {
             restaurantData.put("nickname", userData.getString("nickname"))
             client.send("/mobEats/addReservation", restaurantData.toString()).subscribe({ },
                 { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
+        } else if(client.isConnected && event.message!!.getString("type")  == "findPpl") {
+            findPplDataTmp = event.message!!.toString()
+            findPplData = JSONObject(findPplDataTmp)
+            findPplData.remove("type")
+            findPplData.put("nickname", userData.getString("nickname"))
+            client.send("/mobEats/findPpl", findPplData.toString()).subscribe({ },
+                { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
         } else {
             DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show()
             connectToServer()
@@ -174,12 +228,21 @@ class AppActivity : AppCompatActivity() {
     }
 
     @SuppressLint("CheckResult")
+    private fun setOnFindPll() {
+        client.topic("/topic/messages").subscribe() { topicMessage ->
+            replyDataTmp = topicMessage.payload
+            replyData = JSONObject(replyDataTmp)
+            sendNotification(replyData)
+        }
+    }
+
+    @SuppressLint("CheckResult")
     private fun setOnChangeUserDataSubscribe() {
         client.topic("/user/queue/changeData").subscribe { topicMessage ->
             replyDataTmp = topicMessage.payload
-            replayData = JSONObject(replyDataTmp)
+            replyData = JSONObject(replyDataTmp)
             when {
-                replayData.getString("value") == "acceptNickname" -> {
+                replyData.getString("value") == "acceptNickname" -> {
 
                     userData.remove("nickname")
                     userData.put("nickname", userDataChange.getString("newNickname"))
@@ -189,7 +252,7 @@ class AppActivity : AppCompatActivity() {
                     this.runOnUiThread { setUserData()
                         DynamicToast.makeSuccess(this, getString(R.string.changeNicknameAccepted)).show() }
                 }
-                replayData.getString("value") == "acceptPassword" -> {
+                replyData.getString("value") == "acceptPassword" -> {
 
                     userData.remove("password")
                     userData.put("password", userDataChange.getString("newPassword"))
@@ -198,7 +261,7 @@ class AppActivity : AppCompatActivity() {
 
                     this.runOnUiThread { DynamicToast.makeSuccess(this, getString(R.string.changePasswordAccepted)).show() }
                 }
-                replayData.getString("value") == "reject" -> {
+                replyData.getString("value") == "reject" -> {
                     this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.changeRejectedNickname)).show() }
                 }
                 else -> {
@@ -212,15 +275,15 @@ class AppActivity : AppCompatActivity() {
     private fun setOnDeleteAccountSubscribe() {
         client.topic("/user/queue/dellAccount").subscribe { topicMessage ->
             replyDataTmp = topicMessage.payload
-            replayData = JSONObject(replyDataTmp)
+            replyData = JSONObject(replyDataTmp)
             when {
-                replayData.getString("value") == "accept" -> {
+                replyData.getString("value") == "accept" -> {
                     client.disconnect()
                     goToStartAppActivity()
                     this.runOnUiThread { setUserData()
                         DynamicToast.makeSuccess(this, getString(R.string.deleteAccountAccepted)).show() }
                 }
-                replayData.getString("value") == "reject" -> {
+                replyData.getString("value") == "reject" -> {
                     this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.deleteAccountRejected)).show() }
                 }
                 else -> {
@@ -256,12 +319,12 @@ class AppActivity : AppCompatActivity() {
     private fun setOnDeleteReservationSubscribe() {
         client.topic("/user/queue/dellReservation").subscribe { topicMessage ->
             replyDataTmp = topicMessage.payload
-            replayData = JSONObject(replyDataTmp)
+            replyData = JSONObject(replyDataTmp)
             when {
-                replayData.getString("value") == "accept" -> {
+                replyData.getString("value") == "accept" -> {
                     this.runOnUiThread { DynamicToast.makeSuccess(this, getString(R.string.deleteRestaurantAccepted)).show() }
                 }
-                replayData.getString("value") == "reject" -> {
+                replyData.getString("value") == "reject" -> {
                     this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.deleteRestaurantRejected)).show() }
                 }
                 else -> {
@@ -275,12 +338,12 @@ class AppActivity : AppCompatActivity() {
     private fun setOnAddReservationSubscribe() {
         client.topic("/user/queue/addNewReservation").subscribe { topicMessage ->
             replyDataTmp = topicMessage.payload
-            replayData = JSONObject(replyDataTmp)
+            replyData = JSONObject(replyDataTmp)
             when {
-                replayData.getString("value") == "accept" -> {
+                replyData.getString("value") == "accept" -> {
                     this.runOnUiThread { DynamicToast.makeSuccess(this, getString(R.string.addRestaurantAccepted)).show() }
                 }
-                replayData.getString("value") == "reject" -> {
+                replyData.getString("value") == "reject" -> {
                     this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.addRestaurantRejected)).show() }
                 }
                 else -> {

@@ -95,6 +95,9 @@
     <string name="typeOfPremises">Typ: </string>
     <string name="pressToAddRestaurantText">Dodaj do Ulub.</string>
 
+    <string name="findPplTitle">Masz ochotę na jedzenie?</string>
+    <string name="findPplText">Hej! Znajdź jedzenie.</string>
+
     <!--    Map Filters-->
 
     <string-array name="MapFilters">

@@ -78,6 +78,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     var priceLevel:String?=null
     var typePlace:String="restaurant"
     var infoWindowPayload: JSONObject = JSONObject()
+    var findPplPayload: JSONObject = JSONObject()
     private lateinit var messageToSend: MessageEvent
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,6 +112,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         changeLngButtonListenerConfig()
         changeModeButtonListenerConfig()
         findFoodButtonListenerConfig()
+        findPplButtonListenerConfig()
 
         setContentView(binding.root)
     }
@@ -347,6 +349,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    private fun findPplButtonListenerConfig() {
+        binding.findPplButton.setOnClickListener {
+            findPplPayload = JSONObject()
+            findPplPayload.put("type", "findPpl")
+            findPplPayload.put("lat", "100")
+            findPplPayload.put("long", "100")
+            messageToSend = MessageEvent(findPplPayload)
+            EventBus.getDefault().post(messageToSend)
+        }
+    }
+
     private fun changeLngButtonListenerConfig() {
         val appSettingPrefs: SharedPreferences = getSharedPreferences("AppSettingPrefs", 0)
         val sharedPrefsEdit: SharedPreferences.Editor = appSettingPrefs.edit()
@@ -398,10 +411,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         if(isNightModeOn){
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             binding.changeModeMapButton.setImageResource(R.drawable.ic_light_mode)
+            binding.findPplButton.setImageResource(R.drawable.ic_find_ppl_dark)
         }
         else{
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             binding.changeModeMapButton.setImageResource(R.drawable.ic_dark_mode)
+            binding.findPplButton.setImageResource(R.drawable.ic_find_ppl_white)
         }
 
         binding.changeModeMapButton.setOnClickListener {
@@ -410,10 +425,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 sharedPrefsEdit.putBoolean("NightMode", false)
                 binding.changeModeMapButton.setImageResource(R.drawable.ic_dark_mode)
+                binding.findPplButton.setImageResource(R.drawable.ic_find_ppl_white)
             }else{
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 sharedPrefsEdit.putBoolean("NightMode", true)
                 binding.changeModeMapButton.setImageResource(R.drawable.ic_light_mode)
+                binding.findPplButton.setImageResource(R.drawable.ic_find_ppl_dark)
             }
             sharedPrefsEdit.apply()
         }

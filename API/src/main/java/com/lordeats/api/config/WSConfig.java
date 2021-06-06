@@ -24,6 +24,8 @@ public class WSConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/app");
         registry.addEndpoint("/app").withSockJS();
+        registry.addEndpoint("/findPpl");
+        registry.addEndpoint("/findPpl").withSockJS();
         registry.addEndpoint("/signUp");
         registry.addEndpoint("/signUp").withSockJS();
         registry.addEndpoint("/signIn");
