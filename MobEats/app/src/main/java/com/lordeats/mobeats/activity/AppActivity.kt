@@ -111,17 +111,18 @@ class AppActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendNotification(userData: JSONObject) {
+    private fun sendNotification(userDataFindPpl: JSONObject) {
         val notificationIntent = Intent(this, MapsActivity::class.java)
         notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER)
         notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
         notificationIntent.action = Intent.ACTION_SEND
-        notificationIntent.putExtra("User Data", userData.toString())
+        Log.d("BARTEK USER DATA DO WYSLANIA", userDataFindPpl.toString())
+        notificationIntent.putExtra("USER_DATA_FIND_PPL", userDataFindPpl.toString())
         notificationIntent.type = "text/plain"
 
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val nickname: String = userData.getString("nickname")
+        val nickname: String = userDataFindPpl.getString("nickname")
         if(!notificationIdList.contains(nickname)) {
             createNotificationChannel(nickname)
             notificationIdList[nickname] = notificationIdList.count()
