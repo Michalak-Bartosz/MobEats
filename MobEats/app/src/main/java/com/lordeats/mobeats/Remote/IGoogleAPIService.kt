@@ -4,6 +4,7 @@ import com.lordeats.mobeats.Model.MyPlaces
 import com.lordeats.mobeats.Model.PlaceDetail
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Query
 import retrofit2.http.Url
 
 interface IGoogleAPIService {
@@ -12,6 +13,7 @@ interface IGoogleAPIService {
 
     @GET
     fun getDetailPlace(@Url url:String): Call<PlaceDetail>
-}
 
-// https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&keyword=cruise&key=AIzaSyC3OiPsQ04J88K34GwlN8x83swt3Igi9Ko
+    @GET("maps/api/directions/json")
+    fun getDirections(@Query("origin") origin:String, @Query("destination") destination:String): Call<String>
+}

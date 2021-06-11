@@ -4,7 +4,9 @@ import android.Manifest
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.graphics.Color
 import android.location.Location
+import android.os.AsyncTask
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -29,6 +31,7 @@ import com.google.android.gms.maps.model.*
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.lordeats.mobeats.Common.Common
+import com.lordeats.mobeats.Helper.DirectionJsonParser
 import com.lordeats.mobeats.Model.MyPlaces
 import com.lordeats.mobeats.Model.PlaceDetail
 import com.lordeats.mobeats.R
@@ -39,11 +42,14 @@ import com.lordeats.mobeats.events.MessageEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -55,7 +61,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var longitude: Double = 0.0
 
     private lateinit var mLastLocation: Location
-    private var mMarker: Marker?= null
+    private var mMarker: Marker? = null
     private var markerList: ArrayList<Marker> = ArrayList()
 
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -72,21 +78,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var mService: IGoogleAPIService
     lateinit var mDetails: IGoogleAPIService
     internal lateinit var currentPlace: MyPlaces
-    var mPlace:PlaceDetail?=null
+    var mPlace: PlaceDetail? = null
 
     private var userDataTmp: String = ""
     private var userData: JSONObject = JSONObject()
 
-    var name:String?=null
-    var rating:String?=null
-    var address:String?=null
-    var phoneNumber:String?=null
-    var website:String?=null
-    var priceLevel:String?=null
-    var typePlace:String="restaurant"
+    var name: String? = null
+    var rating: String? = null
+    var address: String? = null
+    var phoneNumber: String? = null
+    var website: String? = null
+    var priceLevel: String? = null
+    var typePlace: String = "restaurant"
     var infoWindowPayload: JSONObject = JSONObject()
     var findPplPayload: JSONObject = JSONObject()
     private lateinit var messageToSend: MessageEvent
+
+    lateinit var polyLine: Polyline
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,13 +114,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 buildLocationRequest()
                 buildLocationCallback()
                 fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-                fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
+                fusedLocationProviderClient.requestLocationUpdates(
+                    locationRequest,
+                    locationCallback,
+                    Looper.myLooper()
+                )
             }
         } else {
             buildLocationRequest()
             buildLocationCallback()
             fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-            fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
+            fusedLocationProviderClient.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                Looper.myLooper()
+            )
         }
 
         onSelectedItemSpinnerListener()
@@ -125,7 +141,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onStart() {
         super.onStart()
-        Log.d("BARTEK MAPACTIVITY","ON START")
+        Log.d("BARTEK MAPACTIVITY", "ON START")
         EventBus.getDefault().register(this)
     }
 
@@ -139,7 +155,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         map = googleMap
         Places.initialize(applicationContext, R.string.google_maps_key.toString())
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
                 map.isMyLocationEnabled = true
             }
         } else {
@@ -147,7 +167,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         map.uiSettings.isZoomControlsEnabled = true
         map.setOnMarkerClickListener { marker ->
-            if(marker != mMarker || isMarkerFromUser(marker)==false) {
+            if (marker != mMarker && isMarkerFromUser(marker) == false) {
                 Common.currentResult = currentPlace!!.results!![Integer.parseInt(marker.snippet)]
                 mDetails.getDetailPlace(getPlaceDetailUrl(Common.currentResult!!.place_id!!))
                     .enqueue(object : retrofit2.Callback<PlaceDetail> {
@@ -156,12 +176,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             response: Response<PlaceDetail>
                         ) {
                             mPlace = response!!.body()
-                            if (mPlace!!.result!!.name == null) "-" else name = mPlace!!.result!!.name
-                            if (mPlace!!.result!!.rating.toString() == null) "-" else rating = mPlace!!.result!!.rating.toString()
-                            if (mPlace!!.result!!.formatted_address == null) "-" else address = mPlace!!.result!!.formatted_address
-                            if (mPlace!!.result!!.formatted_phone_number == null) phoneNumber = "-" else phoneNumber = mPlace!!.result!!.formatted_phone_number
-                            if (mPlace!!.result!!.website == null) website = "-" else website = mPlace!!.result!!.website
-                            if (mPlace!!.result!!.price_level.toString() == null ) "-" else priceLevel = mPlace!!.result!!.price_level.toString()
+                            if (mPlace!!.result!!.name == null) "-" else name =
+                                mPlace!!.result!!.name
+                            if (mPlace!!.result!!.rating.toString() == null) "-" else rating =
+                                mPlace!!.result!!.rating.toString()
+                            if (mPlace!!.result!!.formatted_address == null) "-" else address =
+                                mPlace!!.result!!.formatted_address
+                            if (mPlace!!.result!!.formatted_phone_number == null) phoneNumber =
+                                "-" else phoneNumber = mPlace!!.result!!.formatted_phone_number
+                            if (mPlace!!.result!!.website == null) website = "-" else website =
+                                mPlace!!.result!!.website
+                            if (mPlace!!.result!!.price_level.toString() == null) "-" else priceLevel =
+                                mPlace!!.result!!.price_level.toString()
                             Log.d("URL_PHONE", "" + name)
                             Log.d("URL_PHONE", "" + rating)
                             Log.d("URL_PHONE", "" + address)
@@ -180,9 +206,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             setInfoWindowListenerConfig()
                             infoWindowPayload.remove("priceLevel")
                             val priceLevelArray = resources.getStringArray(R.array.priceLevelsArray)
-                            infoWindowPayload.put("priceLevel", priceLevelArray[priceLevel?.toInt()!!])
+                            infoWindowPayload.put(
+                                "priceLevel",
+                                priceLevelArray[priceLevel?.toInt()!!]
+                            )
 
-                            map.setInfoWindowAdapter(InfoWindowModification(context = this@MapsActivity, content = infoWindowPayload.toString()))
+                            map.setInfoWindowAdapter(
+                                InfoWindowModification(
+                                    context = this@MapsActivity,
+                                    content = infoWindowPayload.toString()
+                                )
+                            )
                             if (marker.isInfoWindowShown) {
                                 marker.hideInfoWindow()
                             } else {
@@ -200,8 +234,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun isMarkerFromUser(marker: Marker): Boolean {
-        for(mar in markerList) {
-            if(mar == marker) {
+        for (mar in markerList) {
+            if (mar == marker) {
                 return true
             }
         }
@@ -215,7 +249,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun getPlaceDetailUrl(place_id:String) : String {
+    private fun getPlaceDetailUrl(place_id: String): String {
         val url = StringBuilder("https://maps.googleapis.com/maps/api/place/details/json")
         url.append("?placeid=$place_id")
         url.append("&key=AIzaSyCoZwNDKs4JRA3HNZCKmB_c09GH0bLPnEE")
@@ -223,24 +257,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         return url.toString()
     }
 
-    private fun nearByPlace (nextPageToken: String) {
+    private fun nearByPlace(nextPageToken: String) {
         map.clear()
         var pageToken = ""
-        val url = getUrl(latitude,longitude,typePlace,nextPageToken)
+        val url = getUrl(latitude, longitude, typePlace, nextPageToken)
         mService.getNearbyPlaces(url)
             .enqueue(object : Callback<MyPlaces> {
                 override fun onResponse(call: Call<MyPlaces>?, response: Response<MyPlaces>?) {
                     currentPlace = response!!.body()!!
-                    if (response!!.isSuccessful)
-                    {
-                        for(i in 0 until response.body()!!.results!!.size)
-                        {
+                    if (response!!.isSuccessful) {
+                        for (i in 0 until response.body()!!.results!!.size) {
                             val markerOptions = MarkerOptions()
                             val googlePlace = response.body()!!.results!![i]
                             val lat = googlePlace.geometry!!.location!!.lat
                             val lng = googlePlace.geometry!!.location!!.lng
                             val placeName = googlePlace.name
-                            val latLng = LatLng(lat,lng)
+                            val latLng = LatLng(lat, lng)
 
                             markerOptions.position(latLng)
                             markerOptions.title(placeName)
@@ -249,15 +281,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         }
                     }
                 }
+
                 override fun onFailure(call: Call<MyPlaces>?, t: Throwable) {
-                    Toast.makeText(baseContext,""+t!!.message, Toast.LENGTH_SHORT).show()
-                    Log.d("URL_DEBUG", ""+ t!!.message);
+                    Toast.makeText(baseContext, "" + t!!.message, Toast.LENGTH_SHORT).show()
+                    Log.d("URL_DEBUG", "" + t!!.message);
                 }
             })
     }
 
-    private fun getUrl(latitude: Double, longitude: Double, typePlace: String, nextPage: String): String {
-        val googlePlaceUrl = StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json")
+    private fun getUrl(
+        latitude: Double,
+        longitude: Double,
+        typePlace: String,
+        nextPage: String
+    ): String {
+        val googlePlaceUrl =
+            StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json")
         if (nextPage.length > 0) {
             googlePlaceUrl.append("?key=AIzaSyCoZwNDKs4JRA3HNZCKmB_c09GH0bLPnEE")
             googlePlaceUrl.append("&pagetoken=$nextPage")
@@ -275,7 +314,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun buildLocationCallback() {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(p0: LocationResult?) {
-                mLastLocation = p0!!.locations.get(p0!!.locations.size-1)
+                mLastLocation = p0!!.locations.get(p0!!.locations.size - 1)
 
                 if (mMarker != null) {
 
@@ -284,7 +323,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 latitude = mLastLocation.latitude
                 longitude = mLastLocation.longitude
 
-                val latLng = LatLng(latitude,longitude)
+                val latLng = LatLng(latitude, longitude)
                 val markerOptions = MarkerOptions()
                     .position(latLng)
                     .title("You are here ;-)")
@@ -300,19 +339,29 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun checkLocationPermission(): Boolean {
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-        {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION))
-                ActivityCompat.requestPermissions(this, arrayOf(
+        if (ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
                     Manifest.permission.ACCESS_FINE_LOCATION
-                ),MY_PERMISSION_CODE)
+                )
+            )
+                ActivityCompat.requestPermissions(
+                    this, arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    ), MY_PERMISSION_CODE
+                )
             else
-                ActivityCompat.requestPermissions(this, arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ),MY_PERMISSION_CODE)
+                ActivityCompat.requestPermissions(
+                    this, arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    ), MY_PERMISSION_CODE
+                )
             return false
-        }
-        else
+        } else
             return true
     }
 
@@ -324,10 +373,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         locationRequest.smallestDisplacement = 10f
     }
 
-    private fun buildDirectionRequest(origin: LatLng, destiny: LatLng) :String {
+    private fun buildDirectionRequest(origin: LatLng, destiny: LatLng): String {
         var lat = origin.latitude
         var long = origin.longitude
-        val googleDirectionUrl = StringBuilder("https://maps.googleapis.com/maps/api/directions/json?")
+        val googleDirectionUrl =
+            StringBuilder("https://maps.googleapis.com/maps/api/directions/json?")
         googleDirectionUrl.append("origin=$lat,$long")
         lat = destiny.latitude
         long = destiny.longitude
@@ -337,27 +387,105 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         return googleDirectionUrl.toString()
     }
 
-    private fun drwaRoutes(data: String) {
-        
+    //    private fun drwaRoutes(data: String) {
+//
+//    }
+    private fun drwaRoutes(origin: LatLng, destiny: LatLng) {
+        if (polyLine != null) {
+            polyLine.remove()
+        }
+        val org = StringBuilder(origin.latitude.toString())
+            .append(",")
+            .append(origin.longitude)
+            .toString()
+
+        val dest = StringBuilder(destiny.latitude.toString())
+            .append(",")
+            .append(destiny.longitude)
+            .toString()
+
+        mService.getDirections(org,dest)
+            .enqueue(object:Callback<String>{
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    val parsedJson = parserTask(response!!.body()!!.toString())
+
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    Log.d("DIRECT","Direction API Failure - Thank's google :-)")
+                }
+
+            })
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    private fun parserTask(vararg response: String): List<List<HashMap<String,String>>>? {
+        val jsonObject: JSONObject
+        var routes: List<List<HashMap<String,String>>>?=null
+        try {
+            jsonObject = JSONObject(response[0])
+            val parser = DirectionJsonParser()
+            routes = parser.parse(jsonObject)
+        }catch (e:JSONException) {
+            e.printStackTrace()
+        }
+        return routes
+    }
+
+    private fun createRoute(result: List<List<HashMap<String,String>>>?) {
+        var points:ArrayList<LatLng>?=null
+        var polylineOptions:PolylineOptions?=null
+
+        for(i in result!!.indices){
+            points = ArrayList()
+            polylineOptions = PolylineOptions()
+
+            val path:List<HashMap<String,String>> = result[i]
+
+            for(j in path.indices) {
+                val point = path[j]
+                val lat = point["lat"]!!.toDouble()
+                val lng = point["lng"]!!.toDouble()
+                val position = LatLng(lat,lng)
+
+                points.add(position)
+            }
+            polylineOptions.addAll(points)
+            polylineOptions.width(12f)
+            polylineOptions.color(Color.RED)
+            polylineOptions.geodesic(true)
+        }
+        polyLine = map!!.addPolyline(polylineOptions)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when(requestCode)
-        {
+        when (requestCode) {
             MY_PERMISSION_CODE -> {
                 if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(
+                            this,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
                         if (checkLocationPermission()) {
                             buildLocationRequest()
                             buildLocationCallback()
-                            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-                            fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
+                            fusedLocationProviderClient =
+                                LocationServices.getFusedLocationProviderClient(this)
+                            fusedLocationProviderClient.requestLocationUpdates(
+                                locationRequest,
+                                locationCallback,
+                                Looper.myLooper()
+                            )
                             map.isMyLocationEnabled = true
                         }
                     }
                 } else {
-                    Toast.makeText(this,"Permission Denied", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -369,21 +497,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.mapFilterSpinner.adapter = spinnerAdapter
         binding.mapFilterSpinner.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>,
-                                        view: View?, position: Int, id: Long) {
-                if (position == 0){
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?, position: Int, id: Long
+            ) {
+                if (position == 0) {
                     typePlace = "restaurant"
-                } else if (position == 1){
+                } else if (position == 1) {
                     typePlace = "cafe"
                 } else {
                     typePlace = "bar"
                 }
 
             }
-            override fun onNothingSelected(parent: AdapterView<*>) { }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
         }
     }
-////// Tutaj dokonczyc
+
+    ////// Tutaj dokonczyc
     private fun findFoodButtonListenerConfig() {
         binding.findFoodOnMapButton.setOnClickListener {
             nearByPlace("")
@@ -417,7 +549,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     updateResources("en")
                     binding.changeLngMapButton.text = getString(R.string.additionalLng)
                 }
-                else -> { }
+                else -> {
+                }
             }
             sharedPrefsEdit.apply()
         }
@@ -449,12 +582,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val sharedPrefsEdit: SharedPreferences.Editor = appSettingPrefs.edit()
         val isNightModeOn: Boolean = appSettingPrefs.getBoolean("NightMode", false)
 
-        if(isNightModeOn){
+        if (isNightModeOn) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             binding.changeModeMapButton.setImageResource(R.drawable.ic_light_mode)
             binding.findPplButton.setImageResource(R.drawable.ic_find_ppl_dark)
-        }
-        else{
+        } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             binding.changeModeMapButton.setImageResource(R.drawable.ic_dark_mode)
             binding.findPplButton.setImageResource(R.drawable.ic_find_ppl_white)
@@ -462,12 +594,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         binding.changeModeMapButton.setOnClickListener {
 
-            if (isNightModeOn){
+            if (isNightModeOn) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 sharedPrefsEdit.putBoolean("NightMode", false)
                 binding.changeModeMapButton.setImageResource(R.drawable.ic_dark_mode)
                 binding.findPplButton.setImageResource(R.drawable.ic_find_ppl_white)
-            }else{
+            } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 sharedPrefsEdit.putBoolean("NightMode", true)
                 binding.changeModeMapButton.setImageResource(R.drawable.ic_light_mode)
@@ -479,18 +611,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: MessageEvent) {
-        if(event.message!!.getString("type") == "findPplReply") {
+        if (event.message!!.getString("type") == "findPplReply") {
             userDataTmp = event.message!!.toString()
             userData = JSONObject(userDataTmp)
             val lat: Double = userData.getString("lat").toDouble()
             val long: Double = userData.getString("long").toDouble()
             val userMarkerOption = MarkerOptions()
-                .position(LatLng(lat,long))
+                .position(LatLng(lat, long))
                 .title("Eat with me!")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
             val marker = map!!.addMarker(userMarkerOption)
-            if(marker != null)
+            if (marker != null)
                 markerList.add(marker)
         }
     }
+
 }
