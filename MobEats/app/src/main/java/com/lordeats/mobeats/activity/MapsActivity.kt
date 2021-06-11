@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.navigation.ActivityNavigator
 import com.example.applicationfinal.Remote.IGoogleAPIService
 import com.google.android.gms.location.*
 
@@ -114,7 +115,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
         }
 
-
         onSelectedItemSpinnerListener()
         changeLngButtonListenerConfig()
         changeModeButtonListenerConfig()
@@ -147,7 +147,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         map.uiSettings.isZoomControlsEnabled = true
         map.setOnMarkerClickListener { marker ->
-            if(marker != mMarker) {
+            if(marker != mMarker || isMarkerFromUser(marker)==false) {
                 Common.currentResult = currentPlace!!.results!![Integer.parseInt(marker.snippet)]
                 mDetails.getDetailPlace(getPlaceDetailUrl(Common.currentResult!!.place_id!!))
                     .enqueue(object : retrofit2.Callback<PlaceDetail> {
@@ -199,6 +199,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    private fun isMarkerFromUser(marker: Marker): Boolean {
+        for(mar in markerList) {
+            if(mar == marker) {
+                return true
+            }
+        }
+        return false
+    }
+
     private fun setInfoWindowListenerConfig() {
         map.setOnInfoWindowClickListener {
             messageToSend = MessageEvent(infoWindowPayload)
@@ -213,6 +222,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         Log.d("URL_DETAIL", "" + url.toString())
         return url.toString()
     }
+
     private fun nearByPlace (nextPageToken: String) {
         map.clear()
         var pageToken = ""
@@ -312,6 +322,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         locationRequest.interval = 5000
         locationRequest.fastestInterval = 3000
         locationRequest.smallestDisplacement = 10f
+    }
+
+    private fun buildDirectionRequest(origin: LatLng, destiny: LatLng) {
+        var lat = origin.latitude
+        var long = origin.longitude
+        val googleDirectionUrl = StringBuilder("https://maps.googleapis.com/maps/api/directions/")
+        googleDirectionUrl.append("origin=$lat,$long")
+        lat = destiny.latitude
+        long = destiny.longitude
+        googleDirectionUrl.append("destination=$lat,$long")
+        googleDirectionUrl.append("mode=driving")
+
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
