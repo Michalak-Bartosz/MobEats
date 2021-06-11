@@ -628,6 +628,5 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 markerList.add(marker)
         }
     }
-
-    //
+    
 }
