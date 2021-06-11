@@ -29,6 +29,7 @@ import ua.naiksoftware.stomp.Stomp
 import ua.naiksoftware.stomp.StompClient
 import ua.naiksoftware.stomp.dto.LifecycleEvent
 import java.util.*
+import kotlin.collections.HashMap
 
 
 @Suppress("DEPRECATION")
@@ -57,7 +58,7 @@ class AppActivity : AppCompatActivity() {
 
     private lateinit var messageToSend: MessageEvent
 
-    private val notificationIdList: ArrayList<Int> = ArrayList()
+    private val notificationIdList: HashMap<String, Int> = HashMap()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -118,8 +119,12 @@ class AppActivity : AppCompatActivity() {
 
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
 
-        createNotificationChannel(nickname)
-        notificationIdList.add(notificationIdList.count())
+
+        if(!notificationIdList.contains(nickname)) {
+            createNotificationChannel(nickname)
+            notificationIdList[nickname] = notificationIdList.count()
+        }
+
         val builder =NotificationCompat.Builder(this, nickname)
             .setSmallIcon(R.mipmap.ic_launcher_foreground)
             .setContentIntent(pendingIntent)
@@ -129,8 +134,7 @@ class AppActivity : AppCompatActivity() {
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
         with(NotificationManagerCompat.from(this)) {
-            notify(notificationIdList[notificationIdList.count()-1], builder.build())
-        }
+            notify(notificationIdList.getValue(nickname), builder.build()) }
     }
 
     @SuppressLint("CheckResult")
