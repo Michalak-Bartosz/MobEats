@@ -111,15 +111,17 @@ class AppActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendNotification(nickname: String) {
+    private fun sendNotification(userData: JSONObject) {
         val notificationIntent = Intent(this, MapsActivity::class.java)
         notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER)
-        notificationIntent.action = Intent.ACTION_MAIN
         notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        notificationIntent.action = Intent.ACTION_SEND
+        notificationIntent.putExtra("User Data", userData.toString())
+        notificationIntent.type = "text/plain"
 
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
 
-
+        val nickname: String = userData.getString("nickname")
         if(!notificationIdList.contains(nickname)) {
             createNotificationChannel(nickname)
             notificationIdList[nickname] = notificationIdList.count()
@@ -132,6 +134,7 @@ class AppActivity : AppCompatActivity() {
             .setContentText(getString(R.string.findPplText))
             .setStyle(NotificationCompat.BigTextStyle().bigText(getString(R.string.findPplStarText) + " " + nickname + " " + getString(R.string.findPplEndText)))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setAutoCancel(true)
 
         with(NotificationManagerCompat.from(this)) {
             notify(notificationIdList.getValue(nickname), builder.build()) }
@@ -241,7 +244,7 @@ class AppActivity : AppCompatActivity() {
             replyData = JSONObject(replyDataTmp)
             if(replyData.getString("nickname") != userData.getString("nickname")) {
                 replyData.put("type", "findPplReply")
-                sendNotification(replyData.getString("nickname"))
+                sendNotification(replyData)
                 messageToSend = MessageEvent(replyData)
                 EventBus.getDefault().post(messageToSend)
             }

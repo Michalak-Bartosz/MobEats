@@ -119,13 +119,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         changeLngButtonListenerConfig()
         changeModeButtonListenerConfig()
         findFoodButtonListenerConfig()
-
         setContentView(binding.root)
     }
 
     override fun onStart() {
         super.onStart()
-        Log.d("BARTEK MAPACTIVITY","ON START")
         EventBus.getDefault().register(this)
     }
 
@@ -135,8 +133,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         EventBus.getDefault().unregister(this)
     }
 
+    private fun getUserData() {
+        userDataTmp = intent.getStringExtra("User Data").toString()
+        Log.d("BARTEK NIE MA MAPY", userDataTmp)
+        if(userDataTmp != "null") {
+            userData = JSONObject(userDataTmp)
+            setPplMarker()
+            Log.d("BARTEK NIE MA MAPY", userData.toString())
+        }
+    }
+
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
+        getUserData()
         Places.initialize(applicationContext, R.string.google_maps_key.toString())
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -482,15 +491,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         if(event.message!!.getString("type") == "findPplReply") {
             userDataTmp = event.message!!.toString()
             userData = JSONObject(userDataTmp)
-            val lat: Double = userData.getString("lat").toDouble()
-            val long: Double = userData.getString("long").toDouble()
-            val userMarkerOption = MarkerOptions()
-                .position(LatLng(lat,long))
-                .title("Eat with me!")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-            val marker = map!!.addMarker(userMarkerOption)
-            if(marker != null)
-                markerList.add(marker)
+                if(userDataTmp != "null")
+                    setPplMarker()
         }
+    }
+
+    private fun setPplMarker() {
+        val lat: Double = userData.getString("lat").toDouble()
+        val long: Double = userData.getString("long").toDouble()
+        val userMarkerOption = MarkerOptions()
+            .position(LatLng(lat,long))
+            .title("Eat with me!")
+            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+        val marker = map!!.addMarker(userMarkerOption)
+        if(marker != null)
+            markerList.add(marker)
     }
 }
