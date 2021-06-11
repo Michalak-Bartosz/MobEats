@@ -57,7 +57,7 @@ class AppActivity : AppCompatActivity() {
 
     private lateinit var messageToSend: MessageEvent
 
-    private val notificationId = 101
+    private val notificationIdList: ArrayList<Int> = ArrayList()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -119,7 +119,7 @@ class AppActivity : AppCompatActivity() {
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
 
         createNotificationChannel(nickname)
-
+        notificationIdList.add(notificationIdList.count())
         val builder =NotificationCompat.Builder(this, nickname)
             .setSmallIcon(R.mipmap.ic_launcher_foreground)
             .setContentIntent(pendingIntent)
@@ -129,7 +129,7 @@ class AppActivity : AppCompatActivity() {
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
         with(NotificationManagerCompat.from(this)) {
-            notify(notificationId, builder.build())
+            notify(notificationIdList[notificationIdList.count()-1], builder.build())
         }
     }
 
