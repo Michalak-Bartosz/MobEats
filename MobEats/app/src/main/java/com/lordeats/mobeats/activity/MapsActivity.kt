@@ -70,8 +70,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     internal lateinit var currentPlace: MyPlaces
     var mPlace:PlaceDetail?=null
 
-    private lateinit var userDataTmp: String
-    private lateinit var userData: JSONObject
+    private var userDataTmp: String = ""
+    private var userData: JSONObject = JSONObject()
 
     var name:String?=null
     var rating:String?=null
@@ -118,7 +118,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         changeLngButtonListenerConfig()
         changeModeButtonListenerConfig()
         findFoodButtonListenerConfig()
-        findPplButtonListenerConfig()
 
         setContentView(binding.root)
     }
@@ -130,7 +129,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun getUserData() {
         userDataTmp = intent.getStringExtra("User Data").toString()
-        userData = JSONObject(userDataTmp)
+        Log.d("BARTEK USERDATATMP", "" + userDataTmp)
+        if(userDataTmp != "null")
+            userData = JSONObject(userDataTmp)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -282,6 +283,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 val cameraPosition = CameraPosition.Builder()
                     .target(latLng).zoom(16f).build()
                 map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+                findPplButtonListenerConfig()
             }
         }
     }
