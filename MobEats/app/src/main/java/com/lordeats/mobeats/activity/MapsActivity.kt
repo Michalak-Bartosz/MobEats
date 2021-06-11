@@ -364,8 +364,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.findPplButton.setOnClickListener {
             findPplPayload = JSONObject()
             findPplPayload.put("type", "findPpl")
-            findPplPayload.put("lat", "100")
-            findPplPayload.put("long", "100")
+            findPplPayload.put("lat", mLastLocation.latitude)
+            findPplPayload.put("long", mLastLocation.longitude)
             messageToSend = MessageEvent(findPplPayload)
             EventBus.getDefault().post(messageToSend)
         }
