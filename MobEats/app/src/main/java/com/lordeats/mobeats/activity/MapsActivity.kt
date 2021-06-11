@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.navigation.ActivityNavigator
 import com.example.applicationfinal.Remote.IGoogleAPIService
 import com.google.android.gms.location.*
 
@@ -212,6 +213,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         Log.d("URL_DETAIL", "" + url.toString())
         return url.toString()
     }
+
     private fun nearByPlace (nextPageToken: String) {
         map.clear()
         var pageToken = ""
@@ -320,6 +322,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         locationRequest.interval = 5000
         locationRequest.fastestInterval = 3000
         locationRequest.smallestDisplacement = 10f
+    }
+
+    private fun buildDirectionRequest(origin: LatLng, destiny: LatLng) {
+        var lat = origin.latitude
+        var long = origin.longitude
+        val googleDirectionUrl = StringBuilder("https://maps.googleapis.com/maps/api/directions/")
+        googleDirectionUrl.append("origin=$lat,$long")
+        lat = destiny.latitude
+        long = destiny.longitude
+        googleDirectionUrl.append("destination=$lat,$long")
+        googleDirectionUrl.append("mode=driving")
+
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
