@@ -279,6 +279,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     .title("You are here ;-)")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
 
+                if(userData!=null){
+                    val userMarkerOption = MarkerOptions()
+                        .position(LatLng(userData.getString("lat").toDouble(),userData.getString("long").toDouble()))
+                        .title("Eat with me!")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                    var marker = map!!.addMarker(userMarkerOption);
+                }
                 mMarker = map!!.addMarker(markerOptions)
                 val cameraPosition = CameraPosition.Builder()
                     .target(latLng).zoom(16f).build()
