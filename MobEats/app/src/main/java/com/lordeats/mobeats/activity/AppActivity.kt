@@ -58,8 +58,6 @@ class AppActivity : AppCompatActivity() {
 
     private lateinit var messageToSend: MessageEvent
 
-    private val notificationChanelId = "1"
-
     private val notificationIdList: HashMap<String, Int> = HashMap()
 
 
@@ -71,7 +69,6 @@ class AppActivity : AppCompatActivity() {
         getUserData()
         connectToServer()
         clientLifecycleConfig()
-        createNotificationChannel()
         EventBus.getDefault().register(this)
     }
 
@@ -101,12 +98,12 @@ class AppActivity : AppCompatActivity() {
         binding.greetingText.text = getString(R.string.greetingText) + " " + userData.getString("nickname") + "!"
     }
 
-    private fun createNotificationChannel() {
+    private fun createNotificationChannel(nickname: String) {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = getString(R.string.findPplTitle)
             val descriptionText = getString(R.string.findPplText)
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(notificationChanelId, name, importance).apply {
+            val channel = NotificationChannel(nickname, name, importance).apply {
                 description = descriptionText
             }
             val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -123,6 +120,11 @@ class AppActivity : AppCompatActivity() {
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
 
 
+        if(!notificationIdList.contains(nickname)) {
+            createNotificationChannel(nickname)
+            notificationIdList[nickname] = notificationIdList.count()
+        }
+
         val builder =NotificationCompat.Builder(this, nickname)
             .setSmallIcon(R.mipmap.ic_launcher_foreground)
             .setContentIntent(pendingIntent)
@@ -131,9 +133,6 @@ class AppActivity : AppCompatActivity() {
             .setStyle(NotificationCompat.BigTextStyle().bigText(getString(R.string.findPplStarText) + " " + nickname + " " + getString(R.string.findPplEndText)))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
-        if(!notificationIdList.contains(nickname)) {
-            notificationIdList[nickname] = notificationIdList.count()
-        }
         with(NotificationManagerCompat.from(this)) {
             notify(notificationIdList.getValue(nickname), builder.build()) }
     }
