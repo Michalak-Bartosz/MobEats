@@ -405,19 +405,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         if (polyLine != null) {
             polyLine!!.remove()
         }
-        val org = StringBuilder(origin.latitude.toString())
-            .append(",")
-            .append(origin.longitude)
-            .toString()
+        val googleDirectionUrl =
+            StringBuilder("https://maps.googleapis.com/maps/api/directions/json?").append("origin=")
+                .append(origin.latitude.toString())
+                .append(",")
+                .append(origin.longitude.toString())
+                .append("&destination=")
+                .append(destiny.latitude.toString())
+                .append(",")
+                .append(destiny.longitude.toString())
+                .append("&key=AIzaSyCoZwNDKs4JRA3HNZCKmB_c09GH0bLPnEE")
+                .toString()
 
-        val dest = StringBuilder(destiny.latitude.toString())
-            .append(",")
-            .append(destiny.longitude)
-            .toString()
-
-        mService.getDirections(org,dest)
+        mService.getDirections(googleDirectionUrl)
             .enqueue(object:Callback<String>{
                 override fun onResponse(call: Call<String>, response: Response<String>) {
+                    Log.d("RESPONSE",response!!.body()!!)
                     val parsedJson = parserTask(response!!.body()!!.toString())
                     createRoute(parsedJson)
                 }
