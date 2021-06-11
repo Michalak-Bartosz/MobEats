@@ -94,7 +94,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     var findPplPayload: JSONObject = JSONObject()
     private lateinit var messageToSend: MessageEvent
 
-    lateinit var polyLine: Polyline?=null
+    var polyLine: Polyline ?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -392,7 +392,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 //    }
     private fun drwaRoutes(origin: LatLng, destiny: LatLng) {
         if (polyLine != null) {
-            polyLine.remove()
+            polyLine!!.remove()
         }
         val org = StringBuilder(origin.latitude.toString())
             .append(",")
