@@ -115,7 +115,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
         }
 
-
         onSelectedItemSpinnerListener()
         changeLngButtonListenerConfig()
         changeModeButtonListenerConfig()
@@ -147,7 +146,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         map.uiSettings.isZoomControlsEnabled = true
         map.setOnMarkerClickListener { marker ->
-            if(marker != mMarker) {
+            if(marker != mMarker || isMarkerFromUser(marker)==false) {
                 Common.currentResult = currentPlace!!.results!![Integer.parseInt(marker.snippet)]
                 mDetails.getDetailPlace(getPlaceDetailUrl(Common.currentResult!!.place_id!!))
                     .enqueue(object : retrofit2.Callback<PlaceDetail> {
@@ -197,6 +196,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
             true
         }
+    }
+
+    private fun isMarkerFromUser(marker: Marker): Boolean {
+        for(mar in markerList) {
+            if(mar == marker) {
+                return true
+            }
+        }
+        return false
     }
 
     private fun setInfoWindowListenerConfig() {
