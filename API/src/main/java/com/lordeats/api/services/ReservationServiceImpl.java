@@ -3,13 +3,13 @@ package com.lordeats.api.services;
 import com.lordeats.api.dtos.GetReservation;
 import com.lordeats.api.dtos.PostReservation;
 import com.lordeats.api.dtos.UpdateReservation;
+import com.lordeats.api.entities.CustomerEntity;
 import com.lordeats.api.entities.ReservationEntity;
 import com.lordeats.api.repositories.CustomerRepository;
 import com.lordeats.api.repositories.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -36,6 +36,15 @@ public class ReservationServiceImpl implements ReservationService{
     }
 
     @Override
+    public List<GetReservation> getCustomerReservations(String nickname) {
+        if(customerRepository.existsByNickname(nickname)){
+            CustomerEntity customer =  customerRepository.findByNickname(nickname);
+            return customer.getReservations();
+        }
+        return null;
+    }
+
+    @Override
     public GetReservation getReservation(int id) {
         ReservationEntity reservationEntity = reservationRepository.findById(id);
         if(reservationEntity != null)
@@ -57,14 +66,14 @@ public class ReservationServiceImpl implements ReservationService{
 
     @Override
     public boolean addNewReservation(PostReservation postReservation) {
-        if(!customerRepository.existsById(postReservation.getCustomer_id()))
+        if(!customerRepository.existsByNickname(postReservation.getCustomerNickname()))
             return false;
         ReservationEntity reservationEntity = new ReservationEntity();
         setNewReservation(reservationEntity, postReservation.getName(), postReservation.getAddress(), postReservation.getPriceLevel(),
                 postReservation.getFonNumber(), postReservation.getRatingPoints(),
                 postReservation.getWebPage());
 
-        reservationEntity.setCustomer(customerRepository.findById(postReservation.getCustomer_id()));
+        reservationEntity.setCustomer(customerRepository.findByNickname(postReservation.getCustomerNickname()));
         reservationRepository.save(reservationEntity);
         return reservationRepository.existsById(reservationEntity.getId());
     }
@@ -72,9 +81,9 @@ public class ReservationServiceImpl implements ReservationService{
 
 
     @Override
-    public boolean updateReservation(UpdateReservation updateReservation) {
-        if(reservationRepository.existsById(updateReservation.getId())) {
-            ReservationEntity reservationEntity = reservationRepository.findById(updateReservation.getId());
+    public boolean updateReservation(int reservationId, UpdateReservation updateReservation) {
+        if(reservationRepository.existsById(reservationId)) {
+            ReservationEntity reservationEntity = reservationRepository.findById(reservationId);
             setNewReservation(reservationEntity, updateReservation.getName(), updateReservation.getAddress(), updateReservation.getPriceLevel(),
                     updateReservation.getFonNumber(), updateReservation.getRatingPoints(),
                     updateReservation.getWebPage());

@@ -70,6 +70,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     internal lateinit var currentPlace: MyPlaces
     var mPlace:PlaceDetail?=null
 
+    private lateinit var userDataTmp: String
+    private lateinit var userData: JSONObject
+
     var name:String?=null
     var rating:String?=null
     var address:String?=null
@@ -85,6 +88,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMapsBinding.inflate(layoutInflater)
+
+        getUserData()
 
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -108,6 +113,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
         }
 
+
         onSelectedItemSpinnerListener()
         changeLngButtonListenerConfig()
         changeModeButtonListenerConfig()
@@ -120,6 +126,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onStop() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
         super.onStop()
+    }
+
+    private fun getUserData() {
+        userDataTmp = intent.getStringExtra("User Data").toString()
+        userData = JSONObject(userDataTmp)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {

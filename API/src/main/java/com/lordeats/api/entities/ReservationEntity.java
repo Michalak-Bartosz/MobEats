@@ -1,5 +1,6 @@
 package com.lordeats.api.entities;
 
+import com.lordeats.api.dtos.GetReservation;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -64,5 +65,17 @@ public class ReservationEntity {
             e.printStackTrace();
         }
         return reservationJ;
+    }
+
+    public GetReservation reservationToGetReservationObject(){
+        GetReservation reservation = new GetReservation();
+        reservation.setId(this.id);
+        reservation.setName(this.name);
+        reservation.setAddress(this.address);
+        reservation.setFonNumber(this.fonNumber);
+        reservation.setPriceLevel(this.priceLevel);
+        reservation.setRatingPoints(this.ratingPoints);
+        reservation.setWebPage(this.webPage);
+        return reservation;
     }
 }

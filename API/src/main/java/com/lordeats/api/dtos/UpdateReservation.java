@@ -10,7 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateReservation {
-    private int id;
     private String name;
     private String address;
     private String priceLevel;

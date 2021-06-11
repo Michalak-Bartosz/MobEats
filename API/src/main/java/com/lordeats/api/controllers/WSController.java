@@ -44,7 +44,7 @@ public class WSController {
     public String processMessage(String message, @Header("simpSessionId") String sessionId){
         try {
             JSONObject findPplPayload = new JSONObject(message);
-            log.info("User: " + findPplPayload + " looking for ppl to eat.");
+            log.info("User: " + findPplPayload + " looking for ppl.");
             findPplPayload.put("message", "Hi! I'm " + findPplPayload.getString("nickname") + " and I'm looking for someone to eat with me. Check it out");
             return findPplPayload.toString();
         } catch (JSONException e) {

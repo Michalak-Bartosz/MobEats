@@ -56,7 +56,7 @@ public class LoginAndRegisterServiceImpl implements LoginAndRegisterService {
             if(customerRepository.existsByNickname(nickname)) {
                 CustomerEntity customer = customerRepository.findByNickname(nickname);
                 if(bCryptPasswordEncoder.matches(password,customer.getPassword())){
-                    loginUsersHashMap.put(sessionId, nickname);
+                    customerRepository.loginUsersHashMap.put(sessionId, nickname);
                     return true;
                 }
             }
@@ -165,13 +165,13 @@ public class LoginAndRegisterServiceImpl implements LoginAndRegisterService {
 
     @Override
     public void logOutUser(String sessionId) {
-        loginUsersHashMap.remove(sessionId);
+        customerRepository.loginUsersHashMap.remove(sessionId);
     }
 
     @Override
     public String listLogInUsers() {
-        if(!loginUsersHashMap.isEmpty()){
-            return loginUsersHashMap.toString();
+        if(!customerRepository.loginUsersHashMap.isEmpty()){
+            return customerRepository.loginUsersHashMap.toString();
         }
         return "No logged in users";
     }

@@ -1,5 +1,6 @@
 package com.lordeats.api.entities;
 
+import com.lordeats.api.dtos.GetReservation;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,7 +8,9 @@ import lombok.Setter;
 import org.json.JSONObject;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -59,6 +62,14 @@ public class CustomerEntity {
             JSONList.add(reservation.reservationToJsonObject());
         }
         return JSONList.toString();
+    }
+
+    public List<GetReservation> getReservations() {
+        List<GetReservation>  reservationsList = new ArrayList<>();
+        for(ReservationEntity reservation: reservations){
+            reservationsList.add(reservation.reservationToGetReservationObject());
+        }
+        return reservationsList;
     }
 
     public boolean hasReservations() {

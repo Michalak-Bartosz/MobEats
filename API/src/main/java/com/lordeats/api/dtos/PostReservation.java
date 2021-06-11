@@ -16,5 +16,5 @@ public class PostReservation {
     private String fonNumber;
     private String ratingPoints;
     private String webPage;
-    private int customer_id;
+    private String customerNickname;
 }

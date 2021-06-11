@@ -9,11 +9,13 @@ import java.util.List;
 public interface ReservationService {
     List<GetReservation> getAllReservations();
 
+    List<GetReservation> getCustomerReservations(String nickname);
+
     GetReservation getReservation(int id);
 
     boolean addNewReservation(PostReservation request);
 
-    boolean updateReservation(UpdateReservation updateReservation);
+    boolean updateReservation(int reservationId, UpdateReservation updateReservation);
 
     boolean deleteReservation(int id);
 

@@ -6,6 +6,8 @@ import com.lordeats.api.dtos.UpdateCustomer;
 import com.lordeats.api.entities.CustomerEntity;
 import com.lordeats.api.repositories.CustomerRepository;
 import com.lordeats.api.repositories.ReservationRepository;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,16 +38,46 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public boolean addNewCustomer(PostCustomer postCustomer) {
+    public CustomerEntity addNewCustomer(PostCustomer postCustomer) {
+        if(postCustomer.getNickname().equals("") || postCustomer.getPassword().equals(""))
+            return null;
         if(customerRepository.existsByNickname(postCustomer.getNickname()))
-            return false;
+            return null;
         CustomerEntity customerEntity = new CustomerEntity();
         customerEntity.setNickname(postCustomer.getNickname());
         String encodedPassword = bCryptPasswordEncoder.encode(postCustomer.getPassword());
         customerEntity.setPassword(encodedPassword);
 
         customerRepository.save(customerEntity);
-        return customerRepository.existsById(customerEntity.getId());
+        if(customerRepository.existsById(customerEntity.getId()))
+            return customerEntity;
+        return null;
+    }
+
+    @Override
+    public synchronized CustomerEntity logInCustomer(PostCustomer postCustomer) {
+        String nickname = postCustomer.getNickname();
+        String password = postCustomer.getPassword();
+        if(customerRepository.existsByNickname(nickname)) {
+            CustomerEntity customer = customerRepository.findByNickname(nickname);
+            if(bCryptPasswordEncoder.matches(password,customer.getPassword())){
+                customerRepository.loginUsersHashMap.put(String.valueOf(customer.getId()), nickname);
+                return customer;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public synchronized boolean logOutCustomer(PostCustomer postCustomer) {
+        if(customerRepository.existsByNickname(postCustomer.getNickname())) {
+            CustomerEntity customer = customerRepository.findByNickname(postCustomer.getNickname());
+            if(customer != null){
+                customerRepository.loginUsersHashMap.remove(String.valueOf(customer.getId()), postCustomer.getNickname());
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

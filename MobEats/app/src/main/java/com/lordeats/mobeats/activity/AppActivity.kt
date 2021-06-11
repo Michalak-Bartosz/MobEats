@@ -114,7 +114,11 @@ class AppActivity : AppCompatActivity() {
     private fun sendNotification(userData: JSONObject) {
         val intent = Intent(this, MapsActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            action = Intent.ACTION_SEND
+            this.putExtra("User Data", userData.toString())
+            this.type = "text/plain"
         }
+
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
 
         val builder =NotificationCompat.Builder(this, CHANNEL_ID)
