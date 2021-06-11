@@ -418,11 +418,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 .append(destiny.longitude.toString())
                 .append("&key=AIzaSyCoZwNDKs4JRA3HNZCKmB_c09GH0bLPnEE")
                 .toString()
-
+        Log.d("LINK",googleDirectionUrl)
         mService.getDirections(googleDirectionUrl)
             .enqueue(object:Callback<String>{
                 override fun onResponse(call: Call<String>, response: Response<String>) {
-                    Log.d("RESPONSE",response!!.body()!!)
                     val parsedJson = parserTask(response!!.body()!!.toString())
                     createRoute(parsedJson)
                 }
