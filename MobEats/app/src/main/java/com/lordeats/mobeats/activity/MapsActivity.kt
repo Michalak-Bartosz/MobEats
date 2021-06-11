@@ -324,16 +324,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         locationRequest.smallestDisplacement = 10f
     }
 
-    private fun buildDirectionRequest(origin: LatLng, destiny: LatLng) {
+    private fun buildDirectionRequest(origin: LatLng, destiny: LatLng) :String {
         var lat = origin.latitude
         var long = origin.longitude
-        val googleDirectionUrl = StringBuilder("https://maps.googleapis.com/maps/api/directions/")
+        val googleDirectionUrl = StringBuilder("https://maps.googleapis.com/maps/api/directions/json?")
         googleDirectionUrl.append("origin=$lat,$long")
         lat = destiny.latitude
         long = destiny.longitude
-        googleDirectionUrl.append("destination=$lat,$long")
-        googleDirectionUrl.append("mode=driving")
-
+        googleDirectionUrl.append("&destination=$lat,$long")
+//        googleDirectionUrl.append("&mode=driving")
+        googleDirectionUrl.append("&key=AIzaSyCoZwNDKs4JRA3HNZCKmB_c09GH0bLPnEE")
+        return googleDirectionUrl.toString()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
