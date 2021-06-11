@@ -94,7 +94,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     var findPplPayload: JSONObject = JSONObject()
     private lateinit var messageToSend: MessageEvent
 
-    lateinit var polyLine: Polyline
+    lateinit var polyLine: Polyline?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
