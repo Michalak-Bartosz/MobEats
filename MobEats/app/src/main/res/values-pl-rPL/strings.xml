@@ -97,6 +97,8 @@
 
     <string name="findPplTitle">Masz ochotę na jedzenie?</string>
     <string name="findPplText">Hej! Znajdź jedzenie.</string>
+    <string name="findPplStarText">Hej! Jestem</string>
+    <string name="findPplEndText">i szukam kogoś do wspólnego jedzenia. Sprawdź to!</string>
 
     <!--    Map Filters-->
 
