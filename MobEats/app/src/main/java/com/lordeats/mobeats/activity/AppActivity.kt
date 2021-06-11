@@ -116,7 +116,6 @@ class AppActivity : AppCompatActivity() {
         notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER)
         notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
         notificationIntent.action = Intent.ACTION_SEND
-        Log.d("BARTEK USER DATA DO WYSLANIA", userDataFindPpl.toString())
         notificationIntent.putExtra("USER_DATA_FIND_PPL", userDataFindPpl.toString())
         notificationIntent.type = "text/plain"
 
