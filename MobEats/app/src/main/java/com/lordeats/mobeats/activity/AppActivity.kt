@@ -29,6 +29,7 @@ import ua.naiksoftware.stomp.Stomp
 import ua.naiksoftware.stomp.StompClient
 import ua.naiksoftware.stomp.dto.LifecycleEvent
 import java.util.*
+import kotlin.collections.HashMap
 
 
 @Suppress("DEPRECATION")
@@ -57,7 +58,9 @@ class AppActivity : AppCompatActivity() {
 
     private lateinit var messageToSend: MessageEvent
 
-    private val notificationIdList: ArrayList<Int> = ArrayList()
+    private val notificationChanelId = "1"
+
+    private val notificationIdList: HashMap<String, Int> = HashMap()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,6 +71,7 @@ class AppActivity : AppCompatActivity() {
         getUserData()
         connectToServer()
         clientLifecycleConfig()
+        createNotificationChannel()
         EventBus.getDefault().register(this)
     }
 
@@ -97,12 +101,12 @@ class AppActivity : AppCompatActivity() {
         binding.greetingText.text = getString(R.string.greetingText) + " " + userData.getString("nickname") + "!"
     }
 
-    private fun createNotificationChannel(nickname: String) {
+    private fun createNotificationChannel() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = getString(R.string.findPplTitle)
             val descriptionText = getString(R.string.findPplText)
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(nickname, name, importance).apply {
+            val channel = NotificationChannel(notificationChanelId, name, importance).apply {
                 description = descriptionText
             }
             val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -118,8 +122,7 @@ class AppActivity : AppCompatActivity() {
 
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
 
-        createNotificationChannel(nickname)
-        notificationIdList.add(notificationIdList.count())
+
         val builder =NotificationCompat.Builder(this, nickname)
             .setSmallIcon(R.mipmap.ic_launcher_foreground)
             .setContentIntent(pendingIntent)
@@ -128,9 +131,11 @@ class AppActivity : AppCompatActivity() {
             .setStyle(NotificationCompat.BigTextStyle().bigText(getString(R.string.findPplStarText) + " " + nickname + " " + getString(R.string.findPplEndText)))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
-        with(NotificationManagerCompat.from(this)) {
-            notify(notificationIdList[notificationIdList.count()-1], builder.build())
+        if(!notificationIdList.contains(nickname)) {
+            notificationIdList[nickname] = notificationIdList.count()
         }
+        with(NotificationManagerCompat.from(this)) {
+            notify(notificationIdList.getValue(nickname), builder.build()) }
     }
 
     @SuppressLint("CheckResult")
