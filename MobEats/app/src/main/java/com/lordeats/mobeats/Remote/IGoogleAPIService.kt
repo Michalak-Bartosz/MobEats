@@ -14,6 +14,6 @@ interface IGoogleAPIService {
     @GET
     fun getDetailPlace(@Url url:String): Call<PlaceDetail>
 
-    @GET("maps/api/directions/json")
-    fun getDirections(@Query("origin") origin:String, @Query("destination") destination:String): Call<String>
+    @GET("https://maps.googleapis.com/maps/api/directions/json?")
+    fun getDirections(@Query("origin=") origin:String, @Query("&destination=") destination:String): Call<String>
 }
