@@ -57,7 +57,6 @@ class AppActivity : AppCompatActivity() {
 
     private lateinit var messageToSend: MessageEvent
 
-    private val CHANNEL_ID = "channel_id_01"
     private val notificationId = 101
 
 
@@ -69,7 +68,6 @@ class AppActivity : AppCompatActivity() {
         getUserData()
         connectToServer()
         clientLifecycleConfig()
-        createNotificationChannel()
         EventBus.getDefault().register(this)
     }
 
@@ -99,12 +97,12 @@ class AppActivity : AppCompatActivity() {
         binding.greetingText.text = getString(R.string.greetingText) + " " + userData.getString("nickname") + "!"
     }
 
-    private fun createNotificationChannel() {
+    private fun createNotificationChannel(nickname: String) {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = getString(R.string.findPplTitle)
             val descriptionText = getString(R.string.findPplText)
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+            val channel = NotificationChannel(nickname, name, importance).apply {
                 description = descriptionText
             }
             val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -120,7 +118,9 @@ class AppActivity : AppCompatActivity() {
 
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
 
-        val builder =NotificationCompat.Builder(this, CHANNEL_ID)
+        createNotificationChannel(nickname)
+
+        val builder =NotificationCompat.Builder(this, nickname)
             .setSmallIcon(R.mipmap.ic_launcher_foreground)
             .setContentIntent(pendingIntent)
             .setContentTitle(getString(R.string.findPplTitle))

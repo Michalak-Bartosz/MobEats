@@ -125,6 +125,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onStart() {
         super.onStart()
+        Log.d("BARTEK MAPACTIVITY","ON START")
         EventBus.getDefault().register(this)
     }
 
