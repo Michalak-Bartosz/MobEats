@@ -151,8 +151,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         EventBus.getDefault().unregister(this)
     }
 
+    private fun getUserData() {
+        userDataTmp = intent.getStringExtra("User Data").toString()
+        if(userDataTmp != "null") {
+            userData = JSONObject(userDataTmp)
+            setPplMarker()
+        }
+    }
+
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
+        getUserData()
         Places.initialize(applicationContext, R.string.google_maps_key.toString())
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(
@@ -617,16 +626,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         if (event.message!!.getString("type") == "findPplReply") {
             userDataTmp = event.message!!.toString()
             userData = JSONObject(userDataTmp)
-            val lat: Double = userData.getString("lat").toDouble()
-            val long: Double = userData.getString("long").toDouble()
-            val userMarkerOption = MarkerOptions()
-                .position(LatLng(lat, long))
-                .title("Eat with me!")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-            val marker = map!!.addMarker(userMarkerOption)
-            if (marker != null)
-                markerList.add(marker)
+            if(userDataTmp != "null")
+                setPplMarker()
         }
+    }
+
+    private fun setPplMarker() {
+        val lat: Double = userData.getString("lat").toDouble()
+        val long: Double = userData.getString("long").toDouble()
+        val userMarkerOption = MarkerOptions()
+            .position(LatLng(lat,long))
+            .title("Eat with me!")
+            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+        val marker = map!!.addMarker(userMarkerOption)
+        if(marker != null)
+            markerList.add(marker)
     }
     
 }
