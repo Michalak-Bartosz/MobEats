@@ -229,7 +229,7 @@ class AppActivity : AppCompatActivity() {
             findPplData = JSONObject(findPplDataTmp)
             findPplData.remove("type")
             findPplData.put("nickname", userData.getString("nickname"))
-            client.send("/mobEats/findPpl", findPplData.toString()).subscribe({ },
+            client.send("/mobEats/findPpl", findPplData.toString()).subscribe({ this.runOnUiThread { DynamicToast.makeSuccess(this, getString(R.string.findPplSuccess)).show() } },
                 { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
         } else if (client.isConnected && event.message!!.getString("type")  == "findPplReply") { } else {
             DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show()
