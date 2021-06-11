@@ -152,11 +152,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun getUserData() {
         userDataTmp = intent.getStringExtra("USER_DATA_FIND_PPL").toString()
-        Log.d("BARTEK USRDATATMP",userDataTmp)
         if(userDataTmp != "null") {
             userData = JSONObject(userDataTmp)
             setPplMarker()
-            Log.d("BARTEK USRDATASJON",userData.toString())
         }
     }
 
