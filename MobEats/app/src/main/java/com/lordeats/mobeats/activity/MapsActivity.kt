@@ -279,12 +279,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     .title("You are here ;-)")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
 
-                if(userData!=null){
+                if(userDataTmp != "null"){
+                    val lat: Double = userData.getString("lat").toDouble()
+                    val long: Double = userData.getString("long").toDouble()
                     val userMarkerOption = MarkerOptions()
-                        .position(LatLng(userData.getString("lat").toDouble(),userData.getString("long").toDouble()))
+                        .position(LatLng(lat,long))
                         .title("Eat with me!")
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                    var marker = map!!.addMarker(userMarkerOption);
+                    var marker = map!!.addMarker(userMarkerOption)
                 }
                 mMarker = map!!.addMarker(markerOptions)
                 val cameraPosition = CameraPosition.Builder()
