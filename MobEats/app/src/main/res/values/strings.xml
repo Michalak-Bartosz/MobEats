@@ -96,6 +96,8 @@
     <string name="typeOfPremises">Type: </string>
     <string name="pressToAddRestaurantText">Add to Fav.</string>
 
+    <string name="findPplSuccess">Send Notification!</string>
+
     <string name="findPplTitle">Would you like to eat?</string>
     <string name="findPplText">Hi! Find food.</string>
     <string name="findPplStarText">Hi! I\'m</string>
