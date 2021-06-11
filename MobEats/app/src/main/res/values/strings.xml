@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name">MobEats</string>
 
@@ -98,6 +98,8 @@
 
     <string name="findPplTitle">Would you like to eat?</string>
     <string name="findPplText">Hi! Find food.</string>
+    <string name="findPplStarText">Hi! I\'m</string>
+    <string name="findPplEndText">and I\'m looking for someone to eat with me. Check it out!</string>
 
 <!--    Map Filters-->
 

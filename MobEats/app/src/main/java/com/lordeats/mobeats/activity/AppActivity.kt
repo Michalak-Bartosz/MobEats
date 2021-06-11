@@ -55,6 +55,8 @@ class AppActivity : AppCompatActivity() {
     private var replyDataTmp: String = ""
     private lateinit var replyData: JSONObject
 
+    private lateinit var messageToSend: MessageEvent
+
     private val CHANNEL_ID = "channel_id_01"
     private val notificationId = 101
 
@@ -110,23 +112,20 @@ class AppActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendNotification(userData: JSONObject) {
-        val intent = Intent(this, MapsActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-//            or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            action = Intent.ACTION_SEND
-            this.putExtra("User Data", userData.toString())
-            this.type = "text/plain"
-        }
+    private fun sendNotification(nickname: String) {
+        val notificationIntent = Intent(this, MapsActivity::class.java)
+        notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER)
+        notificationIntent.action = Intent.ACTION_MAIN
+        notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
 
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
 
         val builder =NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_launcher_foreground)
             .setContentIntent(pendingIntent)
             .setContentTitle(getString(R.string.findPplTitle))
             .setContentText(getString(R.string.findPplText))
-            .setStyle(NotificationCompat.BigTextStyle().bigText(userData.getString("message")))
+            .setStyle(NotificationCompat.BigTextStyle().bigText(getString(R.string.findPplStarText) + " " + nickname + " " + getString(R.string.findPplEndText)))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
         with(NotificationManagerCompat.from(this)) {
@@ -225,7 +224,7 @@ class AppActivity : AppCompatActivity() {
             findPplData.put("nickname", userData.getString("nickname"))
             client.send("/mobEats/findPpl", findPplData.toString()).subscribe({ },
                 { this.runOnUiThread { DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show() } })
-        } else {
+        } else if (client.isConnected && event.message!!.getString("type")  == "findPplReply") { } else {
             DynamicToast.makeError(this, getString(R.string.serverConnectionError)).show()
             connectToServer()
         }
@@ -236,7 +235,12 @@ class AppActivity : AppCompatActivity() {
         client.topic("/topic/messages").subscribe() { topicMessage ->
             replyDataTmp = topicMessage.payload
             replyData = JSONObject(replyDataTmp)
-            sendNotification(replyData)
+            if(replyData.getString("nickname") != userData.getString("nickname")) {
+                replyData.put("type", "findPplReply")
+                sendNotification(replyData.getString("nickname"))
+                messageToSend = MessageEvent(replyData)
+                EventBus.getDefault().post(messageToSend)
+            }
         }
     }
 

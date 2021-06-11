@@ -37,6 +37,8 @@ import com.lordeats.mobeats.databinding.ActivityMapsBinding
 import com.lordeats.mobeats.databinding.InfoWindowBinding
 import com.lordeats.mobeats.events.MessageEvent
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -54,6 +56,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mLastLocation: Location
     private var mMarker: Marker?= null
+    private var markerList: ArrayList<Marker> = ArrayList()
 
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     lateinit var locationRequest: LocationRequest
@@ -90,8 +93,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         binding = ActivityMapsBinding.inflate(layoutInflater)
 
-        getUserData()
-
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -123,16 +124,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         setContentView(binding.root)
     }
 
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
     override fun onStop() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
         super.onStop()
-    }
-
-    private fun getUserData() {
-        userDataTmp = intent.getStringExtra("User Data").toString()
-        Log.d("BARTEK USERDATATMP", "" + userDataTmp)
-        if(userDataTmp != "null")
-            userData = JSONObject(userDataTmp)
+        EventBus.getDefault().unregister(this)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -281,15 +281,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     .title("You are here ;-)")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
 
-                if(userDataTmp != "null"){
-                    val lat: Double = userData.getString("lat").toDouble()
-                    val long: Double = userData.getString("long").toDouble()
-                    val userMarkerOption = MarkerOptions()
-                        .position(LatLng(lat,long))
-                        .title("Eat with me!")
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                    var marker = map!!.addMarker(userMarkerOption)
-                }
                 mMarker = map!!.addMarker(markerOptions)
                 val cameraPosition = CameraPosition.Builder()
                     .target(latLng).zoom(16f).build()
@@ -469,6 +460,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 binding.findPplButton.setImageResource(R.drawable.ic_find_ppl_dark)
             }
             sharedPrefsEdit.apply()
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: MessageEvent) {
+        if(event.message!!.getString("type") == "findPplReply") {
+            userDataTmp = event.message!!.toString()
+            userData = JSONObject(userDataTmp)
+            val lat: Double = userData.getString("lat").toDouble()
+            val long: Double = userData.getString("long").toDouble()
+            val userMarkerOption = MarkerOptions()
+                .position(LatLng(lat,long))
+                .title("Eat with me!")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+            val marker = map!!.addMarker(userMarkerOption)
+            if(marker != null)
+                markerList.add(marker)
         }
     }
 }
