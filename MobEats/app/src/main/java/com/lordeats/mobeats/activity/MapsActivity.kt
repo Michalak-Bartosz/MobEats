@@ -167,6 +167,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         map.uiSettings.isZoomControlsEnabled = true
         map.setOnMarkerClickListener { marker ->
+            if(isMarkerFromUser(marker)){
+                val originLatLng = LatLng(marker.position.latitude,marker.position.longitude)
+                val destinationLatLng = LatLng(mLastLocation.latitude,mLastLocation.longitude)
+                drawRoutes(originLatLng,destinationLatLng)
+            }
             if (marker != mMarker && isMarkerFromUser(marker) == false) {
                 Common.currentResult = currentPlace!!.results!![Integer.parseInt(marker.snippet)]
                 mDetails.getDetailPlace(getPlaceDetailUrl(Common.currentResult!!.place_id!!))
@@ -231,6 +236,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
             true
         }
+
     }
 
     private fun isMarkerFromUser(marker: Marker): Boolean {
@@ -387,10 +393,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         return googleDirectionUrl.toString()
     }
 
-    //    private fun drwaRoutes(data: String) {
-//
-//    }
-    private fun drwaRoutes(origin: LatLng, destiny: LatLng) {
+    private fun drawRoutes(origin: LatLng, destiny: LatLng) {
         if (polyLine != null) {
             polyLine!!.remove()
         }
@@ -408,7 +411,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .enqueue(object:Callback<String>{
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     val parsedJson = parserTask(response!!.body()!!.toString())
-
+                    createRoute(parsedJson)
                 }
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
