@@ -3,6 +3,7 @@ package com.lordeats.mobeats.Common
 import com.example.applicationfinal.Remote.IGoogleAPIService
 import com.example.applicationfinal.Remote.RetrofitClient
 import com.lordeats.mobeats.Model.Results
+import com.lordeats.mobeats.Remote.RetrofitScalarsClient
 
 
 object Common {
@@ -13,4 +14,7 @@ object Common {
 
     val googleApiService: IGoogleAPIService
         get()= RetrofitClient.getClient(GOOGLE_API_URL).create(IGoogleAPIService::class.java)
+
+    val googleApiServiceScalars: IGoogleAPIService
+        get()= RetrofitScalarsClient.getClient(GOOGLE_API_URL).create(IGoogleAPIService::class.java)
 }
