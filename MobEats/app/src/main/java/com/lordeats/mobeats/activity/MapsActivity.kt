@@ -400,7 +400,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .append(destiny.longitude.toString())
             .toString()
 
-        val key = "AIzaSyCoZwNDKs4JRA3HNZCKmB_c09GH0bLPnEE"
+        val key = getString(R.string.api_key)
         polyLineList = ArrayList()
         mService.getDirections(org,dst,key)
             .enqueue(object:Callback<RouteResult>{
