@@ -30,6 +30,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
+import com.google.gson.JsonObject
 import com.lordeats.mobeats.Common.Common
 import com.lordeats.mobeats.Helper.DirectionJsonParser
 import com.lordeats.mobeats.Model.MyPlaces
@@ -39,6 +40,7 @@ import com.lordeats.mobeats.Remote.InfoWindowModification
 import com.lordeats.mobeats.databinding.ActivityMapsBinding
 import com.lordeats.mobeats.databinding.InfoWindowBinding
 import com.lordeats.mobeats.events.MessageEvent
+import okhttp3.internal.notifyAll
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -175,7 +177,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         map.uiSettings.isZoomControlsEnabled = true
         map.setOnMarkerClickListener { marker ->
-            if(isMarkerFromUser(marker)){
+            if(isMarkerFromUser(marker) && ::mLastLocation.isInitialized){
                 val originLatLng = LatLng(marker.position.latitude,marker.position.longitude)
                 val destinationLatLng = LatLng(mLastLocation.latitude,mLastLocation.longitude)
                 drawRoutes(originLatLng,destinationLatLng)
@@ -387,20 +389,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         locationRequest.smallestDisplacement = 10f
     }
 
-    private fun buildDirectionRequest(origin: LatLng, destiny: LatLng): String {
-        var lat = origin.latitude
-        var long = origin.longitude
-        val googleDirectionUrl =
-            StringBuilder("https://maps.googleapis.com/maps/api/directions/json?")
-        googleDirectionUrl.append("origin=$lat,$long")
-        lat = destiny.latitude
-        long = destiny.longitude
-        googleDirectionUrl.append("&destination=$lat,$long")
-//        googleDirectionUrl.append("&mode=driving")
-        googleDirectionUrl.append("&key=AIzaSyCoZwNDKs4JRA3HNZCKmB_c09GH0bLPnEE")
-        return googleDirectionUrl.toString()
-    }
-
     private fun drawRoutes(origin: LatLng, destiny: LatLng) {
         if (polyLine != null) {
             polyLine!!.remove()
@@ -425,7 +413,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
-                    Log.d("DIRECT","Direction API Failure - Thank's google :-)")
+                    Log.d("DIRECT","Direction API Failure - Thank's google :-) " + t.message )
                 }
 
             })

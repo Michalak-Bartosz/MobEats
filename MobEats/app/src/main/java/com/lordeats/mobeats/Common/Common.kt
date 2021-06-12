@@ -16,5 +16,5 @@ object Common {
         get()= RetrofitClient.getClient(GOOGLE_API_URL).create(IGoogleAPIService::class.java)
 
     val googleApiServiceScalars: IGoogleAPIService
-        get()= RetrofitScalarsClient.getClient(GOOGLE_API_URL).create(IGoogleAPIService::class.java)
+        get()= RetrofitClient.getClient(GOOGLE_API_URL).create(IGoogleAPIService::class.java)
 }

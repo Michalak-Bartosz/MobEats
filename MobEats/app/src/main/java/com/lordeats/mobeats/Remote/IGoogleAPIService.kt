@@ -6,6 +6,7 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 import retrofit2.http.Url
+import sk.antons.json.JsonObject
 
 interface IGoogleAPIService {
     @GET
@@ -16,4 +17,7 @@ interface IGoogleAPIService {
 
     @GET
     fun getDirections(@Url url:String): Call<String>
+
+//    @GET("maps/api/directions/json")
+//    fun getDirections(@Query("origin") origin:String,@Query("destination") destination: String):Call<String>
 }
