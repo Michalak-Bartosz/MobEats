@@ -2,6 +2,8 @@ package com.example.applicationfinal.Remote
 
 import com.lordeats.mobeats.Model.MyPlaces
 import com.lordeats.mobeats.Model.PlaceDetail
+import com.lordeats.mobeats.routes.RouteResult
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -15,9 +17,8 @@ interface IGoogleAPIService {
     @GET
     fun getDetailPlace(@Url url:String): Call<PlaceDetail>
 
-    @GET
-    fun getDirections(@Url url:String): Call<String>
-
-//    @GET("maps/api/directions/json")
-//    fun getDirections(@Query("origin") origin:String,@Query("destination") destination: String):Call<String>
+    @GET("maps/api/directions/json")
+    fun getDirections(@Query("origin") origin:String,
+                      @Query("destination") destination: String,
+                      @Query("key") key: String): Call<RouteResult>
 }

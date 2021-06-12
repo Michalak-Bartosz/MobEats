@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Color
 import android.location.Location
-import android.os.AsyncTask
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -19,7 +18,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.navigation.ActivityNavigator
 import com.example.applicationfinal.Remote.IGoogleAPIService
 import com.google.android.gms.location.*
 
@@ -29,8 +27,6 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.Place
-import com.google.gson.JsonObject
 import com.lordeats.mobeats.Common.Common
 import com.lordeats.mobeats.Helper.DirectionJsonParser
 import com.lordeats.mobeats.Model.MyPlaces
@@ -38,20 +34,19 @@ import com.lordeats.mobeats.Model.PlaceDetail
 import com.lordeats.mobeats.R
 import com.lordeats.mobeats.Remote.InfoWindowModification
 import com.lordeats.mobeats.databinding.ActivityMapsBinding
-import com.lordeats.mobeats.databinding.InfoWindowBinding
 import com.lordeats.mobeats.events.MessageEvent
-import okhttp3.internal.notifyAll
+import com.lordeats.mobeats.routes.Route
+import com.lordeats.mobeats.routes.RouteResult
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
+
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -97,6 +92,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var messageToSend: MessageEvent
 
     var polyLine: Polyline ?= null
+    var polyLineList: ArrayList<LatLng> ?=null
+    var polylineOptions: PolylineOptions ?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -393,69 +390,43 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         if (polyLine != null) {
             polyLine!!.remove()
         }
-        val googleDirectionUrl =
-            StringBuilder("https://maps.googleapis.com/maps/api/directions/json?").append("origin=")
-                .append(origin.latitude.toString())
-                .append(",")
-                .append(origin.longitude.toString())
-                .append("&destination=")
-                .append(destiny.latitude.toString())
-                .append(",")
-                .append(destiny.longitude.toString())
-                .append("&key=AIzaSyCoZwNDKs4JRA3HNZCKmB_c09GH0bLPnEE")
-                .toString()
-        Log.d("LINK",googleDirectionUrl)
-        mService.getDirections(googleDirectionUrl)
-            .enqueue(object:Callback<String>{
-                override fun onResponse(call: Call<String>, response: Response<String>) {
-                    val parsedJson = parserTask(response!!.body()!!.toString())
-                    createRoute(parsedJson)
+        val org = StringBuilder(origin.latitude.toString())
+            .append(",")
+            .append(origin.longitude.toString())
+            .toString()
+
+        val dst = StringBuilder(destiny.latitude.toString())
+            .append(",")
+            .append(destiny.longitude.toString())
+            .toString()
+
+        val key = "AIzaSyCoZwNDKs4JRA3HNZCKmB_c09GH0bLPnEE"
+        polyLineList = ArrayList()
+        mService.getDirections(org,dst,key)
+            .enqueue(object:Callback<RouteResult>{
+                override fun onResponse(call: Call<RouteResult>, t: Response<RouteResult>) {
+                    val routeList: List<Route>? = t.body()!!.routes
+                    val parser = DirectionJsonParser()
+                    if (routeList != null) {
+                        for(r in routeList){
+                            val polylineString:String = r.overview_polyline!!.points!!
+                            polyLineList!!.addAll(parser.decodePoly(polylineString))
+                        }
+                    }
+                    polylineOptions = PolylineOptions()
+                    polylineOptions!!.width(12f)
+                    polylineOptions!!.color(Color.RED)
+                    polylineOptions!!.geodesic(true)
+                    polylineOptions!!.addAll(polyLineList!!)
+                    polyLine = map.addPolyline(polylineOptions)
                 }
 
-                override fun onFailure(call: Call<String>, t: Throwable) {
-                    Log.d("DIRECT","Direction API Failure - Thank's google :-) " + t.message )
+                override fun onFailure(call: Call<RouteResult>, t: Throwable) {
+                    Log.d("ERRO","API Direction Fail")
                 }
 
             })
-    }
 
-    private fun parserTask(vararg response: String): List<List<HashMap<String,String>>>? {
-        val jsonObject: JSONObject
-        var routes: List<List<HashMap<String,String>>>?=null
-        try {
-            jsonObject = JSONObject(response[0])
-            val parser = DirectionJsonParser()
-            routes = parser.parse(jsonObject)
-        }catch (e:JSONException) {
-            e.printStackTrace()
-        }
-        return routes
-    }
-
-    private fun createRoute(result: List<List<HashMap<String,String>>>?) {
-        var points:ArrayList<LatLng>?=null
-        var polylineOptions:PolylineOptions?=null
-
-        for(i in result!!.indices){
-            points = ArrayList()
-            polylineOptions = PolylineOptions()
-
-            val path:List<HashMap<String,String>> = result[i]
-
-            for(j in path.indices) {
-                val point = path[j]
-                val lat = point["lat"]!!.toDouble()
-                val lng = point["lng"]!!.toDouble()
-                val position = LatLng(lat,lng)
-
-                points.add(position)
-            }
-            polylineOptions.addAll(points)
-            polylineOptions.width(12f)
-            polylineOptions.color(Color.RED)
-            polylineOptions.geodesic(true)
-        }
-        polyLine = map!!.addPolyline(polylineOptions)
     }
 
     override fun onRequestPermissionsResult(

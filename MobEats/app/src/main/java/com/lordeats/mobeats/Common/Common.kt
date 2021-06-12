@@ -3,7 +3,6 @@ package com.lordeats.mobeats.Common
 import com.example.applicationfinal.Remote.IGoogleAPIService
 import com.example.applicationfinal.Remote.RetrofitClient
 import com.lordeats.mobeats.Model.Results
-import com.lordeats.mobeats.Remote.RetrofitScalarsClient
 
 
 object Common {
