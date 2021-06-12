@@ -190,7 +190,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             mPlace = response!!.body()
                             if (mPlace!!.result!!.name == null) "-" else name =
                                 mPlace!!.result!!.name
-                            if (mPlace!!.result!!.rating.toString() == null) "-" else rating =
+                            if (mPlace!!.result!!.rating.toString() == "null") "-" else rating =
                                 mPlace!!.result!!.rating.toString()
                             if (mPlace!!.result!!.formatted_address == null) "-" else address =
                                 mPlace!!.result!!.formatted_address
@@ -198,7 +198,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                 "-" else phoneNumber = mPlace!!.result!!.formatted_phone_number
                             if (mPlace!!.result!!.website == null) website = "-" else website =
                                 mPlace!!.result!!.website
-                            if (mPlace!!.result!!.price_level.toString() == null) "-" else priceLevel =
+                            if (mPlace!!.result!!.price_level.toString() == "null") "-" else priceLevel =
                                 mPlace!!.result!!.price_level.toString()
                             Log.d("URL_PHONE", "" + name)
                             Log.d("URL_PHONE", "" + rating)
