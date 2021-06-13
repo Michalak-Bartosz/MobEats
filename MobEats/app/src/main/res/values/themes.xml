@@ -1,5 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <style name="progressBar">
+        <item name="colorAccent">@color/ic_launcher_background</item>
+    </style>
+
     <style name="mainBackground">
         <item name="android:background">@color/white</item>
     </style>

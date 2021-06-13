@@ -46,6 +46,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.concurrent.thread
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -94,6 +95,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     var infoWindowPayload: JSONObject = JSONObject()
     var findPplPayload: JSONObject = JSONObject()
     private lateinit var messageToSend: MessageEvent
+
 
     var polyLine: Polyline ?= null
     var polyLineList: ArrayList<LatLng> ?=null
@@ -265,13 +267,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             numberOfMarkers = 0
         }
         val url = getUrl(latitude, longitude, typePlace, nextPageToken)
-        Thread.sleep(1600)
+
         mService.getNearbyPlaces(url)
             .enqueue(object : Callback<MyPlaces> {
                 override fun onResponse(call: Call<MyPlaces>?, response: Response<MyPlaces>?) {
+
                     currentPlace = response!!.body()!!
                     saveToCurrentPlace(numberOfMarkers,currentPlace)
                     if (response!!.isSuccessful) {
+                        if(response.body()!!.results!!.size == 0) {
+                            Thread.sleep(500)
+                            nearByPlace(nextPageToken)
+                            return
+                        }
+
                         for (i in 0 until response.body()!!.results!!.size) {
                             val markerOptions = MarkerOptions()
                             val googlePlace = response.body()!!.results!![i]
@@ -288,8 +297,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         }
                     }
                     if(response!!.body()!!.next_page_token != null) {
-                        Log.d("Test-M","Otrymalem token" + response.body()!!.next_page_token)
+                        Log.d("Test-M","Otrzymałem token" + response.body()!!.next_page_token)
                         nearByPlace(response.body()!!.next_page_token!!.toString())
+                    } else {
+                        binding.loadingMarkersProgressBar.visibility = View.GONE
+                        binding.loadingScreenBackground.visibility = View.GONE
                     }
                 }
 
@@ -318,7 +330,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             googlePlaceUrl.append("&key=AIzaSyCoZwNDKs4JRA3HNZCKmB_c09GH0bLPnEE")
         }
         Log.d("URL_DEBUG", "Request: " + googlePlaceUrl.toString());
-
         return googlePlaceUrl.toString()
     }
 
@@ -521,9 +532,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    ////// Tutaj dokonczyc
     private fun findFoodButtonListenerConfig() {
         binding.findFoodOnMapButton.setOnClickListener {
+            binding.loadingScreenBackground.visibility = View.VISIBLE
+            binding.loadingMarkersProgressBar.visibility = View.VISIBLE
             nearByPlace("")
         }
     }
