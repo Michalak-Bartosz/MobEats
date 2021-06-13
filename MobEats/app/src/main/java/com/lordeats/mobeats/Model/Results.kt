@@ -4,7 +4,6 @@ import com.google.android.libraries.places.api.model.OpeningHours
 import com.lordeats.mobeats.Model.Geometry
 
 class Results {
-    var next_page_token:String?=null
     var name:String?=null
     var icon:String?=null
     var geometry:Geometry?=null

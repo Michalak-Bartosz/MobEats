@@ -76,6 +76,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var mDetails: IGoogleAPIService
     internal lateinit var currentPlace: MyPlaces
     var mPlace: PlaceDetail? = null
+    private var numberOfMarkers = 0
+    private var currenPlace0 : MyPlaces?=null
+    private var currenPlace1 : MyPlaces?=null
+    private var currenPlace2 : MyPlaces?=null
 
     private var userDataTmp: String = ""
     private var userData: JSONObject = JSONObject()
@@ -180,7 +184,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 drawRoutes(originLatLng,destinationLatLng)
             }
             if (marker != mMarker && isMarkerFromUser(marker) == false) {
-                Common.currentResult = currentPlace!!.results!![Integer.parseInt(marker.snippet)]
+                selectCurrentPlace(Integer.parseInt(marker.snippet))
+                Common.currentResult = currentPlace!!.results!![Integer.parseInt(marker.snippet)%20]
                 mDetails.getDetailPlace(getPlaceDetailUrl(Common.currentResult!!.place_id!!))
                     .enqueue(object : retrofit2.Callback<PlaceDetail> {
                         override fun onResponse(
@@ -246,22 +251,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
-    private fun isMarkerFromUser(marker: Marker): Boolean {
-        for (mar in markerList) {
-            if (mar == marker) {
-                return true
-            }
-        }
-        return false
-    }
-
-    private fun setInfoWindowListenerConfig() {
-        map.setOnInfoWindowClickListener {
-            messageToSend = MessageEvent(infoWindowPayload)
-            EventBus.getDefault().post(messageToSend)
-        }
-    }
-
     private fun getPlaceDetailUrl(place_id: String): String {
         val url = StringBuilder("https://maps.googleapis.com/maps/api/place/details/json")
         url.append("?placeid=$place_id")
@@ -271,13 +260,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun nearByPlace(nextPageToken: String) {
-        map.clear()
-        var pageToken = ""
+        if(nextPageToken == ""){
+            map.clear()
+            numberOfMarkers = 0
+        }
         val url = getUrl(latitude, longitude, typePlace, nextPageToken)
+        Thread.sleep(1600)
         mService.getNearbyPlaces(url)
             .enqueue(object : Callback<MyPlaces> {
                 override fun onResponse(call: Call<MyPlaces>?, response: Response<MyPlaces>?) {
                     currentPlace = response!!.body()!!
+                    saveToCurrentPlace(numberOfMarkers,currentPlace)
                     if (response!!.isSuccessful) {
                         for (i in 0 until response.body()!!.results!!.size) {
                             val markerOptions = MarkerOptions()
@@ -289,9 +282,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                             markerOptions.position(latLng)
                             markerOptions.title(placeName)
-                            markerOptions.snippet(i.toString())
+                            markerOptions.snippet((numberOfMarkers).toString())
                             map!!.addMarker(markerOptions)
+                            numberOfMarkers++;
                         }
+                    }
+                    if(response!!.body()!!.next_page_token != null) {
+                        Log.d("Test-M","Otrymalem token" + response.body()!!.next_page_token)
+                        nearByPlace(response.body()!!.next_page_token!!.toString())
                     }
                 }
 
@@ -427,6 +425,42 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
             })
 
+    }
+
+    private fun saveToCurrentPlace(numberOfMarker: Int, placeToSave : MyPlaces) {
+        if(numberOfMarker <= 19){
+            currenPlace0 = placeToSave
+        } else if(numberOfMarker >=20 && numberOfMarker <=39) {
+            currenPlace1 = placeToSave
+        } else {
+            currenPlace2 = placeToSave
+        }
+    }
+
+    private fun selectCurrentPlace(numberOfMarker: Int) {
+        if(numberOfMarker <= 19){
+            currentPlace = currenPlace0!!
+        } else if(numberOfMarker >=20 && numberOfMarker <=39) {
+            currentPlace = currenPlace1!!
+        } else {
+            currentPlace = currenPlace2!!
+        }
+    }
+
+    private fun isMarkerFromUser(marker: Marker): Boolean {
+        for (mar in markerList) {
+            if (mar == marker) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun setInfoWindowListenerConfig() {
+        map.setOnInfoWindowClickListener {
+            messageToSend = MessageEvent(infoWindowPayload)
+            EventBus.getDefault().post(messageToSend)
+        }
     }
 
     override fun onRequestPermissionsResult(
