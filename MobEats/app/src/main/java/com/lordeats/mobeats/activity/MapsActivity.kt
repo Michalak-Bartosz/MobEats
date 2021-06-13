@@ -37,6 +37,7 @@ import com.lordeats.mobeats.databinding.ActivityMapsBinding
 import com.lordeats.mobeats.events.MessageEvent
 import com.lordeats.mobeats.routes.Route
 import com.lordeats.mobeats.routes.RouteResult
+import com.pranavpandey.android.dynamic.toasts.DynamicToast
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -261,6 +262,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         return url.toString()
     }
 
+    private var countResponse: Int = 0
+
     private fun nearByPlace(nextPageToken: String) {
         if(nextPageToken == ""){
             map.clear()
@@ -276,8 +279,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     saveToCurrentPlace(numberOfMarkers,currentPlace)
                     if (response!!.isSuccessful) {
                         if(response.body()!!.results!!.size == 0) {
-                            Thread.sleep(500)
-                            nearByPlace(nextPageToken)
+                            Thread.sleep(200)
+                            countResponse += 1
+                            if(countResponse < 25) {
+                                nearByPlace(nextPageToken)
+                            } else {
+                                binding.loadingMarkersProgressBar.visibility = View.GONE
+                                binding.loadingScreenBackground.visibility = View.GONE
+                                runOnUiThread { DynamicToast.makeError(this@MapsActivity, getString(R.string.findFoodError)).show() }
+                            }
                             return
                         }
 
@@ -536,6 +546,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.findFoodOnMapButton.setOnClickListener {
             binding.loadingScreenBackground.visibility = View.VISIBLE
             binding.loadingMarkersProgressBar.visibility = View.VISIBLE
+            countResponse = 0
             nearByPlace("")
         }
     }

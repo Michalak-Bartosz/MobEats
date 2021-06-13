@@ -95,7 +95,8 @@
     <string name="typeOfPremises">Typ: </string>
     <string name="pressToAddRestaurantText">Dodaj do Ulub.</string>
 
-    <string name="findPplSuccess">Wyszłano powiadomienie!</string>
+    <string name="findPplSuccess">Wysłano powiadomienie!</string>
+    <string name="findFoodError">W pobliżu nie ma wybranych lokali gastronomicznych :(</string>
 
     <string name="findPplTitle">Masz ochotę na jedzenie?</string>
     <string name="findPplText">Hej! Znajdź jedzenie.</string>
